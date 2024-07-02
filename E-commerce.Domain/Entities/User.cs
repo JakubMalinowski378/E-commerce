@@ -7,7 +7,8 @@ public class User
     public string Email { get; set; } = string.Empty;
     public char Gender { get; set; }
     public string PhoneNumber { get; set; } = string.Empty;
-    public string PasswordHash { get; set; } = string.Empty;
+    public byte[] PaswordHash { get; set; }
+    public byte[] PasswordSalt { get; set; } 
     public bool EmailConfirmed { get; set; }
     public List<Address> Addresses { get; set; } = default!;
 }
