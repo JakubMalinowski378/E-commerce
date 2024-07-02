@@ -1,5 +1,5 @@
 using E_commerce.Infrastructure.Extensions;
-using E_commerce.Application.Extension;
+using E_commerce.Application.Extensions;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
