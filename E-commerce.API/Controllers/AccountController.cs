@@ -22,7 +22,7 @@ namespace E_commerce.API.Controllers
         public async Task<ActionResult<User>>Register(RegisterDto registerDto)
         {
             if (await UserExists(registerDto.Email)) return BadRequest("Email Exist");
-            using var hmac = new HMACSHA3_512();
+            using var hmac = new HMACSHA512();
             var user = new User
             {
                 Firstname = registerDto.Firstname,
@@ -40,6 +40,29 @@ namespace E_commerce.API.Controllers
         private async Task<bool> UserExists(string Email)
         {
             return await _context.Users.AnyAsync(x => x.Email == Email);
+        }
+        [HttpPost("login")]
+        public async Task<ActionResult<UserDto>>Login(LoginDto loginDto)
+        {
+            var user = await _context.Users.SingleOrDefaultAsync(x=>x.Email==loginDto.Email);
+            if (user == null) return NotFound("Invalid Email");
+            using var hmac = new HMACSHA512(user.PasswordSalt);
+            var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(loginDto.Password));
+            for(int i = 0;i< computedHash.Length;i++)
+            {
+                if (computedHash[i] != user.PaswordHash[i]) return NotFound("Invalid password");
+            }
+            return new UserDto
+            {
+                Email = user.Email,
+                Firstname = user.Firstname,
+                LastName = user.LastName,
+                PhoneNumber = user.PhoneNumber,
+                Addresses = user.Addresses,
+                EmailConfirmed = user.EmailConfirmed,
+                Gender = user.Gender,
+                Token = _tokenService.CreateToken(user)
+            };
         }
     }
 }
