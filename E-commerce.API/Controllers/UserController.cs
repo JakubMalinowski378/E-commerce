@@ -1,5 +1,4 @@
-﻿using System.Runtime.InteropServices.Marshalling;
-using E_commerce.Domain.Entities;
+﻿using E_commerce.Domain.Entities;
 using E_commerce.Infrastructure.Persistance;
 using Microsoft.AspNetCore.Mvc;
 namespace E_commerce.API.Controllers

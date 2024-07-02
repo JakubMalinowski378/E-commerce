@@ -1,5 +1,4 @@
-﻿using E_commerce.Domain.Entities;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace E_commerce.API.Controllers
 {
