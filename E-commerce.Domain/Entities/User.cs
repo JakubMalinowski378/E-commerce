@@ -11,4 +11,5 @@ public class User
     public byte[] PasswordSalt { get; set; } = default!;
     public bool EmailConfirmed { get; set; }
     public List<Address> Addresses { get; set; } = default!;
+    public Cart Cart { get; set; } = default!;
 }
