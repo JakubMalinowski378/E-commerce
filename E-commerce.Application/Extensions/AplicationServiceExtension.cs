@@ -1,5 +1,7 @@
 ﻿using E_commerce.Application.Interfaces;
 using E_commerce.Application.Services;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -13,6 +15,7 @@ public static class AplicationServiceExtension
     public static void AddApplication(this IServiceCollection services, IConfiguration config)
     {
         var assembly = typeof(AplicationServiceExtension).Assembly;
+
         services.AddScoped<ITokenService, TokenService>();
 
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(opt =>
@@ -28,5 +31,8 @@ public static class AplicationServiceExtension
         });
 
         services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(assembly));
+
+        services.AddValidatorsFromAssembly(assembly)
+            .AddFluentValidationAutoValidation();
     }
 }
