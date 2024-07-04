@@ -3,7 +3,7 @@
 namespace E_commerce.API.Controllers;
 
 [ApiController]
-[Route("Api/[controller]")]
+[Route("api/[controller]")]
 public class BaseController : ControllerBase
 {
 }

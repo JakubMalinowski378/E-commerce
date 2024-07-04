@@ -10,6 +10,7 @@ public class User
     public byte[] PaswordHash { get; set; } = default!;
     public byte[] PasswordSalt { get; set; } = default!;
     public bool EmailConfirmed { get; set; }
-    public List<Address> Addresses { get; set; } = default!;
-    public Cart Cart { get; set; } = default!;
+    public virtual List<Address> Addresses { get; set; } = default!;
+    public virtual Cart Cart { get; set; } = default!;
+    public virtual List<Rating> Ratings { get; set; } = default!;
 }

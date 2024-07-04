@@ -2,16 +2,11 @@
 public class Rating
 {
     public Guid Id { get; set; }
-    public User User { get; set; } 
-    public DateTime DateTime { get; set; }
-    public Ratings ratings { get; set; }
-
-    public enum Ratings
-    {
-        very_bad = 1,
-        bad = 2,
-        neutral = 3,
-        good = 4,
-        very_good = 5,
-    }
+    public virtual User User { get; set; } = default!;
+    public Guid UserId { get; set; }
+    public virtual Product Product { get; set; } = default!;
+    public Guid ProductId { get; set; }
+    public DateTime AddedDate { get; set; }
+    public Ratings Rate { get; set; }
+    public string Comment { get; set; } = string.Empty!;
 }
