@@ -1,4 +1,5 @@
-﻿using E_commerce.Application.Interfaces;
+﻿using AutoMapper;
+using E_commerce.Application.Interfaces;
 using E_commerce.Application.Users.Dtos;
 using E_commerce.Domain.Entities;
 using E_commerce.Domain.Exceptions;
@@ -9,11 +10,12 @@ using System.Text;
 
 namespace E_commerce.Application.Users.Queries.LoginUser;
 
-public class LoginUserQueryHandler(IUserRepository userRepository, ITokenService tokenService)
+public class LoginUserQueryHandler(IUserRepository userRepository, ITokenService tokenService, IMapper mapper)
     : IRequestHandler<LoginUserQuery, UserDto>
 {
     private readonly IUserRepository _userRepository = userRepository;
     private readonly ITokenService _tokenService = tokenService;
+    private readonly IMapper _mapper = mapper;
 
     public async Task<UserDto> Handle(LoginUserQuery request, CancellationToken cancellationToken)
     {
@@ -28,16 +30,10 @@ public class LoginUserQueryHandler(IUserRepository userRepository, ITokenService
             if (computedHash[i] != user.PaswordHash[i])
                 throw new NotFoundException(nameof(User), request.Email);
         }
-        return new UserDto
-        {
-            Email = user.Email,
-            Firstname = user.Firstname,
-            LastName = user.LastName,
-            PhoneNumber = user.PhoneNumber,
-            Addresses = user.Addresses,
-            EmailConfirmed = user.EmailConfirmed,
-            Gender = user.Gender,
-            Token = _tokenService.CreateToken(user)
-        };
+
+        var userDto = _mapper.Map<UserDto>(user);
+        userDto.Token = _tokenService.CreateToken(user);
+
+        return userDto;
     }
 }

@@ -34,5 +34,7 @@ public static class AplicationServiceExtension
 
         services.AddValidatorsFromAssembly(assembly)
             .AddFluentValidationAutoValidation();
+
+        services.AddAutoMapper(assembly);
     }
 }
