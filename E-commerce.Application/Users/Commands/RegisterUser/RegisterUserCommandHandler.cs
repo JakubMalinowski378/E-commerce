@@ -22,7 +22,7 @@ internal class RegisterUserCommandHandler(IUserRepository userRepository, IMappe
 
         var user = _mapper.Map<User>(request);
 
-        user.PaswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(request.Pasword));
+        user.PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(request.Password));
         user.PasswordSalt = hmac.Key;
 
         await _userRepository.Create(user);

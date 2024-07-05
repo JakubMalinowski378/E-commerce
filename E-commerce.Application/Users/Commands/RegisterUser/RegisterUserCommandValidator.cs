@@ -27,7 +27,7 @@ public class RegisterUserCommandValidator : AbstractValidator<RegisterUserComman
             .NotEmpty()
             .Matches(new Regex(@"(\+48\s?)?(\d{3}[-\s]?\d{3}[-\s]?\d{3})")).WithMessage("PhoneNumber not valid");
 
-        RuleFor(x => x.Pasword)
+        RuleFor(x => x.Password)
             .NotEmpty()
             .MinimumLength(8)
             .Matches("[A-Z]").WithMessage("Password must contain at least one uppercase letter.")

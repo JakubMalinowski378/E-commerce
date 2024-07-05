@@ -27,7 +27,7 @@ public class LoginUserQueryHandler(IUserRepository userRepository, ITokenService
         var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(request.Password));
         for (int i = 0; i < computedHash.Length; i++)
         {
-            if (computedHash[i] != user.PaswordHash[i])
+            if (computedHash[i] != user.PasswordHash[i])
                 throw new NotFoundException(nameof(User), request.Email);
         }
 
