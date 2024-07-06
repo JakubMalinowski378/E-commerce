@@ -20,6 +20,14 @@ public class EcommerceDbContext(DbContextOptions<EcommerceDbContext> options) : 
             .HasMany(u => u.Addresses)
             .WithOne(a => a.User);
 
+        builder.Entity<User>()
+            .HasIndex(u => u.PhoneNumber)
+            .IsUnique();
+
+        builder.Entity<User>()
+            .HasIndex(u => u.Email)
+            .IsUnique();
+
         builder.Entity<Cart>()
             .HasOne(c => c.User)
             .WithOne(u => u.Cart)
