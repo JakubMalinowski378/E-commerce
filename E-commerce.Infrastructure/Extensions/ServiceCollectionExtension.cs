@@ -14,5 +14,6 @@ public static class ServiceCollectionExtension
             options => options.UseSqlServer(configuration.GetConnectionString("EcommerceDb")));
 
         services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IAddressRepository, AddressRepository>();
     }
 }
