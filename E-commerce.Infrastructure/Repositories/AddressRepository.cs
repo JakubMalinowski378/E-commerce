@@ -20,11 +20,11 @@ public class AddressRepository(EcommerceDbContext dbContext) : IAddressRepositor
         await _dbContext.SaveChangesAsync();
     }
 
-    public async Task<Address?> GetById(Guid id)
+    public async Task<Address?> GetByIdAsync(Guid id)
         => await _dbContext.Addresses.FirstOrDefaultAsync(a => a.Id == id);
 
 
-    public async Task<IEnumerable<Address>> GetUserAddresses(Guid userId)
+    public async Task<IEnumerable<Address>> GetUserAddressesAsync(Guid userId)
         => await _dbContext.Addresses.Where(a => a.UserId == userId).ToListAsync();
 
 

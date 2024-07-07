@@ -6,6 +6,6 @@ public interface IAddressRepository
     Task Create(Address address);
     Task SaveChanges();
     Task Delete(Address address);
-    Task<Address?> GetById(Guid id);
-    Task<IEnumerable<Address>> GetUserAddresses(Guid userId);
+    Task<Address?> GetByIdAsync(Guid id);
+    Task<IEnumerable<Address>> GetUserAddressesAsync(Guid userId);
 }
