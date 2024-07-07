@@ -11,6 +11,7 @@ public class EcommerceDbContext(DbContextOptions<EcommerceDbContext> options) : 
     public DbSet<CartItem> CartItems { get; set; }
     public DbSet<Rating> Ratings { get; set; }
     public DbSet<ProductCategory> ProductCategories { get; set; }
+    public DbSet<Role> Roles { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -27,6 +28,10 @@ public class EcommerceDbContext(DbContextOptions<EcommerceDbContext> options) : 
         builder.Entity<User>()
             .HasIndex(u => u.Email)
             .IsUnique();
+
+        builder.Entity<User>()
+            .HasMany(u => u.Roles)
+            .WithMany(r => r.Users);
 
         builder.Entity<Cart>()
             .HasOne(c => c.User)
