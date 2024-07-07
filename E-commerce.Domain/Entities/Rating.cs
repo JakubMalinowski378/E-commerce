@@ -1,4 +1,6 @@
-﻿namespace E_commerce.Domain.Entities;
+﻿using E_commerce.Domain.Constants;
+
+namespace E_commerce.Domain.Entities;
 public class Rating
 {
     public Guid Id { get; set; }
