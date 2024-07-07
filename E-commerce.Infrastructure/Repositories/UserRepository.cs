@@ -25,4 +25,14 @@ public class UserRepository(EcommerceDbContext dbContext) : IUserRepository
 
     public async Task<bool> UserExists(string email)
         => await _dbContext.Users.AnyAsync(x => x.Email == email);
+    public async Task<bool>DeleteUserAsync(Guid id)
+    {
+        var OldUser = _dbContext.Users.Find(id);
+        if (OldUser != null)
+        {
+            _dbContext.Users.Remove(OldUser);
+         await _dbContext.SaveChangesAsync();
+        }
+        return true;
+    }
 }

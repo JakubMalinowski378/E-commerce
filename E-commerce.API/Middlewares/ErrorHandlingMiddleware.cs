@@ -16,10 +16,11 @@ public class ErrorHandlingMiddleware : IMiddleware
             context.Response.StatusCode = StatusCodes.Status404NotFound;
             await context.Response.WriteAsync(notFound.Message);
         }
-        catch (Exception)
+        catch (Exception e)
         {
+
             context.Response.StatusCode = StatusCodes.Status500InternalServerError;
-            await context.Response.WriteAsync("Something went wrong");
+            await context.Response.WriteAsync("Something went wrong" + e.Message);
         }
     }
 }
