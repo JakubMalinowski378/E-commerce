@@ -2,6 +2,7 @@
 using E_commerce.Domain.Repositories;
 using E_commerce.Infrastructure.Persistance;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace E_commerce.Infrastructure.Repositories;
 public class UserRepository(EcommerceDbContext dbContext) : IUserRepository
@@ -14,15 +15,32 @@ public class UserRepository(EcommerceDbContext dbContext) : IUserRepository
         return user.Id;
     }
 
-    public async Task<User?> GetUserByIdAsync(Guid id)
-        => await _dbContext.Users.FirstOrDefaultAsync(x => x.Id == id);
+    public async Task<User?> GetUserByIdAsync(Guid id, params Expression<Func<User, object>>[] includePredicates)
+    {
+        var query = ApplyIncludes(includePredicates);
+        return await query.FirstOrDefaultAsync(x => x.Id == id);
+    }
 
-    public async Task<User?> GetUserByEmailAsync(string email)
-        => await _dbContext.Users.FirstOrDefaultAsync(x => x.Email == email);
+    public async Task<User?> GetUserByEmailAsync(string email, params Expression<Func<User, object>>[] includePredicates)
+    {
+        var query = ApplyIncludes(includePredicates);
+        return await query.FirstOrDefaultAsync(x => x.Email == email);
+    }
 
-    public async Task<IEnumerable<User>> GetUsersAsync()
-        => await _dbContext.Users.ToListAsync();
+    public async Task<IEnumerable<User>> GetUsersAsync(params Expression<Func<User, object>>[] includePredicates)
+    {
+        var query = ApplyIncludes(includePredicates);
+        return await query.ToListAsync();
+    }
 
     public async Task<bool> UserExists(string email)
         => await _dbContext.Users.AnyAsync(x => x.Email == email);
+
+    private IQueryable<User> ApplyIncludes(params Expression<Func<User, object>>[] includePredicates)
+    {
+        var query = _dbContext.Users.AsQueryable();
+        foreach (var includePredicate in includePredicates)
+            query = query.Include(includePredicate);
+        return query;
+    }
 }
