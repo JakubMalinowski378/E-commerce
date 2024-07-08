@@ -5,6 +5,7 @@ using E_commerce.Domain.Entities;
 using E_commerce.Domain.Constants;
 using System.Data;
 using System.Drawing;
+using System.Text;
 
 namespace E_commerce.Infrastructure.Seeders;
 public class EcommerceSeeders(EcommerceDbContext dbContext) : IEcommerceSeeders
@@ -76,8 +77,8 @@ public class EcommerceSeeders(EcommerceDbContext dbContext) : IEcommerceSeeders
                 .RuleFor(x => x.Email, y => y.Internet.Email())
                 .RuleFor(x => x.Gender, y => GenerateGender())
                 .RuleFor(x => x.PhoneNumber, y => y.Person.Phone)
-                .RuleFor(x => x.PasswordHash, y => GeneretePassword())
-                .RuleFor(x => x.PasswordSalt, y => GeneretePassword())
+                .RuleFor(x => x.PasswordHash, y => GeneretePassword1())
+                .RuleFor(x => x.PasswordSalt, y => GeneretePassword2())
                 .RuleFor(x => x.EmailConfirmed, y => y.Random.Bool())
                 .Generate(10);
                 
@@ -95,9 +96,17 @@ public class EcommerceSeeders(EcommerceDbContext dbContext) : IEcommerceSeeders
             return 'F';
         }
     }
-    private byte[] GeneretePassword()
+    private byte[] GeneretePassword1()
     {
-        return new byte[25];
+        string text = "PasswordToHash";
+        byte[] byteArray = Encoding.UTF8.GetBytes(text);
+        return byteArray;
+    }
+    private byte[] GeneretePassword2()
+    {
+        string text = "PasswordToSalt";
+        byte[] byteArray = Encoding.UTF8.GetBytes(text);
+        return byteArray;
     }
     private IEnumerable<Address> GetAddresses()
     {
@@ -160,7 +169,6 @@ public class EcommerceSeeders(EcommerceDbContext dbContext) : IEcommerceSeeders
     {
         string[] roleToGet = { "Admin", "User", "Guest", "Seller" };
         var roles = new Faker<Role>()
-            .RuleFor(x => x.UserId, y => Guid.NewGuid())
             .RuleFor(x => x.Name, y => y.Random.ArrayElement(roleToGet))
             .Generate(10);
         return roles;

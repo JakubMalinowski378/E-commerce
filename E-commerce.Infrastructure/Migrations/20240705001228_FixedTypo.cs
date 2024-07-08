@@ -11,7 +11,7 @@ namespace E_commerce.Infrastructure.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.RenameColumn(
-                name: "PaswordHash",
+                name: "PasswordHash",
                 table: "Users",
                 newName: "PasswordHash");
         }
@@ -22,7 +22,7 @@ namespace E_commerce.Infrastructure.Migrations
             migrationBuilder.RenameColumn(
                 name: "PasswordHash",
                 table: "Users",
-                newName: "PaswordHash");
+                newName: "PasswordHash");
         }
     }
 }

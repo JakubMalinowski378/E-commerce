@@ -1,6 +1,7 @@
 using E_commerce.API.Middlewares;
 using E_commerce.Application.Extensions;
 using E_commerce.Infrastructure.Extensions;
+using E_commerce.Infrastructure.Seeders;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -30,6 +31,10 @@ builder.Services.AddApplication(builder.Configuration);
 builder.Services.AddScoped<ErrorHandlingMiddleware>();
 
 var app = builder.Build();
+var scope = app.Services.CreateScope();
+var seeder = scope.ServiceProvider.GetRequiredService<IEcommerceSeeders>();
+
+await seeder.Seed();
 
 if (app.Environment.IsDevelopment())
 {
