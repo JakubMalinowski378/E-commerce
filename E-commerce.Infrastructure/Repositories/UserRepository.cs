@@ -1,6 +1,7 @@
 ﻿using E_commerce.Domain.Entities;
 using E_commerce.Domain.Repositories;
 using E_commerce.Infrastructure.Persistance;
+using E_commerce.Infrastructure.Seeders;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
@@ -8,6 +9,7 @@ namespace E_commerce.Infrastructure.Repositories;
 public class UserRepository(EcommerceDbContext dbContext) : IUserRepository
 {
     private readonly EcommerceDbContext _dbContext = dbContext;
+    
     public async Task<Guid> Create(User user)
     {
         _dbContext.Users.Add(user);
