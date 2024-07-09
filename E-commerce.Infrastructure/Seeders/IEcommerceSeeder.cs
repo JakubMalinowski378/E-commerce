@@ -1,5 +1,5 @@
 ﻿namespace E_commerce.Infrastructure.Seeders;
-public interface IEcommerceSeeders
+public interface IEcommerceSeeder
 {
     Task Seed();
 }

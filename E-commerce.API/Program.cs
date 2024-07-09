@@ -1,7 +1,9 @@
 using E_commerce.API.Middlewares;
 using E_commerce.Application.Extensions;
 using E_commerce.Infrastructure.Extensions;
+using E_commerce.Infrastructure.Persistance;
 using E_commerce.Infrastructure.Seeders;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -31,15 +33,21 @@ builder.Services.AddApplication(builder.Configuration);
 builder.Services.AddScoped<ErrorHandlingMiddleware>();
 
 var app = builder.Build();
-var scope = app.Services.CreateScope();
-var seeder = scope.ServiceProvider.GetRequiredService<IEcommerceSeeders>();
 
-await seeder.Seed();
+var scope = app.Services.CreateScope();
+using var dbContext = scope.ServiceProvider.GetRequiredService<EcommerceDbContext>();
+
+if ((await dbContext.Database.GetPendingMigrationsAsync()).Any())
+{
+    await dbContext.Database.MigrateAsync();
+}
 
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+    var seeder = scope.ServiceProvider.GetRequiredService<IEcommerceSeeder>();
+    await seeder.Seed();
 }
 
 app.UseMiddleware<ErrorHandlingMiddleware>();

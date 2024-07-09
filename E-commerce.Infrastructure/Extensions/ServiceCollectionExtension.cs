@@ -14,7 +14,7 @@ public static class ServiceCollectionExtension
         services.AddDbContext<EcommerceDbContext>(
             options => options.UseSqlServer(configuration.GetConnectionString("EcommerceDb")));
 
-        services.AddScoped<IEcommerceSeeders, EcommerceSeeders>();
+        services.AddScoped<IEcommerceSeeder, EcommerceSeeder>();
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IAddressRepository, AddressRepository>();
     }

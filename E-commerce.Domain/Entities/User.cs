@@ -14,4 +14,5 @@ public class User
     public virtual Cart Cart { get; set; } = default!;
     public virtual List<Rating> Ratings { get; set; } = default!;
     public virtual List<Role> Roles { get; set; } = default!;
+    public virtual List<Product> Products { get; set; } = default!;
 }

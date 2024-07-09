@@ -107,8 +107,11 @@ namespace E_commerce.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<Guid>("OwnerId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<decimal>("Price")
-                        .HasPrecision(18)
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("Quantity")
@@ -119,6 +122,8 @@ namespace E_commerce.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("OwnerId");
 
                     b.ToTable("Products");
                 });
@@ -295,7 +300,7 @@ namespace E_commerce.Infrastructure.Migrations
                     b.HasOne("E_commerce.Domain.Entities.Product", "Product")
                         .WithMany("CartItems")
                         .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Cart");
@@ -303,18 +308,29 @@ namespace E_commerce.Infrastructure.Migrations
                     b.Navigation("Product");
                 });
 
+            modelBuilder.Entity("E_commerce.Domain.Entities.Product", b =>
+                {
+                    b.HasOne("E_commerce.Domain.Entities.User", "Owner")
+                        .WithMany("Products")
+                        .HasForeignKey("OwnerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Owner");
+                });
+
             modelBuilder.Entity("E_commerce.Domain.Entities.Rating", b =>
                 {
                     b.HasOne("E_commerce.Domain.Entities.Product", "Product")
                         .WithMany("Ratings")
                         .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("E_commerce.Domain.Entities.User", "User")
                         .WithMany("Ratings")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Product");
@@ -370,6 +386,8 @@ namespace E_commerce.Infrastructure.Migrations
 
                     b.Navigation("Cart")
                         .IsRequired();
+
+                    b.Navigation("Products");
 
                     b.Navigation("Ratings");
                 });

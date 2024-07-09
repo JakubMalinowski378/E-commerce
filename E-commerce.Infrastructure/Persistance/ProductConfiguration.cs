@@ -9,17 +9,18 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
     {
         builder.HasMany(p => p.CartItems)
             .WithOne(ci => ci.Product)
-            .HasForeignKey(ci => ci.ProductId);
+            .HasForeignKey(ci => ci.ProductId)
+            .OnDelete(DeleteBehavior.Restrict);
 
         builder.HasMany(p => p.ProductCategories)
             .WithMany(pc => pc.Products);
 
         builder.HasMany(p => p.Ratings)
             .WithOne(r => r.Product)
-            .HasForeignKey(r => r.ProductId);
+            .HasForeignKey(r => r.ProductId)
+            .OnDelete(DeleteBehavior.Restrict);
 
         builder.Property(p => p.Price)
-            .HasPrecision(18)
-            .HasColumnType("decimal(18,2)");
+            .HasPrecision(18, 2);
     }
 }

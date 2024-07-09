@@ -17,7 +17,7 @@ public class EcommerceDbContext(DbContextOptions<EcommerceDbContext> options) : 
     {
         base.OnModelCreating(modelBuilder);
 
-
+        modelBuilder.ApplyConfiguration(new CartItemConfiguration());
         modelBuilder.ApplyConfiguration(new UserConfiguration());
         modelBuilder.ApplyConfiguration(new CartConfiguration());
         modelBuilder.ApplyConfiguration(new ProductConfiguration());
