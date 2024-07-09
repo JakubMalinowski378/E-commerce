@@ -16,15 +16,23 @@ public class TokenService(IConfiguration config) : ITokenService
     {
         var claims = new List<Claim>()
         {
-            new(JwtRegisteredClaimNames.NameId,user.Email)
+            new(JwtRegisteredClaimNames.NameId, user.Id.ToString()),
+            new(JwtRegisteredClaimNames.Email, user.Email)
         };
-        var creds = new SigningCredentials(_key, SecurityAlgorithms.HmacSha512Signature);
+
+        foreach (var role in user.Roles)
+        {
+            claims.Add(new Claim(ClaimTypes.Role, role.Name));
+        }
+
+        var credentials = new SigningCredentials(_key, SecurityAlgorithms.HmacSha512Signature);
         var tokenDescription = new SecurityTokenDescriptor
         {
             Subject = new ClaimsIdentity(claims),
             Expires = DateTime.UtcNow.AddDays(7),
-            SigningCredentials = creds
+            SigningCredentials = credentials
         };
+
         var handler = new JwtSecurityTokenHandler();
         var token = handler.CreateToken(tokenDescription);
         return handler.WriteToken(token);

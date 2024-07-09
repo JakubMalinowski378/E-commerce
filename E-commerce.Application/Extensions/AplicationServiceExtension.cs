@@ -26,7 +26,6 @@ public static class AplicationServiceExtension
                 IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["TokenKey"]!)),
                 ValidateIssuer = false,
                 ValidateAudience = false
-
             };
         });
 
@@ -36,5 +35,9 @@ public static class AplicationServiceExtension
             .AddFluentValidationAutoValidation();
 
         services.AddAutoMapper(assembly);
+
+        services.AddHttpContextAccessor();
+
+        services.AddScoped<IUserContext, UserContext>();
     }
 }

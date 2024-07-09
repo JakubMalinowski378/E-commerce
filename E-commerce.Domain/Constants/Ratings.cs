@@ -1,4 +1,4 @@
-﻿namespace E_commerce.Domain.Entities;
+﻿namespace E_commerce.Domain.Constants;
 public enum Ratings
 {
     VeryBad = 1,

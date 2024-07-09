@@ -10,4 +10,6 @@ public class Product
     //public List<Parameter> ParametersList { get; set; } = default!;
     public int Quantity { get; set; }
     public decimal Price { get; set; }
+    public User Owner { get; set; } = default!;
+    public Guid OwnerId { get; set; }
 }

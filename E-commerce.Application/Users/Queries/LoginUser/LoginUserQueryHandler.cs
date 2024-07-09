@@ -19,7 +19,7 @@ public class LoginUserQueryHandler(IUserRepository userRepository, ITokenService
 
     public async Task<UserDto> Handle(LoginUserQuery request, CancellationToken cancellationToken)
     {
-        var user = await _userRepository.GetUserByEmailAsync(request.Email);
+        var user = await _userRepository.GetUserByEmailAsync(request.Email, u => u.Roles);
         if (user == null)
             throw new NotFoundException(nameof(User), request.Email);
 

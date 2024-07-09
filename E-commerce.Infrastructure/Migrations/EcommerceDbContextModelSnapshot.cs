@@ -39,6 +39,10 @@ namespace E_commerce.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Street")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("StreetNumber")
                         .HasColumnType("int");
 
@@ -103,8 +107,11 @@ namespace E_commerce.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<Guid>("OwnerId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<decimal>("Price")
-                        .HasPrecision(18)
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("Quantity")
@@ -115,6 +122,8 @@ namespace E_commerce.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("OwnerId");
 
                     b.ToTable("Products");
                 });
@@ -165,6 +174,21 @@ namespace E_commerce.Infrastructure.Migrations
                     b.ToTable("Ratings");
                 });
 
+            modelBuilder.Entity("E_commerce.Domain.Entities.Role", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Roles");
+                });
+
             modelBuilder.Entity("E_commerce.Domain.Entities.User", b =>
                 {
                     b.Property<Guid>("Id")
@@ -173,7 +197,7 @@ namespace E_commerce.Infrastructure.Migrations
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
@@ -200,9 +224,15 @@ namespace E_commerce.Infrastructure.Migrations
 
                     b.Property<string>("PhoneNumber")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Email")
+                        .IsUnique();
+
+                    b.HasIndex("PhoneNumber")
+                        .IsUnique();
 
                     b.ToTable("Users");
                 });
@@ -220,6 +250,21 @@ namespace E_commerce.Infrastructure.Migrations
                     b.HasIndex("ProductsId");
 
                     b.ToTable("ProductProductCategory");
+                });
+
+            modelBuilder.Entity("RoleUser", b =>
+                {
+                    b.Property<Guid>("RolesId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("UsersId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("RolesId", "UsersId");
+
+                    b.HasIndex("UsersId");
+
+                    b.ToTable("RoleUser");
                 });
 
             modelBuilder.Entity("E_commerce.Domain.Entities.Address", b =>
@@ -255,7 +300,7 @@ namespace E_commerce.Infrastructure.Migrations
                     b.HasOne("E_commerce.Domain.Entities.Product", "Product")
                         .WithMany("CartItems")
                         .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Cart");
@@ -263,18 +308,29 @@ namespace E_commerce.Infrastructure.Migrations
                     b.Navigation("Product");
                 });
 
+            modelBuilder.Entity("E_commerce.Domain.Entities.Product", b =>
+                {
+                    b.HasOne("E_commerce.Domain.Entities.User", "Owner")
+                        .WithMany("Products")
+                        .HasForeignKey("OwnerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Owner");
+                });
+
             modelBuilder.Entity("E_commerce.Domain.Entities.Rating", b =>
                 {
                     b.HasOne("E_commerce.Domain.Entities.Product", "Product")
                         .WithMany("Ratings")
                         .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("E_commerce.Domain.Entities.User", "User")
                         .WithMany("Ratings")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Product");
@@ -297,6 +353,21 @@ namespace E_commerce.Infrastructure.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("RoleUser", b =>
+                {
+                    b.HasOne("E_commerce.Domain.Entities.Role", null)
+                        .WithMany()
+                        .HasForeignKey("RolesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("E_commerce.Domain.Entities.User", null)
+                        .WithMany()
+                        .HasForeignKey("UsersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("E_commerce.Domain.Entities.Cart", b =>
                 {
                     b.Navigation("CartItems");
@@ -315,6 +386,8 @@ namespace E_commerce.Infrastructure.Migrations
 
                     b.Navigation("Cart")
                         .IsRequired();
+
+                    b.Navigation("Products");
 
                     b.Navigation("Ratings");
                 });
