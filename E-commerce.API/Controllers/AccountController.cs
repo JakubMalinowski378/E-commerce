@@ -1,6 +1,5 @@
 ﻿using E_commerce.Application.Users.Commands.DeleteUser;
 using E_commerce.Application.Users.Commands.RegisterUser;
-using E_commerce.Application.Users.Commands.UpdateUser;
 using E_commerce.Application.Users.Dtos;
 using E_commerce.Application.Users.Queries.LoginUser;
 using MediatR;
@@ -24,11 +23,11 @@ public class AccountController(ISender sender) : BaseController
         var userDto = await _sender.Send(loginUserQuery);
         return Ok(userDto);
     }
-    [HttpDelete]
-    public async Task<ActionResult<Guid>>Delete(DeleteUserCommand deleteUserCommand)
-    {
-        var deletedUser = await _sender.Send(deleteUserCommand);
-        return Ok(deletedUser);
-    }
 
+    [HttpDelete("{userId}")]
+    public async Task<ActionResult> Delete([FromRoute] Guid userId)
+    {
+        await _sender.Send(new DeleteUserCommand(userId));
+        return NoContent();
+    }
 }

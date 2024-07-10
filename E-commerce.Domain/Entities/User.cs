@@ -11,7 +11,7 @@ public class User
     public byte[] PasswordSalt { get; set; } = default!;
     public bool EmailConfirmed { get; set; }
     public virtual List<Address> Addresses { get; set; } = default!;
-    public virtual Cart Cart { get; set; } = default!;
+    public virtual List<CartItem> CartItems { get; set; } = default!;
     public virtual List<Rating> Ratings { get; set; } = default!;
     public virtual List<Role> Roles { get; set; } = default!;
     public virtual List<Product> Products { get; set; } = default!;

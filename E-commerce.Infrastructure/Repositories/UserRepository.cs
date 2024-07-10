@@ -1,7 +1,6 @@
 ﻿using E_commerce.Domain.Entities;
 using E_commerce.Domain.Repositories;
 using E_commerce.Infrastructure.Persistance;
-using E_commerce.Infrastructure.Seeders;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
@@ -9,7 +8,7 @@ namespace E_commerce.Infrastructure.Repositories;
 public class UserRepository(EcommerceDbContext dbContext) : IUserRepository
 {
     private readonly EcommerceDbContext _dbContext = dbContext;
-    
+
     public async Task<Guid> Create(User user)
     {
         _dbContext.Users.Add(user);
@@ -37,15 +36,24 @@ public class UserRepository(EcommerceDbContext dbContext) : IUserRepository
 
     public async Task<bool> UserExists(string email)
         => await _dbContext.Users.AnyAsync(x => x.Email == email);
-    public async Task<bool>DeleteUserAsync(Guid id)
+
+    public async Task DeleteUser(User user)
     {
-        var OldUser = _dbContext.Users.Find(id);
-        if (OldUser != null)
+        foreach (var product in user.Products)
         {
-            _dbContext.Users.Remove(OldUser);
-         await _dbContext.SaveChangesAsync();
+            await dbContext.Entry(product).Collection(p => p.CartItems).LoadAsync();
+            await dbContext.Entry(product).Collection(p => p.Ratings).LoadAsync();
+
+            dbContext.CartItems.RemoveRange(product.CartItems);
+            dbContext.Ratings.RemoveRange(product.Ratings);
         }
-        return true;
+        dbContext.CartItems.RemoveRange(user.CartItems);
+        dbContext.Ratings.RemoveRange(user.Ratings);
+        dbContext.Products.RemoveRange(user.Products);
+
+        dbContext.Users.Remove(user);
+
+        await dbContext.SaveChangesAsync();
     }
 
     private IQueryable<User> ApplyIncludes(params Expression<Func<User, object>>[] includePredicates)

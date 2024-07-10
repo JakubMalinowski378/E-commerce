@@ -1,9 +1,7 @@
 ﻿using MediatR;
 
-namespace E_commerce.Application.Users.Commands.DeleteUser
+namespace E_commerce.Application.Users.Commands.DeleteUser;
+public class DeleteUserCommand(Guid userId) : IRequest
 {
-    public class DeleteUserCommand(Guid userId) : IRequest<Guid>
-    {
-        public Guid UserId { get; set; } = userId;
-    }
+    public Guid UserId { get; set; } = userId;
 }

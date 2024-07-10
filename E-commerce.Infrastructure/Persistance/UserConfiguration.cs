@@ -20,15 +20,5 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
 
         builder.HasMany(u => u.Roles)
             .WithMany(r => r.Users);
-
-        builder.HasMany(u => u.Products)
-            .WithOne(p => p.Owner)
-            .HasForeignKey(p => p.OwnerId)
-            .OnDelete(DeleteBehavior.Cascade);
-
-        builder.HasMany(u => u.Ratings)
-            .WithOne(r => r.User)
-            .HasForeignKey(r => r.UserId)
-            .OnDelete(DeleteBehavior.Restrict);
     }
 }

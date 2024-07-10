@@ -27,7 +27,6 @@ public class AddressRepository(EcommerceDbContext dbContext) : IAddressRepositor
     public async Task<IEnumerable<Address>> GetUserAddressesAsync(Guid userId)
         => await _dbContext.Addresses.Where(a => a.UserId == userId).ToListAsync();
 
-
     public async Task SaveChanges()
     {
         await _dbContext.SaveChangesAsync();

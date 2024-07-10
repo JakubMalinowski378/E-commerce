@@ -1,22 +1,22 @@
-﻿using E_commerce.Domain.Repositories;
+﻿using E_commerce.Domain.Entities;
+using E_commerce.Domain.Exceptions;
+using E_commerce.Domain.Repositories;
 using MediatR;
 
-namespace E_commerce.Application.Users.Commands.DeleteUser
+namespace E_commerce.Application.Users.Commands.DeleteUser;
+public class DeleteUserCommandHandler(IUserRepository userRepository) : IRequestHandler<DeleteUserCommand>
 {
-    public class DeleteUserCommandHandler :IRequestHandler<DeleteUserCommand,Guid>
+    private readonly IUserRepository _userRepository = userRepository;
+
+    public async Task Handle(DeleteUserCommand request, CancellationToken cancellationToken)
     {
+        var user = await _userRepository.GetUserByIdAsync(request.UserId,
+            u => u.CartItems,
+            u => u.Ratings,
+            u => u.Products);
+        if (user == null)
+            throw new NotFoundException(nameof(User), request.UserId.ToString());
 
-        private IUserRepository _userRepository;
-        public DeleteUserCommandHandler(IUserRepository userRepository)
-        {
-            _userRepository = userRepository;
-        }
-        public async Task<Guid>Handle(DeleteUserCommand request,CancellationToken cancel)
-        {
-            await _userRepository.DeleteUserAsync(request.UserId);
-            return request.UserId;
-        }
-
-        
+        await _userRepository.DeleteUser(user);
     }
 }

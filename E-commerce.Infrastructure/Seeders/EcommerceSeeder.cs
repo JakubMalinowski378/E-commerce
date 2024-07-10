@@ -44,7 +44,6 @@ public class EcommerceSeeder(EcommerceDbContext dbContext) : IEcommerceSeeder
 
                     var roleIndex = Random.Shared.Next(roles.Length);
                     users[i].Roles = [roles[roleIndex]];
-                    users[i].Cart = new();
                 }
 
                 _dbContext.Addresses.AddRange(addresses);
@@ -73,8 +72,8 @@ public class EcommerceSeeder(EcommerceDbContext dbContext) : IEcommerceSeeder
             if (!_dbContext.CartItems.Any())
             {
                 var productIds = _dbContext.Products.Select(x => x.Id).ToArray();
-                var cartIds = _dbContext.Carts.Select(x => x.Id).ToArray();
-                var cartItems = GetCartItems(productIds, cartIds);
+                var userIds = _dbContext.Users.Select(x => x.Id).ToArray();
+                var cartItems = GetCartItems(productIds, userIds);
                 _dbContext.CartItems.AddRange(cartItems);
                 await _dbContext.SaveChangesAsync();
             }
@@ -131,11 +130,11 @@ public class EcommerceSeeder(EcommerceDbContext dbContext) : IEcommerceSeeder
         return products;
     }
 
-    private static IEnumerable<CartItem> GetCartItems(IEnumerable<Guid> productIds, IEnumerable<Guid> cartIds)
+    private static IEnumerable<CartItem> GetCartItems(IEnumerable<Guid> productIds, IEnumerable<Guid> userIds)
     {
         var cartItems = new Faker<CartItem>(Locale)
-            .RuleFor(x => x.CartId, y => y.PickRandom(cartIds))
             .RuleFor(x => x.ProductId, y => y.PickRandom(productIds))
+            .RuleFor(x => x.UserId, y => y.PickRandom(userIds))
             .RuleFor(x => x.Quantity, y => y.Random.Int(1, 80))
             .Generate(200);
         return cartItems;

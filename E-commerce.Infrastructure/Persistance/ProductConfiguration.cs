@@ -7,18 +7,13 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
 {
     public void Configure(EntityTypeBuilder<Product> builder)
     {
-        builder.HasMany(p => p.CartItems)
-            .WithOne(ci => ci.Product)
-            .HasForeignKey(ci => ci.ProductId)
-            .OnDelete(DeleteBehavior.Restrict);
+        builder.HasOne(p => p.Owner)
+            .WithMany(u => u.Products)
+            .HasForeignKey(p => p.OwnerId)
+            .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasMany(p => p.ProductCategories)
             .WithMany(pc => pc.Products);
-
-        builder.HasMany(p => p.Ratings)
-            .WithOne(r => r.Product)
-            .HasForeignKey(r => r.ProductId)
-            .OnDelete(DeleteBehavior.Restrict);
 
         builder.Property(p => p.Price)
             .HasPrecision(18, 2);

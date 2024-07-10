@@ -56,30 +56,10 @@ namespace E_commerce.Infrastructure.Migrations
                     b.ToTable("Addresses");
                 });
 
-            modelBuilder.Entity("E_commerce.Domain.Entities.Cart", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId")
-                        .IsUnique();
-
-                    b.ToTable("Carts");
-                });
-
             modelBuilder.Entity("E_commerce.Domain.Entities.CartItem", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("CartId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("ProductId")
@@ -88,11 +68,14 @@ namespace E_commerce.Infrastructure.Migrations
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("CartId");
-
                     b.HasIndex("ProductId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("CartItems");
                 });
@@ -278,34 +261,23 @@ namespace E_commerce.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("E_commerce.Domain.Entities.Cart", b =>
-                {
-                    b.HasOne("E_commerce.Domain.Entities.User", "User")
-                        .WithOne("Cart")
-                        .HasForeignKey("E_commerce.Domain.Entities.Cart", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("E_commerce.Domain.Entities.CartItem", b =>
                 {
-                    b.HasOne("E_commerce.Domain.Entities.Cart", "Cart")
-                        .WithMany("CartItems")
-                        .HasForeignKey("CartId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("E_commerce.Domain.Entities.Product", "Product")
                         .WithMany("CartItems")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("Cart");
+                    b.HasOne("E_commerce.Domain.Entities.User", "User")
+                        .WithMany("CartItems")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Product");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("E_commerce.Domain.Entities.Product", b =>
@@ -324,7 +296,7 @@ namespace E_commerce.Infrastructure.Migrations
                     b.HasOne("E_commerce.Domain.Entities.Product", "Product")
                         .WithMany("Ratings")
                         .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("E_commerce.Domain.Entities.User", "User")
@@ -368,11 +340,6 @@ namespace E_commerce.Infrastructure.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("E_commerce.Domain.Entities.Cart", b =>
-                {
-                    b.Navigation("CartItems");
-                });
-
             modelBuilder.Entity("E_commerce.Domain.Entities.Product", b =>
                 {
                     b.Navigation("CartItems");
@@ -384,8 +351,7 @@ namespace E_commerce.Infrastructure.Migrations
                 {
                     b.Navigation("Addresses");
 
-                    b.Navigation("Cart")
-                        .IsRequired();
+                    b.Navigation("CartItems");
 
                     b.Navigation("Products");
 
