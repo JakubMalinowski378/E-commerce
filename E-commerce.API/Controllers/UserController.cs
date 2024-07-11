@@ -20,7 +20,7 @@ public class UserController(ISender sender) : BaseController
         var users = await _sender.Send(new GetUsersQuery());
         return Ok(users);
     }
-
+    [Authorize]
     [HttpGet("{id}")]
     public async Task<ActionResult<UserDto>> GetUser(Guid id)
     {

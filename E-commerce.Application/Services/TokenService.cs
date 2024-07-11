@@ -10,7 +10,7 @@ namespace E_commerce.Application.Services;
 
 public class TokenService(IConfiguration config) : ITokenService
 {
-    public readonly SymmetricSecurityKey _key = new(Encoding.UTF8.GetBytes(config["TokenKey"]!));
+    public readonly SymmetricSecurityKey _key = new(Encoding.UTF8.GetBytes(config["TokenKey"] ?? throw new Exception("token key was not found")));
 
     public string CreateToken(User user)
     {
@@ -28,9 +28,11 @@ public class TokenService(IConfiguration config) : ITokenService
         var credentials = new SigningCredentials(_key, SecurityAlgorithms.HmacSha512Signature);
         var tokenDescription = new SecurityTokenDescriptor
         {
+           
             Subject = new ClaimsIdentity(claims),
             Expires = DateTime.UtcNow.AddDays(7),
-            SigningCredentials = credentials
+            SigningCredentials = credentials,
+           
         };
 
         var handler = new JwtSecurityTokenHandler();

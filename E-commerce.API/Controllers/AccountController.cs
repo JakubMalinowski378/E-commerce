@@ -3,6 +3,7 @@ using E_commerce.Application.Users.Commands.RegisterUser;
 using E_commerce.Application.Users.Dtos;
 using E_commerce.Application.Users.Queries.LoginUser;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace E_commerce.API.Controllers;
@@ -23,7 +24,7 @@ public class AccountController(ISender sender) : BaseController
         var userDto = await _sender.Send(loginUserQuery);
         return Ok(userDto);
     }
-
+    [Authorize]
     [HttpDelete("{userId}")]
     public async Task<ActionResult> Delete([FromRoute] Guid userId)
     {
