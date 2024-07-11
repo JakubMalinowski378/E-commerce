@@ -1,5 +1,6 @@
 ﻿using E_commerce.Application.Users.Commands.DeleteUser;
 using E_commerce.Application.Users.Commands.RegisterUser;
+using E_commerce.Application.Users.Commands.UpdatePassword;
 using E_commerce.Application.Users.Dtos;
 using E_commerce.Application.Users.Queries.LoginUser;
 using MediatR;
@@ -29,6 +30,13 @@ public class AccountController(ISender sender) : BaseController
     public async Task<ActionResult> Delete([FromRoute] Guid userId)
     {
         await _sender.Send(new DeleteUserCommand(userId));
+        return NoContent();
+    }
+    [Authorize]
+    [HttpPut]
+    public async Task<ActionResult> UpdatePassword(UpdatePasswordCommand updatePasswordCommand)
+    {
+        await _sender.Send(updatePasswordCommand);
         return NoContent();
     }
 }

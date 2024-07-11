@@ -55,6 +55,11 @@ public class UserRepository(EcommerceDbContext dbContext) : IUserRepository
 
         await dbContext.SaveChangesAsync();
     }
+    public async Task UpdateUser(User user)
+    {
+        _dbContext.Users.Update(user);
+        await dbContext.SaveChangesAsync();
+    }
 
     private IQueryable<User> ApplyIncludes(params Expression<Func<User, object>>[] includePredicates)
     {
