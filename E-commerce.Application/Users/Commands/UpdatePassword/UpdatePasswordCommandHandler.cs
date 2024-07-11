@@ -2,23 +2,20 @@
 using E_commerce.Domain.Exceptions;
 using E_commerce.Domain.Repositories;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace E_commerce.Application.Users.Commands.UpdatePassword
 {
-    public class UpdatePasswordHandler(IUserRepository userRepository):IRequestHandler<UpdatePasswordCommand>
+    public class UpdatePasswordCommandHandler(IUserRepository userRepository) : IRequestHandler<UpdatePasswordCommand>
     {
         private readonly IUserRepository _userRepository = userRepository;
 
         public async Task Handle(UpdatePasswordCommand request, CancellationToken cancellationToken)
         {
             var user = await _userRepository.GetUserByEmailAsync(request.Email);
-            if (user == null) { 
+            if (user == null)
+            {
                 throw new NotFoundException(nameof(User), request.Email);
             }
             var hmac = new HMACSHA512(user.PasswordSalt);
