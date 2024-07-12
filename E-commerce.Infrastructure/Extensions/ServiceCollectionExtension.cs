@@ -17,5 +17,6 @@ public static class ServiceCollectionExtension
         services.AddScoped<IEcommerceSeeder, EcommerceSeeder>();
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IAddressRepository, AddressRepository>();
+        services.AddScoped<IRolesRepository, RolesRepository>();
     }
 }

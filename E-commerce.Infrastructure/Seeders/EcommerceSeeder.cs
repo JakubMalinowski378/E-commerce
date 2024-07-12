@@ -165,7 +165,7 @@ public class EcommerceSeeder(EcommerceDbContext dbContext) : IEcommerceSeeder
         return
         [
             new(){ Name = "User"},
-            new(){ Name = "Guest"},
+            new(){ Name = "Salesman"},
             new(){ Name = "Manager"},
             new(){ Name = "Admin"}
         ];
