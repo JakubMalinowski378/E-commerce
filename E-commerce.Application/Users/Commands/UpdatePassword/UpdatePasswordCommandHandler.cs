@@ -6,7 +6,6 @@ using System.Security.Cryptography;
 using System.Text;
 
 namespace E_commerce.Application.Users.Commands.UpdatePassword;
-
 public class UpdatePasswordCommandHandler(IUserRepository userRepository) : IRequestHandler<UpdatePasswordCommand>
 {
     private readonly IUserRepository _userRepository = userRepository;

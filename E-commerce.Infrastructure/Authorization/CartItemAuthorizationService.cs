@@ -1,4 +1,5 @@
 ﻿using E_commerce.Application.Interfaces;
+using E_commerce.Domain.Constants;
 using E_commerce.Domain.Entities;
 using E_commerce.Domain.Interfaces;
 
@@ -11,7 +12,7 @@ public class CartItemAuthorizationService(IUserContext userContext) : ICartItemA
     {
         var user = _userContext.GetCurrentUser();
 
-        if (cartItem.UserId == user!.Id || user.IsInRole("Admin"))
+        if (cartItem.UserId == user!.Id || user.IsInRole(UserRoles.Admin))
         {
             return true;
         }

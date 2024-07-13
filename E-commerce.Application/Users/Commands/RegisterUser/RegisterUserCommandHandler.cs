@@ -7,11 +7,12 @@ using System.Security.Cryptography;
 using System.Text;
 
 namespace E_commerce.Application.Users.Commands.RegisterUser;
-public class RegisterUserCommandHandler(IUserRepository userRepository, IMapper mapper)
+public class RegisterUserCommandHandler(IUserRepository userRepository, IRolesRepository rolesRepository, IMapper mapper)
     : IRequestHandler<RegisterUserCommand, Guid>
 {
     private readonly IUserRepository _userRepository = userRepository;
     private readonly IMapper _mapper = mapper;
+    private readonly IRolesRepository _rolesRepository = rolesRepository;
 
     public async Task<Guid> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
     {

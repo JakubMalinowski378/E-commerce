@@ -2,6 +2,7 @@
 using E_commerce.Domain.Repositories;
 using E_commerce.Infrastructure.Persistance;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace E_commerce.Infrastructure.Repositories;
 
@@ -15,8 +16,21 @@ public class ProductsRepository(EcommerceDbContext dbContext) : IProductsReposit
         await dbContext.SaveChangesAsync();
         return product.Id;
     }
+
     public async Task<IEnumerable<Product>> GetProductsAsync()
         => await _dbContext.Products.ToListAsync();
-    public async Task<Product?> GetProductByIdAsync(Guid id)
-        => await _dbContext.Products.FirstOrDefaultAsync(x => x.Id == id);
+
+    public async Task<Product?> GetProductByIdAsync(Guid id, params Expression<Func<Product, object>>[] includePredicates)
+    {
+        var query = ApplyIncludes(includePredicates);
+        return await query.FirstOrDefaultAsync(x => x.Id == id);
+    }
+
+    private IQueryable<Product> ApplyIncludes(params Expression<Func<Product, object>>[] includePredicates)
+    {
+        var query = _dbContext.Products.AsQueryable();
+        foreach (var includePredicate in includePredicates)
+            query = query.Include(includePredicate);
+        return query;
+    }
 }

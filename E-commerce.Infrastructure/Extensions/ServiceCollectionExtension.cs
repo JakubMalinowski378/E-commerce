@@ -22,5 +22,6 @@ public static class ServiceCollectionExtension
         services.AddScoped<IProductsRepository, ProductsRepository>();
         services.AddScoped<ICartItemRepository, CartItemRepository>();
         services.AddScoped<ICartItemAuthorizationService, CartItemAuthorizationService>();
+        services.AddScoped<IRolesRepository, RolesRepository>();
     }
 }
