@@ -25,6 +25,7 @@ public class AccountController(ISender sender) : BaseController
         var userDto = await _sender.Send(loginUserQuery);
         return Ok(userDto);
     }
+
     [Authorize]
     [HttpDelete("{userId}")]
     public async Task<ActionResult> Delete([FromRoute] Guid userId)
@@ -32,6 +33,7 @@ public class AccountController(ISender sender) : BaseController
         await _sender.Send(new DeleteUserCommand(userId));
         return NoContent();
     }
+
     [Authorize]
     [HttpPut]
     public async Task<ActionResult> UpdatePassword(UpdatePasswordCommand updatePasswordCommand)

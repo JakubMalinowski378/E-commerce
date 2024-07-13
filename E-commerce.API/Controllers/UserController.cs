@@ -20,6 +20,7 @@ public class UserController(ISender sender) : BaseController
         var users = await _sender.Send(new GetUsersQuery());
         return Ok(users);
     }
+
     [Authorize]
     [HttpGet("{id}")]
     public async Task<ActionResult<UserDto>> GetUser(Guid id)
@@ -40,6 +41,6 @@ public class UserController(ISender sender) : BaseController
     public async Task<ActionResult> CreateAddress(CreateAddressCommand createAddressCommand)
     {
         var addressId = await _sender.Send(createAddressCommand);
-        return CreatedAtAction(nameof(GetAddressById), new { addressId = addressId }, null);
+        return CreatedAtAction(nameof(GetAddressById), new { addressId }, null);
     }
 }

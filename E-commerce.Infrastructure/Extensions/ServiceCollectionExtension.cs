@@ -1,4 +1,6 @@
-﻿using E_commerce.Domain.Repositories;
+﻿using E_commerce.Domain.Interfaces;
+using E_commerce.Domain.Repositories;
+using E_commerce.Infrastructure.Authorization;
 using E_commerce.Infrastructure.Persistance;
 using E_commerce.Infrastructure.Repositories;
 using E_commerce.Infrastructure.Seeders;
@@ -17,5 +19,8 @@ public static class ServiceCollectionExtension
         services.AddScoped<IEcommerceSeeder, EcommerceSeeder>();
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IAddressRepository, AddressRepository>();
+        services.AddScoped<IProductsRepository, ProductsRepository>();
+        services.AddScoped<ICartItemRepository, CartItemRepository>();
+        services.AddScoped<ICartItemAuthorizationService, CartItemAuthorizationService>();
     }
 }
