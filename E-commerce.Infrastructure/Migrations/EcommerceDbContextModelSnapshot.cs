@@ -305,6 +305,7 @@ namespace E_commerce.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+
                     b.Navigation("Product");
 
                     b.Navigation("User");

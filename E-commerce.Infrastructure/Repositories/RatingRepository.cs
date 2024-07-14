@@ -9,8 +9,7 @@ public class RatingRepository(EcommerceDbContext context) : IRatingRepository
     private readonly EcommerceDbContext _context = context;
     public async Task CreateRating(Rating rating)
     {
-        //var user = await _context.Users.Include(r => r.Ratings).FirstOrDefaultAsync(r => r.Id == rating.UserId);
-        //user.Ratings.Add(rating);
+
         _context.Ratings.Add(rating);
         await _context.SaveChangesAsync();
     }
@@ -24,22 +23,19 @@ public class RatingRepository(EcommerceDbContext context) : IRatingRepository
 
     public async Task<Rating> GetRatingById(Guid id)
     {
-        return await _context.Ratings.FirstOrDefaultAsync(x => x.Id == id);
+        var rating = await _context.Ratings.FirstOrDefaultAsync(x => x.Id == id);
+        return rating;
     }
+
+
+
+    public async Task<Rating> GetRatingByUserIdAndProductId(Guid userId, Guid ProductId)
+    => await _context.Ratings.FirstOrDefaultAsync(x => x.UserId == userId && x.ProductId == ProductId);
 
     public async Task<IEnumerable<Rating>> GetRatings()
     => await _context.Ratings.ToListAsync();
 
-    public async Task<IEnumerable<Rating>> GetRatingsByProductId(Guid id)
-    => await _context.Ratings.Where(x => x.ProductId == id).ToListAsync();
-
-    public async Task<IEnumerable<Rating>> GetRatingsByUserId(Guid id)
-    => await _context.Ratings.Where(x => x.UserId == id).ToListAsync();
+    public Task SaveChanges() => _context.SaveChangesAsync();
 
 
-    public async Task UppdateRating(Rating rating)
-    {
-        _context.Ratings.Update(rating);
-        await _context.SaveChangesAsync();
-    }
 }
