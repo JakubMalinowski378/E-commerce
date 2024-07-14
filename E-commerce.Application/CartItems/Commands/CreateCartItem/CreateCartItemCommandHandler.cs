@@ -7,13 +7,13 @@ using MediatR;
 
 namespace E_commerce.Application.CartItems.Commands.CreateCartItem;
 public class CreateCartItemCommandHandler(ICartItemRepository cartItemRepository,
-    IProductsRepository productsRepository,
+    IProductRepository productsRepository,
     IUserContext userContext,
     IMapper mapper)
     : IRequestHandler<CreateCartItemCommand>
 {
     private readonly ICartItemRepository _cartItemRepository = cartItemRepository;
-    private readonly IProductsRepository _productsRepository = productsRepository;
+    private readonly IProductRepository _productsRepository = productsRepository;
     private readonly IUserContext _userContext = userContext;
     private readonly IMapper _mapper = mapper;
 

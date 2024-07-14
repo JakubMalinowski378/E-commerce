@@ -6,11 +6,11 @@ using E_commerce.Domain.Repositories;
 using MediatR;
 
 namespace E_commerce.Application.Products.Queries.GetProductByIdQuery;
-public class GetProductByIdQueryHandler(IProductsRepository productsRepository,
+public class GetProductByIdQueryHandler(IProductRepository productsRepository,
     IMapper mapper)
     : IRequestHandler<GetProductByIdQuery, ProductDto>
 {
-    private readonly IProductsRepository _productsRepository = productsRepository;
+    private readonly IProductRepository _productsRepository = productsRepository;
     private readonly IMapper _mapper = mapper;
 
     public async Task<ProductDto> Handle(GetProductByIdQuery request, CancellationToken cancellationToken)

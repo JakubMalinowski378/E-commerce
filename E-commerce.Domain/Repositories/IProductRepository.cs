@@ -3,7 +3,7 @@ using System.Linq.Expressions;
 
 namespace E_commerce.Domain.Repositories;
 
-public interface IProductsRepository
+public interface IProductRepository
 {
     Task<Product?> GetProductByIdAsync(Guid id, params Expression<Func<Product, object>>[] includePredicates);
     Task<IEnumerable<Product>> GetProductsAsync();

@@ -8,21 +8,21 @@ using Microsoft.AspNetCore.Mvc;
 namespace E_commerce.API.Controllers;
 
 [Authorize]
-public class CartItemController(IMediator mediator) : BaseController
+public class CartItemController(ISender sender) : BaseController
 {
-    private readonly IMediator _mediator = mediator;
+    private readonly ISender _sender = sender;
 
     [HttpPost]
     public async Task<ActionResult> CreateCartItem(CreateCartItemCommand createCartItemCommand)
     {
-        await _mediator.Send(createCartItemCommand);
+        await _sender.Send(createCartItemCommand);
         return NoContent();
     }
 
     [HttpGet("{userId}")]
     public async Task<ActionResult<IEnumerable<CartItemDto>>> GetUserCartItems(Guid userId)
     {
-        var cartItems = await _mediator.Send(new GetUserCartItemsQuery(userId));
+        var cartItems = await _sender.Send(new GetUserCartItemsQuery(userId));
         return Ok(cartItems);
     }
 }

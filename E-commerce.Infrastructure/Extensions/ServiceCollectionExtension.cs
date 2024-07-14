@@ -19,10 +19,11 @@ public static class ServiceCollectionExtension
         services.AddScoped<IEcommerceSeeder, EcommerceSeeder>();
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IAddressRepository, AddressRepository>();
-        services.AddScoped<IProductsRepository, ProductsRepository>();
+        services.AddScoped<IProductRepository, ProductRepository>();
         services.AddScoped<ICartItemRepository, CartItemRepository>();
         services.AddScoped<ICartItemAuthorizationService, CartItemAuthorizationService>();
         services.AddScoped<IRolesRepository, RolesRepository>();
         services.AddScoped<IRatingRepository, RatingRepository>();
+        services.AddScoped<IProductCategoryRepository, ProductCategoryRepository>();
     }
 }
