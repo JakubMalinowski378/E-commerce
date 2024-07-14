@@ -6,9 +6,9 @@ using System.Linq.Expressions;
 
 namespace E_commerce.Infrastructure.Repositories;
 
-public class ProductsRepository(EcommerceDbContext dbContext) : IProductsRepository
+public class ProductRepository(EcommerceDbContext dbContext) : IProductRepository
 {
-    private readonly EcommerceDbContext _dbContext = dbContext!;
+    private readonly EcommerceDbContext _dbContext = dbContext;
 
     public async Task<Guid> Create(Product product)
     {
