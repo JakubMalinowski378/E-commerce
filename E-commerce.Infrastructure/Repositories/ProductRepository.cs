@@ -33,4 +33,13 @@ public class ProductRepository(EcommerceDbContext dbContext) : IProductRepositor
             query = query.Include(includePredicate);
         return query;
     }
+
+    public async Task Delete(Product product)
+    {
+        _dbContext.Products.Remove(product);
+        await _dbContext.SaveChangesAsync();
+    }
+
+    public Task SaveChanges()
+        => _dbContext.SaveChangesAsync();
 }

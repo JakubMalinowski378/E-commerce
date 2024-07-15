@@ -25,5 +25,6 @@ public static class ServiceCollectionExtension
         services.AddScoped<IRolesRepository, RolesRepository>();
         services.AddScoped<IRatingRepository, RatingRepository>();
         services.AddScoped<IProductCategoryRepository, ProductCategoryRepository>();
+        services.AddScoped<IProductAuthorizationService, ProductAuthorizationService>();
     }
 }
