@@ -14,9 +14,9 @@ public class AccountController(ISender sender) : BaseController
     public readonly ISender _sender = sender;
 
     [HttpPost("register")]
-    public async Task<ActionResult<Guid>> Register(RegisterUserCommand registerUserCommand)
+    public async Task<ActionResult<Guid>> Register(RegisterUserCommand command)
     {
-        return Ok(await _sender.Send(registerUserCommand));
+        return Ok(await _sender.Send(command));
     }
 
     [HttpPost("login")]
@@ -36,9 +36,9 @@ public class AccountController(ISender sender) : BaseController
 
     [Authorize]
     [HttpPut]
-    public async Task<ActionResult> UpdatePassword(UpdatePasswordCommand updatePasswordCommand)
+    public async Task<ActionResult> UpdatePassword(UpdatePasswordCommand command)
     {
-        await _sender.Send(updatePasswordCommand);
+        await _sender.Send(command);
         return NoContent();
     }
 }

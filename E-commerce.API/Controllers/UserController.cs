@@ -8,8 +8,8 @@ using E_commerce.Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-namespace E_commerce.API.Controllers;
 
+namespace E_commerce.API.Controllers;
 public class UserController(ISender sender) : BaseController
 {
     private readonly ISender _sender = sender;
@@ -38,9 +38,9 @@ public class UserController(ISender sender) : BaseController
 
     [Authorize]
     [HttpPost("address")]
-    public async Task<ActionResult> CreateAddress(CreateAddressCommand createAddressCommand)
+    public async Task<ActionResult> CreateAddress(CreateAddressCommand command)
     {
-        var addressId = await _sender.Send(createAddressCommand);
+        var addressId = await _sender.Send(command);
         return CreatedAtAction(nameof(GetAddressById), new { addressId }, null);
     }
 }

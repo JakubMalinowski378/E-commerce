@@ -83,12 +83,12 @@ public class EcommerceSeeder(EcommerceDbContext dbContext) : IEcommerceSeeder
     private static List<User> GetUsers(int count)
     {
         var (passwordHash, passwordSalt) = GeneratePassword("Password#123");
-
+        char[] availableGenders = ['F', 'M'];
         var users = new Faker<User>(Locale)
                 .RuleFor(x => x.Firstname, y => y.Name.FirstName())
                 .RuleFor(x => x.LastName, y => y.Name.LastName())
                 .RuleFor(x => x.Email, y => y.Internet.Email())
-                .RuleFor(x => x.Gender, y => y.Random.Char('F', 'M'))
+                .RuleFor(x => x.Gender, y => y.PickRandom(availableGenders))
                 .RuleFor(x => x.PhoneNumber, y => y.Person.Phone)
                 .RuleFor(x => x.PasswordHash, _ => passwordHash)
                 .RuleFor(x => x.PasswordSalt, _ => passwordSalt)

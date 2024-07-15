@@ -14,9 +14,9 @@ public class RatingController(ISender sender) : BaseController
 {
     private readonly ISender _sender = sender;
     [HttpPost]
-    public async Task<ActionResult> CreateRating(CreateRatingCommand createRatingCommand)
+    public async Task<ActionResult> CreateRating(CreateRatingCommand command)
     {
-        await _sender.Send(createRatingCommand);
+        await _sender.Send(command);
         return NoContent();
     }
 
@@ -42,10 +42,10 @@ public class RatingController(ISender sender) : BaseController
         return NoContent();
     }
 
-    [HttpPut]
-    public async Task<ActionResult> UpdateRating(UpdateRatingCommand updateRatingCommand)
+    [HttpPatch]
+    public async Task<ActionResult> UpdateRating(UpdateRatingCommand command)
     {
-        await _sender.Send(updateRatingCommand);
+        await _sender.Send(command);
         return NoContent();
     }
 }

@@ -20,9 +20,9 @@ public class ProductController(ISender sender) : BaseController
 
     [HttpPost]
     [Authorize]
-    public async Task<ActionResult> CreateProduct(CreateProductCommand createProductCommand)
+    public async Task<ActionResult> CreateProduct(CreateProductCommand command)
     {
-        var productId = await _sender.Send(createProductCommand);
+        var productId = await _sender.Send(command);
         return CreatedAtAction(nameof(GetProduct), new { productId }, null);
     }
 }
