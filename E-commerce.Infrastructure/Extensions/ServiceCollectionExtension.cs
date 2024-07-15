@@ -1,9 +1,11 @@
-﻿using E_commerce.Domain.Interfaces;
+﻿using E_commerce.Application.Interfaces;
+using E_commerce.Domain.Interfaces;
 using E_commerce.Domain.Repositories;
 using E_commerce.Infrastructure.Authorization;
 using E_commerce.Infrastructure.Persistance;
 using E_commerce.Infrastructure.Repositories;
 using E_commerce.Infrastructure.Seeders;
+using E_commerce.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -25,5 +27,8 @@ public static class ServiceCollectionExtension
         services.AddScoped<IRolesRepository, RolesRepository>();
         services.AddScoped<IRatingRepository, RatingRepository>();
         services.AddScoped<IProductCategoryRepository, ProductCategoryRepository>();
+        //email config
+        services.Configure<SmtpSettings>(configuration.GetSection("SmtpSettings"));
+        services.AddTransient<IEmailSender, EmailSender>();
     }
 }
