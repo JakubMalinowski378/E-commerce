@@ -19,12 +19,14 @@ public class RatingController(ISender sender) : BaseController
         await _sender.Send(createRatingCommand);
         return NoContent();
     }
+
     [HttpGet("{id}")]
     public async Task<ActionResult<RatingDto>> GetRatingById(Guid id)
     {
         var rating = await _sender.Send(new GetRatingByIdQuery(id));
         return Ok(rating);
     }
+
     [AllowAnonymous]
     [HttpGet]
     public async Task<ActionResult<IEnumerable<RatingDto>>> GetRatings()
@@ -32,14 +34,15 @@ public class RatingController(ISender sender) : BaseController
         var ratings = await _sender.Send(new GetRatingsQuary());
         return Ok(ratings);
     }
+
     [HttpDelete]
     public async Task<ActionResult> DeleteRating(Guid id)
     {
         await _sender.Send(new DeleteRatingCommand(id));
         return NoContent();
     }
-    [HttpPut]
 
+    [HttpPut]
     public async Task<ActionResult> UpdateRating(UpdateRatingCommand updateRatingCommand)
     {
         await _sender.Send(updateRatingCommand);

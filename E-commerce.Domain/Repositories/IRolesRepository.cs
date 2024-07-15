@@ -3,5 +3,5 @@
 namespace E_commerce.Domain.Repositories;
 public interface IRolesRepository
 {
-    public Task<Role> GetRole(string roleName);
+    public Task<Role?> GetRole(string roleName);
 }

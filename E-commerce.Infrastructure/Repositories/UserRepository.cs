@@ -6,14 +6,15 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
 namespace E_commerce.Infrastructure.Repositories;
-public class UserRepository(EcommerceDbContext dbContext, IRolesRepository rolesRepository) : IUserRepository
+public class UserRepository(EcommerceDbContext dbContext,
+    IRolesRepository rolesRepository)
+    : IUserRepository
 {
     private readonly EcommerceDbContext _dbContext = dbContext;
     private readonly IRolesRepository _rolesRepository = rolesRepository;
 
     public async Task<Guid> Create(User user)
     {
-
         var role = await _rolesRepository.GetRole(UserRoles.User);
         user.Roles = new List<Role> { role };
         _dbContext.Users.Add(user);
@@ -60,6 +61,7 @@ public class UserRepository(EcommerceDbContext dbContext, IRolesRepository roles
 
         await dbContext.SaveChangesAsync();
     }
+
     public async Task UpdateUser(User user)
     {
         _dbContext.Users.Update(user);

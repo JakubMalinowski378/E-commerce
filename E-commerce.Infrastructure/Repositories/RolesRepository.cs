@@ -8,7 +8,7 @@ public class RolesRepository(EcommerceDbContext context) : IRolesRepository
 {
     private readonly EcommerceDbContext _dbContext = context;
 
-    public async Task<Role> GetRole(string RoleName)
-        => await _dbContext.Roles.FirstOrDefaultAsync(x => x.Name == RoleName);
-
+    public async Task<Role?> GetRole(string RoleName)
+        => await _dbContext.Roles
+        .FirstOrDefaultAsync(x => x.Name == RoleName);
 }

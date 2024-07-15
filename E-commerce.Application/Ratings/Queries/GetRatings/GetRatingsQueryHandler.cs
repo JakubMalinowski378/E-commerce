@@ -11,7 +11,7 @@ public class GetRatingsQueryHandler(IRatingRepository ratingRepository, IMapper 
     public async Task<IEnumerable<RatingDto>> Handle(GetRatingsQuary request, CancellationToken cancellationToken)
     {
         var ratings = await _ratingRepository.GetRatings();
-        List<RatingDto> ratingsDtos = new List<RatingDto>();
+        var ratingsDtos = new List<RatingDto>();
         foreach (var rating in ratings)
         {
             var ratingDto = _mapper.Map<RatingDto>(rating);

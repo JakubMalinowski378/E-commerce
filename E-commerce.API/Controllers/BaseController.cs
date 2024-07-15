@@ -7,4 +7,3 @@ namespace E_commerce.API.Controllers;
 public class BaseController : ControllerBase
 {
 }
-

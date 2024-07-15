@@ -17,19 +17,17 @@ public static class AplicationServiceExtension
         var assembly = typeof(AplicationServiceExtension).Assembly;
 
         services.AddScoped<ITokenService, TokenService>();
-        
+
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(opt =>
         {
-            
-
             var tokenKey = config["TokenKey"] ?? throw new Exception("Token key was not found");
-        opt.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateIssuerSigningKey = true,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenKey)),
-            ValidateIssuer = false,
-            ValidateAudience = false
-            
+            opt.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenKey)),
+                ValidateIssuer = false,
+                ValidateAudience = false
+
             };
         });
         services.AddAuthorization();

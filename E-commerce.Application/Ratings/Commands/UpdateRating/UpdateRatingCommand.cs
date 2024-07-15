@@ -6,5 +6,5 @@ public class UpdateRatingCommand : IRequest
     public Guid UserId { get; set; }
     public Guid ProductId { get; set; }
     public int Rate { get; set; }
-    public string Comment { get; set; }
+    public string Comment { get; set; } = string.Empty;
 }

@@ -18,6 +18,5 @@ public class CreateRatingCommandHandler(IMapper mapper, IRatingRepository rating
         rating.UserId = user!.Id;
         rating.AddedDate = DateTime.UtcNow;
         await _ratingRepository.CreateRating(rating);
-
     }
 }

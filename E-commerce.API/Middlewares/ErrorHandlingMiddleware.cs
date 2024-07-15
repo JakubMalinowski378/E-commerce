@@ -1,5 +1,4 @@
-﻿
-using E_commerce.Domain.Exceptions;
+﻿using E_commerce.Domain.Exceptions;
 
 namespace E_commerce.API.Middlewares;
 
