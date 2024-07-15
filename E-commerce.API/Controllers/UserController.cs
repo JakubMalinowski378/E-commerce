@@ -1,7 +1,9 @@
 ﻿using E_commerce.Application.Addresses.Commands.CreateAddress;
 using E_commerce.Application.Addresses.Commands.Dtos;
 using E_commerce.Application.Addresses.Queries.GetAddressById;
+using E_commerce.Application.Ratings.Dtos;
 using E_commerce.Application.Users.Dtos;
+using E_commerce.Application.Users.Queries.GetAllRatingsOfUser;
 using E_commerce.Application.Users.Queries.GetUserById;
 using E_commerce.Application.Users.Queries.GetUsers;
 using E_commerce.Domain.Entities;
@@ -42,5 +44,11 @@ public class UserController(ISender sender) : BaseController
     {
         var addressId = await _sender.Send(createAddressCommand);
         return CreatedAtAction(nameof(GetAddressById), new { addressId }, null);
+    }
+    [HttpGet("ratings/{id}")]
+    public async Task<ActionResult<IEnumerable<RatingDto>>> GetAllRatingsOfUser(Guid id)
+    {
+        var ratings = await _sender.Send(new GetAllRatingsOfUserQuery(id));
+        return Ok(ratings);
     }
 }

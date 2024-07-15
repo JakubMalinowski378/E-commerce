@@ -3,10 +3,10 @@
 namespace E_commerce.Domain.Repositories;
 public interface IRatingRepository
 {
-    public Task CreateRating(Rating rating);
-    public Task DeleteRating(Rating rating);
-    public Task<Rating?> GetRatingById(Guid id);
-    public Task<IEnumerable<Rating>> GetRatings();
-    public Task SaveChanges();
-    public Task<Rating?> GetRatingByUserIdAndProductId(Guid userId, Guid ProductId);
+    Task CreateRating(Rating rating);
+    Task DeleteRating(Rating rating);
+    Task<Rating?> GetRatingById(Guid id);
+    Task<IEnumerable<Rating>> GetRatings();
+    Task SaveChanges();
+    Task<Rating?> GetRatingByUserIdAndProductId(Guid userId, Guid ProductId);
 }

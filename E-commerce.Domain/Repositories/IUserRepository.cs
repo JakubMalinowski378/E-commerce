@@ -11,4 +11,5 @@ public interface IUserRepository
     Task<User?> GetUserByEmailAsync(string email, params Expression<Func<User, object>>[] includePredicates);
     Task DeleteUser(User user);
     Task UpdateUser(User user);
+    Task<IEnumerable<Rating>?> GetAllRatingsOfUser(Guid id);
 }
