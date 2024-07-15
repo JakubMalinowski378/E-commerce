@@ -75,4 +75,14 @@ public class UserRepository(EcommerceDbContext dbContext,
             query = query.Include(includePredicate);
         return query;
     }
+
+    public async Task<IEnumerable<Rating>?> GetAllRatingsOfUser(Guid id)
+    {
+        var user = await _dbContext.Users.Include(x => x.Ratings).FirstOrDefaultAsync(x => x.Id == id);
+        if (user == null)
+        {
+            return null;
+        }
+        return user.Ratings;
+    }
 }
