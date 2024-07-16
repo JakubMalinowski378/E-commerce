@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using E_commerce.Application.Products.Commands.CreateProductCommand;
+using E_commerce.Application.Products.Commands.UpdateProductCommand;
 using E_commerce.Domain.Entities;
 
 namespace E_commerce.Application.Products.Dtos;
@@ -12,5 +13,6 @@ public class ProductProfile : Profile
             opt => opt.MapFrom(src => src.ProductCategories.Select(x => x.CategoryName)));
 
         CreateMap<CreateProductCommand, Product>();
+        CreateMap<UpdateProductCommand, Product>();
     }
 }
