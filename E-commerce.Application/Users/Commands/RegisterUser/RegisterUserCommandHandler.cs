@@ -29,9 +29,9 @@ public class RegisterUserCommandHandler(IEmailSender emailSender, IUserRepositor
         user.EmailConfirmed = false;
         user.ConfirmationToken = Guid.NewGuid().ToString();
         user.ConfirmationTokenExpiration = DateTime.UtcNow.AddDays(1);
-        var tempraryAppLinkt = "";
-        var confirmationLink = $"{tempraryAppLinkt}/confirm-email?token={user.ConfirmationToken}&email={user.Email}";
-        var message = $"Please confirm your email by clicking on the following link: <a href='{confirmationLink}'>Confirm Email</a>";
+        var tempraryAppLinkt = "https://localhost:7202";
+        var confirmationLink = $"{tempraryAppLinkt}/api/Mail/confirm-email?token={user.ConfirmationToken}&email={user.Email}";
+        var message = $"Please confirm your email by clicking on the following link: <a href='{confirmationLink}'>Confirm Email .</a>";
 
         await _emailSender.SendEmailAsync(user.Email, "Confirm your email", message);
         await _userRepository.Create(user);
