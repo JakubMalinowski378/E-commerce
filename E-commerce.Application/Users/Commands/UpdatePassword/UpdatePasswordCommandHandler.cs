@@ -25,6 +25,6 @@ public class UpdatePasswordCommandHandler(IUserRepository userRepository) : IReq
                 throw new NotFoundException(nameof(User), request.Email);
         }
         user.PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(request.NewPassword));
-        await _userRepository.UpdateUser(user);
+        await _userRepository.SaveUserAsync();
     }
 }

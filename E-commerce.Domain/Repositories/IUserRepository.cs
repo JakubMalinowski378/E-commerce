@@ -10,6 +10,7 @@ public interface IUserRepository
     Task<bool> UserExists(string email);
     Task<User?> GetUserByEmailAsync(string email, params Expression<Func<User, object>>[] includePredicates);
     Task DeleteUser(User user);
-    Task UpdateUser(User user);
+    Task SaveUserAsync();
     Task<IEnumerable<Rating>?> GetAllRatingsOfUser(Guid id);
+    Task<User?> GetUserByConfirmationTokenAsync(string token);
 }

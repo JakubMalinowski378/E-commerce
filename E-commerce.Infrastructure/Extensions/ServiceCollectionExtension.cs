@@ -26,6 +26,7 @@ public static class ServiceCollectionExtension
         services.AddScoped<ICartItemAuthorizationService, CartItemAuthorizationService>();
         services.AddScoped<IRolesRepository, RolesRepository>();
         services.AddScoped<IRatingRepository, RatingRepository>();
+        services.AddScoped<IProductAuthorizationService, ProductAuthorizationService>();
         services.AddScoped<IProductCategoryRepository, ProductCategoryRepository>();
         //email config
         services.Configure<SmtpSettings>(configuration.GetSection("SmtpSettings"));

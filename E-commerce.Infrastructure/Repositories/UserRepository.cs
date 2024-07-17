@@ -62,11 +62,7 @@ public class UserRepository(EcommerceDbContext dbContext,
         await dbContext.SaveChangesAsync();
     }
 
-    public async Task UpdateUser(User user)
-    {
-        _dbContext.Users.Update(user);
-        await dbContext.SaveChangesAsync();
-    }
+
 
     private IQueryable<User> ApplyIncludes(params Expression<Func<User, object>>[] includePredicates)
     {
@@ -85,4 +81,10 @@ public class UserRepository(EcommerceDbContext dbContext,
         }
         return user.Ratings;
     }
+
+    public async Task<User?> GetUserByConfirmationTokenAsync(string token)
+    => await _dbContext.Users.FirstOrDefaultAsync(x => x.ConfirmationToken == token);
+
+    public async Task SaveUserAsync()
+    => await _dbContext.SaveChangesAsync();
 }
