@@ -33,7 +33,7 @@ public class CreateProductCommandHandler(IProductCategoryRepository productCateg
         }
 
         var user = _userContext.GetCurrentUser();
-        product.OwnerId = user!.Id;
+        product.UserId = user!.Id;
         product.ProductCategories = categories;
 
         await _productRepository.Create(product);

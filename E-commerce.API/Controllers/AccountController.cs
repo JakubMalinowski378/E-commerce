@@ -1,4 +1,4 @@
-﻿using E_commerce.Application.Users.Commands.DeleteUser;
+﻿using E_commerce.Application.Email.ConfirmEmail.Commands;
 using E_commerce.Application.Users.Commands.RegisterUser;
 using E_commerce.Application.Users.Commands.UpdatePassword;
 using E_commerce.Application.Users.Dtos;
@@ -27,18 +27,18 @@ public class AccountController(ISender sender) : BaseController
     }
 
     [Authorize]
-    [HttpDelete("{userId}")]
-    public async Task<ActionResult> Delete([FromRoute] Guid userId)
-    {
-        await _sender.Send(new DeleteUserCommand(userId));
-        return NoContent();
-    }
-
-    [Authorize]
-    [HttpPut]
+    [HttpPatch("update-password")]
     public async Task<ActionResult> UpdatePassword(UpdatePasswordCommand command)
     {
         await _sender.Send(command);
         return NoContent();
+    }
+
+    [HttpGet("confirm-email")]
+    public async Task<IActionResult> ConfirmEmail([FromQuery] string token, [FromQuery] string email)
+    {
+        var command = new ConfirmEmailCommand(token, email);
+        await _sender.Send(command);
+        return Ok("Email confirmed successfully.");
     }
 }

@@ -19,16 +19,19 @@ public static class ServiceCollectionExtension
             options => options.UseSqlServer(configuration.GetConnectionString("EcommerceDb")));
 
         services.AddScoped<IEcommerceSeeder, EcommerceSeeder>();
+
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IAddressRepository, AddressRepository>();
         services.AddScoped<IProductRepository, ProductRepository>();
         services.AddScoped<ICartItemRepository, CartItemRepository>();
-        services.AddScoped<ICartItemAuthorizationService, CartItemAuthorizationService>();
         services.AddScoped<IRolesRepository, RolesRepository>();
         services.AddScoped<IRatingRepository, RatingRepository>();
-        services.AddScoped<IProductAuthorizationService, ProductAuthorizationService>();
         services.AddScoped<IProductCategoryRepository, ProductCategoryRepository>();
-        //email config
+
+        services.AddScoped<ICartItemAuthorizationService, CartItemAuthorizationService>();
+        services.AddScoped<IProductAuthorizationService, ProductAuthorizationService>();
+        services.AddScoped<IAddressAuthorizationService, AddressAuthorizationService>();
+
         services.Configure<SmtpSettings>(configuration.GetSection("SmtpSettings"));
         services.AddTransient<IEmailSender, EmailSender>();
     }

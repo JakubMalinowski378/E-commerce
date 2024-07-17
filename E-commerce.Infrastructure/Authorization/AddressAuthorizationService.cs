@@ -4,29 +4,21 @@ using E_commerce.Domain.Entities;
 using E_commerce.Domain.Interfaces;
 
 namespace E_commerce.Infrastructure.Authorization;
-public class ProductAuthorizationService(IUserContext userContext)
-    : IProductAuthorizationService
+public class AddressAuthorizationService(IUserContext userContext) : IAddressAuthorizationService
 {
     private readonly IUserContext _userContext = userContext;
 
-    public bool Authorize(Product product, ResourceOperation resourceOperation)
+    public bool Authorize(Address address, ResourceOperation resourceOperation)
     {
         var user = _userContext.GetCurrentUser();
-
         if (resourceOperation == ResourceOperation.Create
-            && (user!.IsInRole(UserRoles.Salesman) || user!.IsInRole(UserRoles.Admin)))
+            && (user!.Id == address.UserId || user!.IsInRole(UserRoles.Admin)))
         {
             return true;
         }
 
         if (resourceOperation == ResourceOperation.Delete
-            && (product.UserId == user!.Id || user.IsInRole(UserRoles.Admin)))
-        {
-            return true;
-        }
-
-        if (resourceOperation == ResourceOperation.Update
-            && (product.UserId == user!.Id || user!.IsInRole(UserRoles.Admin)))
+            && (user!.Id == address.UserId || user!.IsInRole(UserRoles.Admin)))
         {
             return true;
         }

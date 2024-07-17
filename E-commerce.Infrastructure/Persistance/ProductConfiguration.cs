@@ -7,9 +7,9 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
 {
     public void Configure(EntityTypeBuilder<Product> builder)
     {
-        builder.HasOne(p => p.Owner)
+        builder.HasOne(p => p.User)
             .WithMany(u => u.Products)
-            .HasForeignKey(p => p.OwnerId)
+            .HasForeignKey(p => p.UserId)
             .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasMany(p => p.ProductCategories)

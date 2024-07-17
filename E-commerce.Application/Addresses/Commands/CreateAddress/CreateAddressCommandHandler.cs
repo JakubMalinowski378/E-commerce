@@ -1,27 +1,28 @@
 ﻿using AutoMapper;
-using E_commerce.Application.Interfaces;
+using E_commerce.Domain.Constants;
 using E_commerce.Domain.Entities;
+using E_commerce.Domain.Exceptions;
+using E_commerce.Domain.Interfaces;
 using E_commerce.Domain.Repositories;
 using MediatR;
 
 namespace E_commerce.Application.Addresses.Commands.CreateAddress;
 public class CreateAddressCommandHandler(IAddressRepository addressRepository,
     IMapper mapper,
-    IUserContext userContext)
+    IAddressAuthorizationService addressAuthorizationService)
     : IRequestHandler<CreateAddressCommand, Guid>
 {
     private readonly IAddressRepository _addressRepository = addressRepository;
     private readonly IMapper _mapper = mapper;
-    private readonly IUserContext _userContext = userContext;
+    private readonly IAddressAuthorizationService _addressAuthorizationService = addressAuthorizationService;
 
     public async Task<Guid> Handle(CreateAddressCommand request, CancellationToken cancellationToken)
     {
-        var user = _userContext.GetCurrentUser();
-
         var address = _mapper.Map<Address>(request);
-
-        address.UserId = user!.Id;
-
+        if (!_addressAuthorizationService.Authorize(address, ResourceOperation.Create))
+        {
+            throw new ForbidException();
+        }
         await _addressRepository.Create(address);
         return address.Id;
     }

@@ -7,6 +7,7 @@ public interface IProductRepository
 {
     Task<Product?> GetProductByIdAsync(Guid id, params Expression<Func<Product, object>>[] includePredicates);
     Task<IEnumerable<Product>> GetProductsAsync();
+    Task<IEnumerable<Product>> GetUserProducts(Guid userId);
     Task<Guid> Create(Product product);
     Task Delete(Product product);
     Task SaveChanges();
