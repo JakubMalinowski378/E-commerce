@@ -83,11 +83,9 @@ public class UserRepository(EcommerceDbContext dbContext,
     public async Task<User?> GetUserByConfirmationTokenAsync(string token)
         => await _dbContext.Users.FirstOrDefaultAsync(x => x.ConfirmationToken == token);
 
-    public async Task SaveUserAsync()
+    public async Task SaveChanges()
         => await _dbContext.SaveChangesAsync();
 
-    public Task UpdateUser(User user)
-    {
-        throw new NotImplementedException();
-    }
+    public async Task<User?> GetUserByResetPasswordTokenAsync(string token)
+        => await _dbContext.Users.SingleOrDefaultAsync(x => x.ResetPasswordToken == token);
 }

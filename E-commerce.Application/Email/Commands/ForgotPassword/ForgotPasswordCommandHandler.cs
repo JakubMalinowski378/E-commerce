@@ -21,6 +21,6 @@ public class ForgotPasswordCommandHandler(IEmailSender emailSender, IUserReposit
         var message = $"Your reset password code is {user.ResetPasswordToken}";
 
         await _emailSender.SendEmailAsync(user.Email, "Reset Password", message);
-        await _userRepository.SaveUserAsync();
+        await _userRepository.SaveChanges();
     }
 }

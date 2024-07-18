@@ -43,12 +43,14 @@ public class AccountController(ISender sender) : BaseController
         await _sender.Send(new ConfirmEmailCommand(token));
         return Ok("Email confirmed successfully.");
     }
+
     [HttpGet("forgot-password/{email}")]
     public async Task<IActionResult> ForgotPassword(string email)
     {
         await _sender.Send(new ForgotPasswordCommand(email));
         return Ok("Password reset successfully");
     }
+
     [HttpPost("reset-pasword")]
     public async Task<IActionResult> ResetPasswor([FromQuery] string token, [FromBody] string password)
     {

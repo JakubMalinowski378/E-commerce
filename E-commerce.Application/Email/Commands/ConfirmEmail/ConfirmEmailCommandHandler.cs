@@ -13,6 +13,6 @@ public class ConfirmEmailCommandHandler(IUserRepository userRepository) : IReque
         user.EmailConfirmed = true;
         user.ConfirmationTokenExpiration = null;
         user.ConfirmationToken = null;
-        await _userRepository.SaveUserAsync();
+        await _userRepository.SaveChanges();
     }
 }
