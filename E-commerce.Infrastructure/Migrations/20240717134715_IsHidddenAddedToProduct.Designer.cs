@@ -4,6 +4,7 @@ using E_commerce.Infrastructure.Persistance;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace E_commerce.Infrastructure.Migrations
 {
     [DbContext(typeof(EcommerceDbContext))]
-    partial class EcommerceDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240717134715_IsHidddenAddedToProduct")]
+    partial class IsHidddenAddedToProduct
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -182,7 +185,7 @@ namespace E_commerce.Infrastructure.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("ConfirmationToken")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("ConfirmationTokenExpiration")
                         .HasColumnType("datetime2");
@@ -221,27 +224,13 @@ namespace E_commerce.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("ResetPasswordToken")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime?>("ResetPasswordTokenExpiration")
-                        .HasColumnType("datetime2");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("ConfirmationToken")
-                        .IsUnique()
-                        .HasFilter("[ConfirmationToken] IS NOT NULL");
 
                     b.HasIndex("Email")
                         .IsUnique();
 
                     b.HasIndex("PhoneNumber")
                         .IsUnique();
-
-                    b.HasIndex("ResetPasswordToken")
-                        .IsUnique()
-                        .HasFilter("[ResetPasswordToken] IS NOT NULL");
 
                     b.ToTable("Users");
                 });

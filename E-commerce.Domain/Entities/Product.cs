@@ -7,9 +7,9 @@ public class Product
     public virtual List<CartItem> CartItems { get; set; } = default!;
     public virtual List<ProductCategory> ProductCategories { get; set; } = default!;
     public List<Rating> Ratings { get; set; } = default!;
-    //public List<Parameter> ParametersList { get; set; } = default!;
     public int Quantity { get; set; }
     public decimal Price { get; set; }
-    public User Owner { get; set; } = default!;
-    public Guid OwnerId { get; set; }
+    public bool IsHidden { get; set; }
+    public User User { get; set; } = default!;
+    public Guid UserId { get; set; }
 }

@@ -25,11 +25,9 @@ public class LoginUserQueryHandler(IUserRepository userRepository, ITokenService
 
         using var hmac = new HMACSHA512(user.PasswordSalt);
         var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(request.Password));
-        for (int i = 0; i < computedHash.Length; i++)
-        {
-            if (computedHash[i] != user.PasswordHash[i])
-                throw new NotFoundException(nameof(User), request.Email);
-        }
+
+        if (!computedHash.SequenceEqual(user.PasswordHash))
+            throw new NotFoundException(nameof(User), request.Email);
 
         var userDto = _mapper.Map<UserDto>(user);
         userDto.Token = _tokenService.CreateToken(user);

@@ -124,7 +124,7 @@ public class EcommerceSeeder(EcommerceDbContext dbContext) : IEcommerceSeeder
             .RuleFor(x => x.Supplier, y => y.Company.CompanyName())
             .RuleFor(x => x.Quantity, y => y.Random.Int(0, 1000))
             .RuleFor(x => x.Price, y => y.Random.Decimal(1, 200))
-            .RuleFor(x => x.OwnerId, y => y.PickRandom(usersId))
+            .RuleFor(x => x.UserId, y => y.PickRandom(usersId))
             .RuleFor(x => x.ProductCategories, y => y.PickRandom(productCategories, Random.Shared.Next(1, 5)).ToList())
             .Generate(count);
         return products;

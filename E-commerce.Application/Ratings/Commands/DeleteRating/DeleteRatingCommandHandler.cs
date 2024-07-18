@@ -9,9 +9,8 @@ public class DeleteRatingCommandHandler(IRatingRepository ratingRepository) : IR
     public readonly IRatingRepository _ratingRepository = ratingRepository;
     public async Task Handle(DeleteRatingCommand request, CancellationToken cancellationToken)
     {
-        var rating = await _ratingRepository.GetRatingById(request.Id);
-        if (rating == null)
-            throw new NotFoundException(nameof(Rating), request.Id.ToString());
+        var rating = await _ratingRepository.GetRatingById(request.RatingId)
+            ?? throw new NotFoundException(nameof(Rating), request.RatingId.ToString());
         await _ratingRepository.DeleteRating(rating);
     }
 }

@@ -1,7 +1,7 @@
 ﻿using MediatR;
 
 namespace E_commerce.Application.Ratings.Commands.DeleteRating;
-public class DeleteRatingCommand(Guid id) : IRequest
+public class DeleteRatingCommand(Guid ratingId) : IRequest
 {
-    public readonly Guid Id = id;
+    public readonly Guid RatingId = ratingId;
 }

@@ -16,7 +16,7 @@ public class UserRepository(EcommerceDbContext dbContext,
     public async Task<Guid> Create(User user)
     {
         var role = await _rolesRepository.GetRole(UserRoles.User);
-        user.Roles = new List<Role> { role! };
+        user.Roles = [role!];
         _dbContext.Users.Add(user);
         await _dbContext.SaveChangesAsync();
         return user.Id;
@@ -62,8 +62,6 @@ public class UserRepository(EcommerceDbContext dbContext,
         await _dbContext.SaveChangesAsync();
     }
 
-
-
     private IQueryable<User> ApplyIncludes(params Expression<Func<User, object>>[] includePredicates)
     {
         var query = _dbContext.Users.AsQueryable();
@@ -83,10 +81,13 @@ public class UserRepository(EcommerceDbContext dbContext,
     }
 
     public async Task<User?> GetUserByConfirmationTokenAsync(string token)
-    => await _dbContext.Users.FirstOrDefaultAsync(x => x.ConfirmationToken == token);
-    public async Task<User?> GetUserByResetPasswordTokenAsync(string token)
-   => await _dbContext.Users.FirstOrDefaultAsync(x => x.ResetPasswordToken == token);
+        => await _dbContext.Users.FirstOrDefaultAsync(x => x.ConfirmationToken == token);
 
     public async Task SaveUserAsync()
-    => await _dbContext.SaveChangesAsync();
+        => await _dbContext.SaveChangesAsync();
+
+    public Task UpdateUser(User user)
+    {
+        throw new NotImplementedException();
+    }
 }

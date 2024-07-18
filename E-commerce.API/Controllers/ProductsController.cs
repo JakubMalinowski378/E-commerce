@@ -3,14 +3,16 @@ using E_commerce.Application.Products.Commands.DeleteProductCommand;
 using E_commerce.Application.Products.Commands.UpdateProductCommand;
 using E_commerce.Application.Products.Dtos;
 using E_commerce.Application.Products.Queries.GetProductByIdQuery;
+using E_commerce.Application.Ratings.Commands.CreateRating;
+using E_commerce.Application.Ratings.Dtos;
+using E_commerce.Application.Ratings.Queries.GetProductRatings;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace E_commerce.API.Controllers;
-
 [Authorize]
-public class ProductController(ISender sender) : BaseController
+public class ProductsController(ISender sender) : BaseController
 {
     private readonly ISender _sender = sender;
 
@@ -42,5 +44,21 @@ public class ProductController(ISender sender) : BaseController
         command.ProductId = productId;
         await _sender.Send(command);
         return NoContent();
+    }
+
+    [HttpPost("{productId}/ratings")]
+    public async Task<ActionResult> CreateRating([FromRoute] Guid productId, CreateRatingCommand command)
+    {
+        command.ProductId = productId;
+        await _sender.Send(command);
+        return NoContent();
+    }
+
+    [AllowAnonymous]
+    [HttpGet("{productId}/ratings")]
+    public async Task<ActionResult<IEnumerable<RatingDto>>> GetProductRatings([FromRoute] Guid productId)
+    {
+        var ratings = await _sender.Send(new GetProductRatingsQuery(productId));
+        return Ok(ratings);
     }
 }

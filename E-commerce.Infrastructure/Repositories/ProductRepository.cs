@@ -40,6 +40,9 @@ public class ProductRepository(EcommerceDbContext dbContext) : IProductRepositor
         await _dbContext.SaveChangesAsync();
     }
 
-    public async Task SaveChanges()
-        => await _dbContext.SaveChangesAsync();
+    public Task SaveChanges()
+        => _dbContext.SaveChangesAsync();
+
+    public async Task<IEnumerable<Product>> GetUserProducts(Guid userId)
+        => await _dbContext.Products.Where(x => x.UserId == userId).ToListAsync();
 }
