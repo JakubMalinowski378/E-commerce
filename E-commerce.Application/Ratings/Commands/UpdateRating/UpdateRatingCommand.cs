@@ -7,5 +7,5 @@ public class UpdateRatingCommand(Guid ratingId) : IRequest
     [JsonIgnore]
     public Guid RatingId { get; set; } = ratingId;
     public int Rate { get; set; }
-    public string Comment { get; set; } = string.Empty;
+    public string? Comment { get; set; } = string.Empty;
 }

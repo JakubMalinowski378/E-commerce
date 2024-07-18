@@ -14,9 +14,8 @@ public class ForgotPasswordCommandHandler(IEmailSender emailSender, IUserReposit
     public async Task Handle(ForgotPasswordCommand request, CancellationToken cancellationToken)
     {
         var user = await _userRepository.GetUserByEmailAsync(request.Email)
-        ?? throw new NotFoundException(nameof(User), request.Email);
-        var token = Guid.NewGuid().ToString();
-        user.ResetPasswordToken = token;
+            ?? throw new NotFoundException(nameof(User), request.Email);
+        user.ResetPasswordToken = Guid.NewGuid().ToString();
         user.ResetPasswordTokenExpiration = DateTime.UtcNow.AddHours(3);
         var message = $"Your reset password code is {user.ResetPasswordToken}";
 

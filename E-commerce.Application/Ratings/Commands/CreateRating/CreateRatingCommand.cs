@@ -7,5 +7,5 @@ public class CreateRatingCommand : IRequest
     [JsonIgnore]
     public Guid ProductId { get; set; }
     public int Rate { get; set; }
-    public string Comment { get; set; } = string.Empty;
+    public string? Comment { get; set; } = string.Empty;
 }
