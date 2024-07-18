@@ -16,7 +16,7 @@ public class UserRepository(EcommerceDbContext dbContext,
     public async Task<Guid> Create(User user)
     {
         var role = await _rolesRepository.GetRole(UserRoles.User);
-        user.Roles = new List<Role> { role };
+        user.Roles = new List<Role> { role! };
         _dbContext.Users.Add(user);
         await _dbContext.SaveChangesAsync();
         return user.Id;
@@ -47,19 +47,19 @@ public class UserRepository(EcommerceDbContext dbContext,
     {
         foreach (var product in user.Products)
         {
-            await dbContext.Entry(product).Collection(p => p.CartItems).LoadAsync();
-            await dbContext.Entry(product).Collection(p => p.Ratings).LoadAsync();
+            await _dbContext.Entry(product).Collection(p => p.CartItems).LoadAsync();
+            await _dbContext.Entry(product).Collection(p => p.Ratings).LoadAsync();
 
-            dbContext.CartItems.RemoveRange(product.CartItems);
-            dbContext.Ratings.RemoveRange(product.Ratings);
+            _dbContext.CartItems.RemoveRange(product.CartItems);
+            _dbContext.Ratings.RemoveRange(product.Ratings);
         }
-        dbContext.CartItems.RemoveRange(user.CartItems);
-        dbContext.Ratings.RemoveRange(user.Ratings);
-        dbContext.Products.RemoveRange(user.Products);
+        _dbContext.CartItems.RemoveRange(user.CartItems);
+        _dbContext.Ratings.RemoveRange(user.Ratings);
+        _dbContext.Products.RemoveRange(user.Products);
 
-        dbContext.Users.Remove(user);
+        _dbContext.Users.Remove(user);
 
-        await dbContext.SaveChangesAsync();
+        await _dbContext.SaveChangesAsync();
     }
 
 
@@ -84,6 +84,8 @@ public class UserRepository(EcommerceDbContext dbContext,
 
     public async Task<User?> GetUserByConfirmationTokenAsync(string token)
     => await _dbContext.Users.FirstOrDefaultAsync(x => x.ConfirmationToken == token);
+    public async Task<User?> GetUserByResetPasswordTokenAsync(string token)
+   => await _dbContext.Users.FirstOrDefaultAsync(x => x.ResetPasswordToken == token);
 
     public async Task SaveUserAsync()
     => await _dbContext.SaveChangesAsync();

@@ -14,6 +14,7 @@ public class AccountController(ISender sender) : BaseController
     public readonly ISender _sender = sender;
 
     [HttpPost("register")]
+
     public async Task<ActionResult<Guid>> Register(RegisterUserCommand command)
     {
         return Ok(await _sender.Send(command));

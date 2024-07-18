@@ -20,5 +20,11 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
 
         builder.HasMany(u => u.Roles)
             .WithMany(r => r.Users);
+
+        builder.HasIndex(u => u.ResetPasswordToken)
+            .IsUnique();
+
+        builder.HasIndex(u => u.ConfirmationToken)
+            .IsUnique();
     }
 }

@@ -13,4 +13,6 @@ public interface IUserRepository
     Task SaveUserAsync();
     Task<IEnumerable<Rating>?> GetAllRatingsOfUser(Guid id);
     Task<User?> GetUserByConfirmationTokenAsync(string token);
+    Task<User?> GetUserByResetPasswordTokenAsync(string token);
+
 }

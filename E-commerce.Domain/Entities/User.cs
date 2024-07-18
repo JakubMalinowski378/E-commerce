@@ -13,6 +13,8 @@ public class User
     public bool EmailConfirmed { get; set; }
     public string? ConfirmationToken { get; set; }
     public DateTime? ConfirmationTokenExpiration { get; set; }
+    public string? ResetPasswordToken { get; set; }
+    public DateTime? ResetPasswordTokenExpiration { get; set; }
     public virtual List<Address> Addresses { get; set; } = default!;
     public virtual List<CartItem> CartItems { get; set; } = default!;
     public virtual List<Rating> Ratings { get; set; } = default!;

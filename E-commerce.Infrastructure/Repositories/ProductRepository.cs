@@ -13,7 +13,7 @@ public class ProductRepository(EcommerceDbContext dbContext) : IProductRepositor
     public async Task<Guid> Create(Product product)
     {
         _dbContext.Products.Add(product);
-        await dbContext.SaveChangesAsync();
+        await _dbContext.SaveChangesAsync();
         return product.Id;
     }
 
@@ -40,6 +40,6 @@ public class ProductRepository(EcommerceDbContext dbContext) : IProductRepositor
         await _dbContext.SaveChangesAsync();
     }
 
-    public Task SaveChanges()
-        => _dbContext.SaveChangesAsync();
+    public async Task SaveChanges()
+        => await _dbContext.SaveChangesAsync();
 }
