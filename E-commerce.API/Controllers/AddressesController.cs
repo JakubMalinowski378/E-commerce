@@ -1,5 +1,6 @@
 ﻿using E_commerce.Application.Addresses.Commands.DeleteAddress;
 using E_commerce.Application.Addresses.Commands.Dtos;
+using E_commerce.Application.Addresses.Commands.UpdateAddress;
 using E_commerce.Application.Addresses.Queries.GetAddressById;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -21,6 +22,14 @@ public class AddressesController(ISender sender) : BaseController
     public async Task<ActionResult> DeleteAddress([FromRoute] Guid addressId)
     {
         await _sender.Send(new DeleteAddressCommand(addressId));
+        return NoContent();
+    }
+
+    [HttpPatch("{addressId}")]
+    public async Task<ActionResult> UpdateAddress([FromRoute] Guid addressId, UpdateAddressCommand command)
+    {
+        command.AddressId = addressId;
+        await _sender.Send(command);
         return NoContent();
     }
 }
