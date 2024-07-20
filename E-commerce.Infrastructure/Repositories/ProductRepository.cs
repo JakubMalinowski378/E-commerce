@@ -45,4 +45,22 @@ public class ProductRepository(EcommerceDbContext dbContext) : IProductRepositor
 
     public async Task<IEnumerable<Product>> GetUserProducts(Guid userId)
         => await _dbContext.Products.Where(x => x.UserId == userId).ToListAsync();
+
+    public async Task<(IEnumerable<Product>, int)> GetAllMatchingAsync(string? searchPhrase, int pageSize, int pageNumber)
+    {
+        var searchPhraseLower = searchPhrase?.ToLower();
+
+        var query = _dbContext.Products
+            .Where(x => searchPhraseLower == null
+            || x.Name.ToLower().Contains(searchPhraseLower));
+
+        var count = await query.CountAsync();
+
+        var products = await query
+            .Skip(pageSize * (pageNumber - 1))
+            .Take(pageSize)
+            .ToListAsync();
+
+        return (products, count);
+    }
 }

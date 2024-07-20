@@ -1,7 +1,9 @@
-﻿using E_commerce.Application.Products.Commands.CreateProductCommand;
+﻿using E_commerce.Application.Common;
+using E_commerce.Application.Products.Commands.CreateProductCommand;
 using E_commerce.Application.Products.Commands.DeleteProductCommand;
 using E_commerce.Application.Products.Commands.UpdateProductCommand;
 using E_commerce.Application.Products.Dtos;
+using E_commerce.Application.Products.Queries.GetAllProducts;
 using E_commerce.Application.Products.Queries.GetProductByIdQuery;
 using E_commerce.Application.Ratings.Commands.CreateRating;
 using E_commerce.Application.Ratings.Dtos;
@@ -60,5 +62,13 @@ public class ProductsController(ISender sender) : BaseController
     {
         var ratings = await _sender.Send(new GetProductRatingsQuery(productId));
         return Ok(ratings);
+    }
+
+    [AllowAnonymous]
+    [HttpGet]
+    public async Task<ActionResult<PagedResult<ProductDto>>> GetProducts([FromQuery] GetAllProductsQuery query)
+    {
+        var products = await _sender.Send(query);
+        return Ok(products);
     }
 }
