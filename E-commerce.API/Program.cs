@@ -3,13 +3,8 @@ using E_commerce.Application.Extensions;
 using E_commerce.Infrastructure.Extensions;
 using E_commerce.Infrastructure.Persistance;
 using E_commerce.Infrastructure.Seeders;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using System.Data;
-using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();

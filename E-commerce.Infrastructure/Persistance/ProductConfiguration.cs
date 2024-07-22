@@ -12,7 +12,7 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
             .HasForeignKey(p => p.UserId)
             .OnDelete(DeleteBehavior.Cascade);
 
-        builder.HasMany(p => p.ProductCategories)
+        builder.HasMany(p => p.Categories)
             .WithMany(pc => pc.Products);
 
         builder.Property(p => p.Price)

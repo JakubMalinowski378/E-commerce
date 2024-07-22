@@ -4,11 +4,11 @@ using E_commerce.Infrastructure.Persistance;
 using Microsoft.EntityFrameworkCore;
 
 namespace E_commerce.Infrastructure.Repositories;
-public class ProductCategoryRepository(EcommerceDbContext dbContext)
-    : IProductCategoryRepository
+public class CategoryRepository(EcommerceDbContext dbContext)
+    : ICategoryRepository
 {
     private readonly EcommerceDbContext _dbContext = dbContext;
 
-    public async Task<IEnumerable<ProductCategory>> GetAllAsync()
-        => await _dbContext.ProductCategories.ToListAsync();
+    public async Task<IEnumerable<Category>> GetAllAsync()
+        => await _dbContext.Categories.ToListAsync();
 }

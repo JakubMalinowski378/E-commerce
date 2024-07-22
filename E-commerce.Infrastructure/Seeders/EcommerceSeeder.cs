@@ -2,13 +2,18 @@
 using E_commerce.Domain.Constants;
 using E_commerce.Domain.Entities;
 using E_commerce.Infrastructure.Persistance;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
 using System.Security.Cryptography;
 using System.Text;
 
 namespace E_commerce.Infrastructure.Seeders;
-public class EcommerceSeeder(EcommerceDbContext dbContext) : IEcommerceSeeder
+public class EcommerceSeeder(EcommerceDbContext dbContext,
+    IWebHostEnvironment webHostEnvironment)
+    : IEcommerceSeeder
 {
     private readonly EcommerceDbContext _dbContext = dbContext;
+    private readonly IWebHostEnvironment _webHostEnvironment = webHostEnvironment;
     private const string Locale = "pl";
     private const int RowCount = 10;
 
@@ -23,12 +28,15 @@ public class EcommerceSeeder(EcommerceDbContext dbContext) : IEcommerceSeeder
                 await _dbContext.SaveChangesAsync();
             }
 
-            if (!_dbContext.ProductCategories.Any())
+            if (!_dbContext.Categories.Any())
             {
-                var productCategories = GetProductCategories();
-                _dbContext.ProductCategories.AddRange(productCategories);
+                var productCategories = GetCategories();
+                _dbContext.Categories.AddRange(productCategories);
                 await _dbContext.SaveChangesAsync();
             }
+
+            if (_webHostEnvironment.IsProduction())
+                return;
 
             if (!_dbContext.Users.Any())
             {
@@ -54,7 +62,7 @@ public class EcommerceSeeder(EcommerceDbContext dbContext) : IEcommerceSeeder
             if (!_dbContext.Products.Any())
             {
                 var userIds = _dbContext.Users.Select(x => x.Id);
-                var productCategories = _dbContext.ProductCategories.ToArray();
+                var productCategories = _dbContext.Categories.ToArray();
                 var products = GetProducts(RowCount * 10, userIds, productCategories);
                 _dbContext.Products.AddRange(products);
                 await _dbContext.SaveChangesAsync();
@@ -93,6 +101,7 @@ public class EcommerceSeeder(EcommerceDbContext dbContext) : IEcommerceSeeder
                 .RuleFor(x => x.PasswordHash, _ => passwordHash)
                 .RuleFor(x => x.PasswordSalt, _ => passwordSalt)
                 .RuleFor(x => x.EmailConfirmed, y => y.Random.Bool())
+                .RuleFor(x => x.DateOfBirth, y => y.Date.BetweenDateOnly(new DateOnly(1970, 1, 1), new DateOnly(2006, 12, 31)))
                 .Generate(count);
         return users;
     }
@@ -117,15 +126,14 @@ public class EcommerceSeeder(EcommerceDbContext dbContext) : IEcommerceSeeder
     }
 
     private static IEnumerable<Product> GetProducts(int count, IEnumerable<Guid> usersId,
-        IEnumerable<ProductCategory> productCategories)
+        IEnumerable<Category> productCategories)
     {
         var products = new Faker<Product>(Locale)
             .RuleFor(x => x.Name, y => y.Commerce.ProductName())
-            .RuleFor(x => x.Supplier, y => y.Company.CompanyName())
             .RuleFor(x => x.Quantity, y => y.Random.Int(0, 1000))
             .RuleFor(x => x.Price, y => y.Random.Decimal(1, 200))
             .RuleFor(x => x.UserId, y => y.PickRandom(usersId))
-            .RuleFor(x => x.ProductCategories, y => y.PickRandom(productCategories, Random.Shared.Next(1, 5)).ToList())
+            .RuleFor(x => x.Categories, y => y.PickRandom(productCategories, Random.Shared.Next(1, 5)).ToList())
             .Generate(count);
         return products;
     }
@@ -153,11 +161,14 @@ public class EcommerceSeeder(EcommerceDbContext dbContext) : IEcommerceSeeder
         return ratings;
     }
 
-    private static IEnumerable<ProductCategory> GetProductCategories()
+    private static IEnumerable<Category> GetCategories()
     {
-        var faker = new Faker(Locale);
-        var categories = faker.Commerce.Categories(50).ToHashSet();
-        return categories.Select(x => new ProductCategory() { CategoryName = x });
+        List<string> categories = ["Electronics", "Clothing", "Home & Kitchen", "Beauty & Personal Care",
+            "Sports & Outdoors", "Automotive", "Books", "Toys & Games", "Health & Household",
+            "Grocery & Gourmet Food", "Office Products", "Pet Supplies", "Baby", "Tools & Home Improvement",
+            "Garden & Outdoor", "Jewelry", "Shoes", "Computers", "Video Games", "Musical Instruments",
+            "Industrial", "Sports", "Jewelery", "Games", "Grocery", "Kids", "Music", "Outdoors", "Toys", "Tools"];
+        return categories.Select(x => new Category() { CategoryName = x });
     }
 
     private static List<Role> GetRoles()

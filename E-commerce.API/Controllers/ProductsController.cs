@@ -20,7 +20,7 @@ public class ProductsController(ISender sender) : BaseController
 
     [AllowAnonymous]
     [HttpGet("{productId}")]
-    public async Task<ActionResult<ProductDto>> GetProduct(Guid productId)
+    public async Task<ActionResult<ProductDetailsDto>> GetProduct([FromRoute] Guid productId)
     {
         var product = await _sender.Send(new GetProductByIdQuery(productId));
         return Ok(product);

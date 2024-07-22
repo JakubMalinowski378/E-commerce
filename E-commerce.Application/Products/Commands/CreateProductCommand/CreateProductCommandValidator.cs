@@ -1,4 +1,6 @@
 ﻿using FluentValidation;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace E_commerce.Application.Products.Commands.CreateProductCommand;
 public class CreateProductCommandValidator : AbstractValidator<CreateProductCommand>
@@ -16,7 +18,21 @@ public class CreateProductCommandValidator : AbstractValidator<CreateProductComm
             .NotEmpty()
             .GreaterThanOrEqualTo(0);
 
-        RuleFor(x => x.Supplier)
-            .NotEmpty();
+        RuleFor(x => x.AdditionalProperties)
+            .Must(BeValidJson)
+            .WithMessage("Invalid JSON format.");
+    }
+
+    private bool BeValidJson(string jsonString)
+    {
+        try
+        {
+            JToken.Parse(jsonString);
+            return true;
+        }
+        catch (JsonReaderException)
+        {
+            return false;
+        }
     }
 }

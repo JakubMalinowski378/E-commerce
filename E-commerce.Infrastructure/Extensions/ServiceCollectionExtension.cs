@@ -26,7 +26,7 @@ public static class ServiceCollectionExtension
         services.AddScoped<ICartItemRepository, CartItemRepository>();
         services.AddScoped<IRolesRepository, RolesRepository>();
         services.AddScoped<IRatingRepository, RatingRepository>();
-        services.AddScoped<IProductCategoryRepository, ProductCategoryRepository>();
+        services.AddScoped<ICategoryRepository, CategoryRepository>();
 
         services.AddScoped<ICartItemAuthorizationService, CartItemAuthorizationService>();
         services.AddScoped<IProductAuthorizationService, ProductAuthorizationService>();

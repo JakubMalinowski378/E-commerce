@@ -9,7 +9,7 @@ public class EcommerceDbContext(DbContextOptions<EcommerceDbContext> options) : 
     public DbSet<Product> Products { get; set; }
     public DbSet<CartItem> CartItems { get; set; }
     public DbSet<Rating> Ratings { get; set; }
-    public DbSet<ProductCategory> ProductCategories { get; set; }
+    public DbSet<Category> Categories { get; set; }
     public DbSet<Role> Roles { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
