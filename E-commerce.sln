@@ -18,11 +18,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "E-commerce.Infrastructure",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "E-commerce.Domain", "src\E-commerce.Domain\E-commerce.Domain.csproj", "{03D4DCAB-D255-43F8-94A7-26277FE3FAED}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "E-commerce.Infrastructure.Tests", "tests\E-commerce.Infrastructure.Tests\E-commerce.Infrastructure.Tests.csproj", "{BD7746EB-F343-473F-B4DD-2DFD86404DAF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "E-commerce.Infrastructure.Tests", "tests\E-commerce.Infrastructure.Tests\E-commerce.Infrastructure.Tests.csproj", "{BD7746EB-F343-473F-B4DD-2DFD86404DAF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "E-commerce.API.Tests", "tests\E-commerce.API.Tests\E-commerce.API.Tests.csproj", "{F72960F1-5B61-4ADD-8520-9E9971438ED0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "E-commerce.API.Tests", "tests\E-commerce.API.Tests\E-commerce.API.Tests.csproj", "{F72960F1-5B61-4ADD-8520-9E9971438ED0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "E-commerce.Application", "tests\E-commerce.Application\E-commerce.Application.csproj", "{7D6CCA76-60BA-4231-9A38-7DD1693DC4DE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "E-commerce.Application", "tests\E-commerce.Application\E-commerce.Application.csproj", "{7D6CCA76-60BA-4231-9A38-7DD1693DC4DE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
