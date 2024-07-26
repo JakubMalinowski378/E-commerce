@@ -6,6 +6,7 @@ using E_commerce.Domain.Repositories;
 using Moq;
 using E_commerce.Infrastructure.Persistance;
 using Bogus;
+using FluentAssertions;
 
 namespace E_commerce.Infrastructure.Repositories.Tests;
 public class AddressRepositoryTest
@@ -24,62 +25,68 @@ public class AddressRepositoryTest
         _addressRepository = new AddressRepository(_context);
     }
 
-    //Tutaj sprawdzanie poprawności bazy danych będzie
     [Fact()]
-    public void CreateTest()
+    public void Create_WithMatchingAddedAdresses_ShouldReturnTrue()
     {
 
         // arrange
         Address address = new Address
         {
-            Id = new Guid(),
+            Id = Guid.NewGuid(),
             StreetNumber = 4,
             ApartmentNumber = 15,
             PostalCode = "18-100",
             Street = "Glowna",
-            City = "Lapy"
+            City = "Lapy",
+            UserId = Guid.NewGuid(),
         };
 
         //act
         _context.Addresses.Add(address);
         _context.SaveChanges();
-
+        var addressFromDb = _context.Addresses.FirstOrDefault(a => a.Id == address.Id);
+        addressFromDb.Should().NotBeNull();
 
         //assert
-        var addressFromDb = _context.Addresses.FirstOrDefault();
-        Assert.NotNull(addressFromDb);
-        Assert.Equal(address.City, addressFromDb.City);
-        
+        addressFromDb.Should().Match<Address>(
+            a =>  a.StreetNumber == address.StreetNumber &&
+            a.ApartmentNumber == address.ApartmentNumber &&
+            a.PostalCode == address.PostalCode &&
+            a.Street == address.Street &&
+            a.City == address.City);
+
+
     }
 
     [Fact()]
-    public void DeleteTest()
+    public void Delete_WithCheckingIfNull_ShouldBeNull()
     {
         // arrange
         Address address = new Address
         {
-            Id = new Guid(),
+            Id = Guid.NewGuid(),
             StreetNumber = 4,
             ApartmentNumber = 15,
             PostalCode = "18-100",
             Street = "Glowna",
-            City = "Lapy"
+            City = "Lapy",
+            UserId = Guid.NewGuid(),
         };
+
+        //act
         _context.Addresses.Add(address);
         _context.SaveChanges();
         Address? addressFromDb = _context.Addresses.FirstOrDefault();
-
-        //act
         _context.Addresses.Remove(address);
         _context.SaveChanges();
+        var addressFromDb2 = _context.Addresses.FirstOrDefault(a => a.Id == address.Id);
 
         //assert
-        var addressFromDb2 = _context.Addresses.FirstOrDefault();
-        Assert.Null(addressFromDb2);
+        addressFromDb2.Should().BeNull();
     }
 
     [Fact()]
-    public void GetByIdAsyncTest()
+    public void GetByIdAsync_WithCheckingIfNotNull_ShouldBeNotNull()
     {
         // arrange
         Address address = new Address
@@ -91,19 +98,19 @@ public class AddressRepositoryTest
             Street = "Glowna",
             City = "Lapy"
         };
-        _context.Addresses.Add(address);
-        _context.SaveChanges();
 
         //act
-        Address? addressFromDb = _context.Addresses.FirstOrDefault(a => a.Id == address.Id);
+        _context.Addresses.Add(address);
+        _context.SaveChanges();
+        Address? addressFromDb =  _context.Addresses.FirstOrDefault(a => a.Id == address.Id);
 
 
         //assert
-        Assert.NotNull(addressFromDb);
+        addressFromDb.Should().NotBeNull();
     }
 
     [Fact()]
-    public void GetUserAddressesAsyncTest()
+    public async void GetUserAddressesAsync_WithCheckingIfGettingAddressesByIdWork_ShouldReturnAssignableType()
     {
         // arrange
         Guid userId = new Guid();
@@ -127,42 +134,16 @@ public class AddressRepositoryTest
             City = "Warszawa",
             UserId = userId
         };
+
+        //act
         _context.Addresses.Add(address);
         _context.Addresses.Add(address2);
         _context.SaveChanges();
-
-        //act
-        //Task<IEnumerable<Address>> addressFromDb = _context.Addresses.Where(a => a.UserId == userId).ToListAsync();
+        var addressFromDb = await _context.Addresses.Where(a => a.UserId == userId).ToListAsync();
 
 
         //assert
-        //Assert.IsType<Task<IEnumerable<Address>>>(addressFromDb);
-
-    }
-
-    [Fact()]
-    public void SaveChangesTest()
-    {
-        // arrange
-        Address address = new Address
-        {
-            Id = new Guid(),
-            StreetNumber = 4,
-            ApartmentNumber = 15,
-            PostalCode = "18-100",
-            Street = "Glowna",
-            City = "Lapy",
-            UserId = new Guid(),
-        };
-
-        //act
-        _context.Addresses.Add(address);
-        _context.SaveChanges();
-
-        //assert
-        var addressFromDb = _context.Addresses.FirstOrDefault();
-        Assert.NotNull(addressFromDb);
-        Assert.Equal(address.City, addressFromDb.City);
+        addressFromDb.Should().BeAssignableTo<IEnumerable<Address>>();
 
     }
 }
