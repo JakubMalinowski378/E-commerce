@@ -48,7 +48,7 @@ public class ProductRepository(EcommerceDbContext dbContext) : IProductRepositor
 
     public async Task<(IEnumerable<Product>, int)> GetAllMatchingAsync(string? searchPhrase, int pageSize, int pageNumber)
     {
-        var searchPhraseLower = searchPhrase?.ToLower();
+        var searchPhraseLower = searchPhrase?.Trim().ToLower();
 
         var query = _dbContext.Products
             .Where(x => searchPhraseLower == null
