@@ -1,6 +1,8 @@
 ﻿using E_commerce.Application.Interfaces;
 using E_commerce.Application.Users;
 using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
 namespace E_commerce.Application.Services;
@@ -23,4 +25,5 @@ public class UserContext(IHttpContextAccessor httpContextAccessor) : IUserContex
 
         return new CurrentUser(Guid.Parse(userId), email, roles);
     }
+
 }

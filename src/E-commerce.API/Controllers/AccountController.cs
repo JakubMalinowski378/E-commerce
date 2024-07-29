@@ -1,8 +1,10 @@
 ﻿using E_commerce.Application.Email.Commands.ConfirmEmail;
 using E_commerce.Application.Email.Commands.ForgotPassword;
 using E_commerce.Application.Email.Commands.ResetPassword;
-using E_commerce.Application.Users.Commands.RegisterUser;
+using E_commerce.Application.Users.Commands.RegisterByEmail;
 using E_commerce.Application.Users.Commands.UpdatePassword;
+using E_commerce.Application.Users.Commands.SetLogin;
+
 using E_commerce.Application.Users.Dtos;
 using E_commerce.Application.Users.Queries.LoginUser;
 using MediatR;
@@ -15,12 +17,13 @@ public class AccountController(ISender sender) : BaseController
 {
     public readonly ISender _sender = sender;
 
-    [HttpPost("register")]
+    [HttpPost("registerByEmail")]
 
-    public async Task<ActionResult<Guid>> Register(RegisterUserCommand command)
+    public async Task<ActionResult<Guid>> RegisterByEmail(RegisterByEmailCommand command)
     {
         return Ok(await _sender.Send(command));
     }
+   
 
     [HttpPost("login")]
     public async Task<ActionResult<UserDto>> Login(LoginUserQuery loginUserQuery)
@@ -32,6 +35,13 @@ public class AccountController(ISender sender) : BaseController
     [Authorize]
     [HttpPatch("update-password")]
     public async Task<ActionResult> UpdatePassword(UpdatePasswordCommand command)
+    {
+        await _sender.Send(command);
+        return NoContent();
+    }
+    [Authorize]
+    [HttpPatch("set-login")]
+    public async Task<ActionResult> SetLogin(SetLoginCommnand command)
     {
         await _sender.Send(command);
         return NoContent();

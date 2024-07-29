@@ -33,6 +33,16 @@ public class UserRepository(EcommerceDbContext dbContext,
         var query = ApplyIncludes(includePredicates);
         return await query.FirstOrDefaultAsync(x => x.Email == email);
     }
+    public async Task<User?> GetUserByPhoneNumberAsync(string phoneNumber, params Expression<Func<User, object>>[] includePredicates)
+    {
+        var query = ApplyIncludes(includePredicates);
+        return await query.FirstOrDefaultAsync(x => x.PhoneNumber == phoneNumber);
+    }
+    public async Task<User?> GetUserByLoginAsync(string login, params Expression<Func<User, object>>[] includePredicates)
+    {
+        var query = ApplyIncludes(includePredicates);
+        return await query.FirstOrDefaultAsync(x => x.Login == login);
+    }
 
     public async Task<IEnumerable<User>> GetUsersAsync(params Expression<Func<User, object>>[] includePredicates)
     {

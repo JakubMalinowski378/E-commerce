@@ -28,11 +28,11 @@ public class TokenService(IConfiguration config) : ITokenService
         var credentials = new SigningCredentials(_key, SecurityAlgorithms.HmacSha512Signature);
         var tokenDescription = new SecurityTokenDescriptor
         {
-           
+
             Subject = new ClaimsIdentity(claims),
             Expires = DateTime.UtcNow.AddDays(7),
             SigningCredentials = credentials,
-           
+
         };
 
         var handler = new JwtSecurityTokenHandler();

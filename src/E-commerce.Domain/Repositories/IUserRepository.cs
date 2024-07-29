@@ -9,6 +9,10 @@ public interface IUserRepository
     Task<Guid> Create(User user);
     Task<bool> UserExists(string email);
     Task<User?> GetUserByEmailAsync(string email, params Expression<Func<User, object>>[] includePredicates);
+    Task<User?> GetUserByPhoneNumberAsync(string email, params Expression<Func<User, object>>[] includePredicates);
+
+    Task<User?> GetUserByLoginAsync(string email, params Expression<Func<User, object>>[] includePredicates);
+
     Task DeleteUser(User user);
     Task SaveChanges();
     Task<IEnumerable<Rating>?> GetAllRatingsOfUser(Guid id);

@@ -19,15 +19,18 @@ public class LoginUserQueryHandler(IUserRepository userRepository, ITokenService
 
     public async Task<UserDto> Handle(LoginUserQuery request, CancellationToken cancellationToken)
     {
-        var user = await _userRepository.GetUserByEmailAsync(request.Email, u => u.Roles);
+        var user = await _userRepository.GetUserByEmailAsync(request.EmailOrLogin, u => u.Roles);
         if (user == null)
-            throw new NotFoundException(nameof(User), request.Email);
-
+        {
+            user = await _userRepository.GetUserByLoginAsync(request.EmailOrLogin, u => u.Roles);
+            if (user == null)
+                throw new NotFoundException(nameof(User), request.EmailOrLogin);
+        }
         using var hmac = new HMACSHA512(user.PasswordSalt);
         var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(request.Password));
 
         if (!computedHash.SequenceEqual(user.PasswordHash))
-            throw new NotFoundException(nameof(User), request.Email);
+            throw new NotFoundException(nameof(User), request.EmailOrLogin);
 
         var userDto = _mapper.Map<UserDto>(user);
         userDto.Token = _tokenService.CreateToken(user);
