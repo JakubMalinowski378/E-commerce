@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace E_commerce.Application.Users.Commands.SetLogin
 {
-    public class SetLoginCommnand : IRequest
+    public class SetLoginCommand : IRequest
     {
         public string Login { get; set; } = string.Empty;
     }

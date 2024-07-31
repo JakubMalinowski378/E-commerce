@@ -10,6 +10,10 @@ using E_commerce.Application.Users.Queries.LoginUser;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using E_commerce.Application.Users.Commands.ChangeEmail;
+using E_commerce.Application.Users.Commands.SetNameAndLastName;
+using E_commerce.Application.Users.Commands.SetGender;
+using E_commerce.Application.Users.Commands.SetPhoneNumber;
 
 namespace E_commerce.API.Controllers;
 
@@ -41,10 +45,31 @@ public class AccountController(ISender sender) : BaseController
     }
     [Authorize]
     [HttpPatch("set-login")]
-    public async Task<ActionResult> SetLogin(SetLoginCommnand command)
+    public async Task<ActionResult> SetLogin(SetLoginCommand command)
     {
         await _sender.Send(command);
-        return NoContent();
+        return Ok("Login set successfully");
+    }
+    [HttpPatch("set-nameAndLastName")]
+    public async Task<ActionResult> SetNameAndLastName(SetNameAndLastNameCommand command)
+    {
+        await _sender.Send(command);
+        return Ok("Login set successfully");
+    }
+    [Authorize]
+    [HttpPatch("set-phone-number")]
+    public async Task<ActionResult>SetPhoneNumber(SetPhoneNumberCommand command)
+    {
+        await _sender.Send(command);
+        return Ok("phone number set successfully");
+    }
+
+    [Authorize]
+    [HttpPatch("set-gender")]
+    public async Task<ActionResult>SetGender(SetGenderCommand command)
+    {
+        await _sender.Send(command);
+        return Ok("Gender set successfully");
     }
 
     [HttpGet("confirm-email")]
@@ -52,6 +77,13 @@ public class AccountController(ISender sender) : BaseController
     {
         await _sender.Send(new ConfirmEmailCommand(token));
         return Ok("Email confirmed successfully.");
+    }
+    [Authorize]
+    [HttpGet("change-email")]
+    public async Task<IActionResult> ChangeEmail(ChangeEmailCommand changeEmailCommand)
+    {
+        await _sender.Send(changeEmailCommand);
+        return Ok("Email changed successfully.");
     }
 
     [HttpGet("forgot-password/{email}")]

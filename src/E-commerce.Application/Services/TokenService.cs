@@ -14,10 +14,15 @@ public class TokenService(IConfiguration config) : ITokenService
 
     public string CreateToken(User user)
     {
+        if (user == null)
+        {
+            throw new ArgumentNullException(nameof(user));
+        }
         var claims = new List<Claim>()
         {
             new(JwtRegisteredClaimNames.NameId, user.Id.ToString()),
-            new(JwtRegisteredClaimNames.Email, user.Email)
+            new(JwtRegisteredClaimNames.Email, user.Email),
+            new(JwtRegisteredClaimNames.PhoneNumber, user.PhoneNumber)
         };
 
         foreach (var role in user.Roles)
@@ -36,7 +41,15 @@ public class TokenService(IConfiguration config) : ITokenService
         };
 
         var handler = new JwtSecurityTokenHandler();
-        var token = handler.CreateToken(tokenDescription);
-        return handler.WriteToken(token);
+        try
+        {
+            var token = handler.CreateToken(tokenDescription);
+            return handler.WriteToken(token);
+        }
+        catch (Exception ex)
+        {
+            // Log the exception or handle it as appropriate
+            throw new InvalidOperationException("An error occurred while generating the token.", ex);
+        }
     }
 }

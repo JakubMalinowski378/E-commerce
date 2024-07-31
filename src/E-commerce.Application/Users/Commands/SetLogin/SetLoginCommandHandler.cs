@@ -9,16 +9,16 @@ using System.Threading.Tasks;
 
 namespace E_commerce.Application.Users.Commands.SetLogin
 {
-    internal class SetLoginCommandHandler(IUserRepository userRepository,IUserContext userContext) : IRequestHandler<SetLoginCommnand>
+    public class SetLoginCommandHandler(IUserRepository userRepository,IUserContext userContext) : IRequestHandler<SetLoginCommand>
     {
         private readonly IUserRepository _userRepository = userRepository;
         private readonly IUserContext _userContext = userContext;
 
 
-        public async Task Handle(SetLoginCommnand request, CancellationToken cancellationToken)
+        public async Task Handle(SetLoginCommand request, CancellationToken cancellationToken)
         {
-           var userFromContext = _userContext.GetCurrentUser();
-            var user =await _userRepository.GetUserByIdAsync(userFromContext!.Id);
+           var currentUser = _userContext.GetCurrentUser();
+            var user =await _userRepository.GetUserByIdAsync(currentUser!.Id);
             user!.Login = request.Login;
             await  _userRepository.SaveChanges();
         }

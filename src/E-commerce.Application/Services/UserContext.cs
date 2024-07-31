@@ -19,11 +19,12 @@ public class UserContext(IHttpContextAccessor httpContextAccessor) : IUserContex
         if (user.Identity == null || !user.Identity.IsAuthenticated)
             return null;
 
-        var userId = user.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)!.Value;
+        var userId = user.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+        var phoneNumber = user.FindFirst(c => c.Type == JwtRegisteredClaimNames.PhoneNumber)?.Value;
         var email = user.FindFirst(c => c.Type == ClaimTypes.Email)!.Value;
         var roles = user.Claims.Where(c => c.Type == ClaimTypes.Role)!.Select(c => c.Value).ToList();
 
-        return new CurrentUser(Guid.Parse(userId), email, roles);
+        return new CurrentUser(Guid.Parse(userId!), email,phoneNumber, roles);
     }
 
 }
