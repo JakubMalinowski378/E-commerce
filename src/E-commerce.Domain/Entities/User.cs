@@ -15,9 +15,9 @@ public class User
     public DateTime? ConfirmationTokenExpiration { get; set; }
     public string? ResetPasswordToken { get; set; }
     public DateTime? ResetPasswordTokenExpiration { get; set; }
-    public virtual List<Address> Addresses { get; set; } = default!;
-    public virtual List<CartItem> CartItems { get; set; } = default!;
-    public virtual List<Rating> Ratings { get; set; } = default!;
-    public virtual List<Role> Roles { get; set; } = default!;
-    public virtual List<Product> Products { get; set; } = default!;
+    public List<Address> Addresses { get; set; } = default!;
+    public List<CartItem> CartItems { get; set; } = default!;
+    public List<Rating> Ratings { get; set; } = default!;
+    public List<Role> Roles { get; set; } = default!;
+    public List<Product> Products { get; set; } = default!;
 }

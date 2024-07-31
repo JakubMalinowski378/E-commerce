@@ -20,5 +20,6 @@ public class EcommerceDbContext(DbContextOptions<EcommerceDbContext> options) : 
         modelBuilder.ApplyConfiguration(new UserConfiguration());
         modelBuilder.ApplyConfiguration(new ProductConfiguration());
         modelBuilder.ApplyConfiguration(new RatingConfiguration());
+        modelBuilder.ApplyConfiguration(new ProductImageConfiguration());
     }
 }
