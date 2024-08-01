@@ -34,5 +34,8 @@ public static class ServiceCollectionExtension
 
         services.Configure<SmtpSettings>(configuration.GetSection("SmtpSettings"));
         services.AddTransient<IEmailSender, EmailSender>();
+        services.AddTransient<IBlobStorageRepository, BlobStorageRepository>();
+        services.AddTransient<IProductImageRepository, ProductImageRepository>();
+        services.AddTransient<IProductImageService, ProductImageService>();
     }
 }

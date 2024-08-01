@@ -11,6 +11,7 @@ public class EcommerceDbContext(DbContextOptions<EcommerceDbContext> options) : 
     public DbSet<Rating> Ratings { get; set; }
     public DbSet<Category> Categories { get; set; }
     public DbSet<Role> Roles { get; set; }
+    public DbSet<ProductImage> ProductImages { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
