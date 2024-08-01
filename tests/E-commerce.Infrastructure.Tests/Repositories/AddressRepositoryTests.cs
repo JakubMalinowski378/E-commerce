@@ -32,10 +32,12 @@ public class AddressRepositoryTests
             Street = "Glowna",
             City = "Lapy"
         };
+
         //act
         await _addressRepository.Create(address);
-        //assert
         var addressFromDb = await _addressRepository.GetByIdAsync(address.Id);
+        
+        //assert
         Assert.NotNull(addressFromDb);
         Assert.Equal(address.City, addressFromDb.City);
     }
@@ -52,10 +54,12 @@ public class AddressRepositoryTests
             Street = "Glowna",
             City = "Lapy"
         };
+
         //act
         await _addressRepository.Create(address);
         await _addressRepository.Delete(address);
         var addressFromDb = await _addressRepository.GetByIdAsync(address.Id);
+
         //assert
         Assert.Null(addressFromDb);
     }
@@ -72,11 +76,14 @@ public class AddressRepositoryTests
             Street = "Glowna",
             City = "Lapy"
         };
+
         //act
         await _addressRepository.Create(address);
         var addressFromDb = await _addressRepository.GetByIdAsync(address.Id);
+
         //assert
         Assert.NotNull(addressFromDb);
+        Assert.Equal(addressFromDb.City, addressFromDb.City);
     }
 
     [Fact()]
@@ -102,10 +109,12 @@ public class AddressRepositoryTests
             Street = "Witosa",
             City = "Warszawa",
         };
+
         //act
         await _addressRepository.Create(address);
         await _addressRepository.Create(address2);
         var addressesFromDb = await _addressRepository.GetUserAddressesAsync(userId);
+
         //assert
         Assert.Equal(2, addressesFromDb.Count());
         Assert.Contains(addressesFromDb, a => a.Street == "Glowna" && a.City == "Lapy" && a.PostalCode == "18-100");

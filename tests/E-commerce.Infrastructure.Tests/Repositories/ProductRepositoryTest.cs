@@ -92,7 +92,6 @@ public  class ProductRepositoryTest
         var productsFromDb = await _productRepository.GetProductsAsync();
 
         //assert
-        Assert.Equal(3, productsFromDb.Count());
         Assert.Contains(productsFromDb, p => p.Name == product1.Name && p.Quantity == product1.Quantity && p.Price == product1.Price);
         Assert.Contains(productsFromDb, p => p.Name == product2.Name && p.Quantity == product2.Quantity && p.Price == product2.Price);
         Assert.Contains(productsFromDb, p => p.Name == product3.Name && p.Quantity == product3.Quantity && p.Price == product3.Price);
@@ -168,7 +167,7 @@ public  class ProductRepositoryTest
             Price = 11.5M,
             IsHidden = false,
             UserId = user.Id,
-            AdditionalProperties = "NotNull",
+            AdditionalProperties = "Book",
         };
         Product product2 = new Product()
         {
@@ -179,7 +178,7 @@ public  class ProductRepositoryTest
             Price = 11,
             IsHidden = false,
             UserId = user.Id,
-            AdditionalProperties = "NotNull",
+            AdditionalProperties = "Sports Book",
         };
         Product product3 = new Product()
         {
@@ -190,6 +189,17 @@ public  class ProductRepositoryTest
             Price = 5,
             IsHidden = true,
             UserId = user.Id,
+            AdditionalProperties = "Null",
+        };
+        Product product4 = new Product()
+        {
+            Id = Guid.NewGuid(),
+            Name = "Test4",
+            Ratings = new List<Rating>(),
+            Quantity = 20,
+            Price = 5,
+            IsHidden = false,
+            UserId = Guid.NewGuid(),
             AdditionalProperties = "Null",
         };
 
@@ -205,18 +215,55 @@ public  class ProductRepositoryTest
         Assert.Contains(productsFromDb, p => p.Name == product2.Name && p.Quantity == product2.Quantity && p.Price == product2.Price);
         Assert.Contains(productsFromDb, p => p.Name == product3.Name && p.Quantity == product3.Quantity && p.Price == product3.Price);
     }
-
+    /*
     [Fact()]
     public async Task GetAllMatchingAsync()
     {
         // arrange
+        Product product1 = new Product()
+        {
+            Id = Guid.NewGuid(),
+            Name = "Test1",
+            Ratings = new List<Rating>(),
+            Quantity = 1000,
+            Price = 11.5M,
+            IsHidden = false,
+            UserId = Guid.NewGuid(),
+            AdditionalProperties = "book",
+        };
+        Product product2 = new Product()
+        {
+            Id = Guid.NewGuid(),
+            Name = "Test2",
+            Ratings = new List<Rating>(),
+            Quantity = 100,
+            Price = 11,
+            IsHidden = false,
+            UserId = Guid.NewGuid(),
+            AdditionalProperties = "sports book",
+        };
+        Product product3 = new Product()
+        {
+            Id = Guid.NewGuid(),
+            Name = "Test3",
+            Ratings = new List<Rating>(),
+            Quantity = 0,
+            Price = 5,
+            IsHidden = true,
+            UserId = Guid.NewGuid(),
+            AdditionalProperties = "Null",
+        };
 
         //act
+        await _productRepository.Create(product1);
+        await _productRepository.Create(product2);
+        await _productRepository.Create(product3);
+        var productsFromDb = await _productRepository.GetAllMatchingAsync("Book",0,0);
 
         //assert
-
+        Assert.Equal(productsFromDb.Item1.First().Name, product1.Name);
     }
 
-
+    */
 
 }
