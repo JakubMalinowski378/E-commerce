@@ -34,7 +34,7 @@ public class CategoryRepositoryTests
 
         //act
         await _categoryRepository.Create(category);
-        var categoryFromDb = await _context.Categories.FirstOrDefaultAsync();
+        var categoryFromDb = await _context.Categories.FirstOrDefaultAsync(c => c.Id == category.Id);
 
         //assert
         Assert.NotNull(categoryFromDb);
@@ -54,7 +54,7 @@ public class CategoryRepositoryTests
         //act
         await _categoryRepository.Create(category);
         await _categoryRepository.Delete(category);
-        var categoryFromDb = await _context.Categories.FirstOrDefaultAsync();
+        var categoryFromDb = await _context.Categories.FirstOrDefaultAsync(c => c.Id == category.Id);
 
         //assert
         Assert.Null(categoryFromDb);
