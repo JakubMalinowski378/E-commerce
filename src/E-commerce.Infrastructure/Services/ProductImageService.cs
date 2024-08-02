@@ -1,18 +1,19 @@
-﻿using E_commerce.Application.Interfaces;
+﻿using E_commerce.Application.Configuration;
+using E_commerce.Application.Interfaces;
 using E_commerce.Domain.Entities;
 using E_commerce.Domain.Repositories;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 
 namespace E_commerce.Infrastructure.Services;
 public class ProductImageService(IBlobStorageRepository blobStorageRepository,
     IProductImageRepository productImageRepository,
-    IConfiguration configuration)
+    IOptions<BlobStorageSettings> blobStorageSettings)
     : IProductImageService
 {
     private readonly IBlobStorageRepository _blobStorageRepository = blobStorageRepository;
     private readonly IProductImageRepository _productImageRepository = productImageRepository;
-    private readonly IConfiguration _configuration = configuration;
+    private readonly IOptions<BlobStorageSettings> _blobStorageSettings = blobStorageSettings;
 
     public async Task HandleImageUploads(Product product, List<IFormFile> images)
     {
@@ -28,7 +29,7 @@ public class ProductImageService(IBlobStorageRepository blobStorageRepository,
                 ProductId = product.Id
             };
             await _blobStorageRepository.UploadBlobAsync(
-                _configuration["BlobStorage:ContainerName"]!,
+                _blobStorageSettings.Value.ContainerName,
                 fileName,
                 file.ContentType,
                 file.OpenReadStream());

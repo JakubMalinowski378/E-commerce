@@ -1,11 +1,10 @@
 ﻿using E_commerce.Application.Interfaces;
-using E_commerce.Infrastructure.Services;
+using E_commerce.Infrastructure.Configuration;
 using MailKit.Net.Smtp;
 using Microsoft.Extensions.Options;
 using MimeKit;
 
-
-
+namespace E_commerce.Infrastructure.Services;
 
 public class EmailSender(IOptions<SmtpSettings> smtpSettings) : IEmailSender
 {

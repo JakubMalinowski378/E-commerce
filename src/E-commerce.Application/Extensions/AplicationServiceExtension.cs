@@ -1,4 +1,5 @@
-﻿using E_commerce.Application.Interfaces;
+﻿using E_commerce.Application.Configuration;
+using E_commerce.Application.Interfaces;
 using E_commerce.Application.Services;
 using FluentValidation;
 using FluentValidation.AspNetCore;
@@ -12,7 +13,7 @@ namespace E_commerce.Application.Extensions;
 
 public static class AplicationServiceExtension
 {
-    public static void AddApplication(this IServiceCollection services, IConfiguration config)
+    public static void AddApplication(this IServiceCollection services, IConfiguration configuration)
     {
         var assembly = typeof(AplicationServiceExtension).Assembly;
 
@@ -20,7 +21,7 @@ public static class AplicationServiceExtension
 
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(opt =>
         {
-            var tokenKey = config["TokenKey"] ?? throw new Exception("Token key was not found");
+            var tokenKey = configuration["TokenKey"] ?? throw new Exception("Token key was not found");
             opt.TokenValidationParameters = new TokenValidationParameters
             {
                 ValidateIssuerSigningKey = true,
@@ -42,5 +43,7 @@ public static class AplicationServiceExtension
         services.AddHttpContextAccessor();
 
         services.AddScoped<IUserContext, UserContext>();
+
+        services.Configure<BlobStorageSettings>(configuration.GetSection("BlobStorageSettings"));
     }
 }

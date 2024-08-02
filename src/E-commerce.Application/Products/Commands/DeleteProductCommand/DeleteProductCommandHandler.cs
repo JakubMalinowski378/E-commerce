@@ -1,22 +1,23 @@
-﻿using E_commerce.Domain.Constants;
+﻿using E_commerce.Application.Configuration;
+using E_commerce.Domain.Constants;
 using E_commerce.Domain.Entities;
 using E_commerce.Domain.Exceptions;
 using E_commerce.Domain.Interfaces;
 using E_commerce.Domain.Repositories;
 using MediatR;
-using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 
 namespace E_commerce.Application.Products.Commands.DeleteProductCommand;
 public class DeleteProductCommandHandler(IProductRepository productRepository,
     IProductAuthorizationService productAuthorizationService,
     IBlobStorageRepository blobStorageRepository,
-    IConfiguration configuration)
+    IOptions<BlobStorageSettings> blobStorageSettings)
     : IRequestHandler<DeleteProductCommand>
 {
     private readonly IProductRepository _productRepository = productRepository;
     private readonly IProductAuthorizationService _productAuthorizationService = productAuthorizationService;
     private readonly IBlobStorageRepository _blobStorageRepository = blobStorageRepository;
-    private readonly IConfiguration _configuration = configuration;
+    private readonly IOptions<BlobStorageSettings> _blobStorageSettings = blobStorageSettings;
 
     public async Task Handle(DeleteProductCommand request, CancellationToken cancellationToken)
     {
@@ -28,7 +29,7 @@ public class DeleteProductCommandHandler(IProductRepository productRepository,
 
         await _productRepository.Delete(product);
         await _blobStorageRepository.DeleteBlobRangeAsync(
-            _configuration["BlobStorage:ContainerName"]!,
+            _blobStorageSettings.Value.ContainerName,
             product.ProductImages.Select(x => x.FileName));
     }
 }
