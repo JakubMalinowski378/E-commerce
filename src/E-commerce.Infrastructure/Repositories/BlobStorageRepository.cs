@@ -20,6 +20,20 @@ public class BlobStorageRepository(IConfiguration configuration) : IBlobStorageR
         await blobClient.DeleteAsync();
     }
 
+    public async Task DeleteBlobRangeAsync(string containerName, IEnumerable<string> blobNames)
+    {
+        var blobServiceClient = new BlobServiceClient(blobStorageConnectionString);
+
+        var containerClient = blobServiceClient.GetBlobContainerClient(containerName);
+
+        await containerClient.CreateIfNotExistsAsync();
+        foreach (var blobName in blobNames)
+        {
+            BlobClient blobClient = containerClient.GetBlobClient(blobName);
+            await blobClient.DeleteAsync();
+        }
+    }
+
     public async Task UploadBlobAsync(string containerName, string blobName, string contentType, Stream content)
     {
         var blobServiceClient = new BlobServiceClient(blobStorageConnectionString);
