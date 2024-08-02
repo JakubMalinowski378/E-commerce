@@ -13,8 +13,6 @@ public class BlobStorageRepository(IConfiguration configuration) : IBlobStorageR
 
         var containerClient = blobServiceClient.GetBlobContainerClient(containerName);
 
-        await containerClient.CreateIfNotExistsAsync();
-
         BlobClient blobClient = containerClient.GetBlobClient(blobName);
 
         await blobClient.DeleteAsync();
@@ -26,7 +24,6 @@ public class BlobStorageRepository(IConfiguration configuration) : IBlobStorageR
 
         var containerClient = blobServiceClient.GetBlobContainerClient(containerName);
 
-        await containerClient.CreateIfNotExistsAsync();
         foreach (var blobName in blobNames)
         {
             BlobClient blobClient = containerClient.GetBlobClient(blobName);
@@ -41,10 +38,14 @@ public class BlobStorageRepository(IConfiguration configuration) : IBlobStorageR
         var containerClient = blobServiceClient.GetBlobContainerClient(containerName);
 
         await containerClient.CreateIfNotExistsAsync();
+        await containerClient.SetAccessPolicyAsync(PublicAccessType.BlobContainer);
 
         BlobClient blobClient = containerClient.GetBlobClient(blobName);
 
-        var blobHttpHeaders = new BlobHttpHeaders() { ContentType = contentType };
+        var blobHttpHeaders = new BlobHttpHeaders()
+        {
+            ContentType = contentType
+        };
 
         await blobClient.UploadAsync(content, blobHttpHeaders);
     }
