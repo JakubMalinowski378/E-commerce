@@ -1,4 +1,4 @@
-﻿namespace E_commerce.Infrastructure.Services;
+﻿namespace E_commerce.Infrastructure.Configuration;
 
 public class SmtpSettings
 {
@@ -9,5 +9,3 @@ public class SmtpSettings
     public string Username { get; set; }
     public string Password { get; set; }
 }
-
-

@@ -15,7 +15,9 @@ public class GetProductByIdQueryHandler(IProductRepository productsRepository,
 
     public async Task<ProductDetailsDto> Handle(GetProductByIdQuery request, CancellationToken cancellationToken)
     {
-        var product = await _productsRepository.GetProductByIdAsync(request.ProductId, x => x.Categories)
+        var product = await _productsRepository.GetProductByIdAsync(request.ProductId,
+                x => x.Categories,
+                x => x.ProductImages)
             ?? throw new NotFoundException(nameof(Product), request.ProductId.ToString());
         var productDto = _mapper.Map<ProductDetailsDto>(product);
         return productDto;

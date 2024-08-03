@@ -9,7 +9,8 @@ public class ConfirmEmailCommandHandler(IUserRepository userRepository) : IReque
     public async Task Handle(ConfirmEmailCommand request, CancellationToken cancellationToken)
     {
         var user = await _userRepository.GetUserByConfirmationTokenAsync(request.Token);
-        if (user == null || user.ConfirmationTokenExpiration < DateTime.UtcNow) throw new Exception("Invalid confirmation Token");
+        if (user == null || user.ConfirmationTokenExpiration < DateTime.UtcNow)
+            throw new Exception("Invalid confirmation Token");
         user.EmailConfirmed = true;
         user.ConfirmationTokenExpiration = null;
         user.ConfirmationToken = null;

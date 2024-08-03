@@ -41,10 +41,10 @@ public class UserRepositoryTest
             LastName = "Test",
             Email = "email@gmail.com",
             Gender = 'M',
-            DateOfBirth = new DateOnly(2002,5,10),
+            DateOfBirth = new DateOnly(2002, 5, 10),
             PhoneNumber = "123456789",
-            PasswordHash = new byte[] {1,2,3,4,5,6,7,8},
-            PasswordSalt = new byte[] {9,8,7,6,5,4,3,2},
+            PasswordHash = [1, 2, 3, 4, 5, 6, 7, 8],
+            PasswordSalt = [9, 8, 7, 6, 5, 4, 3, 2],
 
         };
 
@@ -71,8 +71,8 @@ public class UserRepositoryTest
             Gender = 'M',
             DateOfBirth = new DateOnly(2002, 5, 10),
             PhoneNumber = "123456789",
-            PasswordHash = new byte[] { 1, 2, 3, 4, 5, 6, 7, 8 },
-            PasswordSalt = new byte[] { 9, 8, 7, 6, 5, 4, 3, 2 },
+            PasswordHash = [1, 2, 3, 4, 5, 6, 7, 8],
+            PasswordSalt = [9, 8, 7, 6, 5, 4, 3, 2],
             EmailConfirmed = true,
         };
 
@@ -97,8 +97,8 @@ public class UserRepositoryTest
             Gender = 'M',
             DateOfBirth = new DateOnly(2002, 5, 10),
             PhoneNumber = "123456789",
-            PasswordHash = new byte[] { 1, 2, 3, 4, 5, 6, 7, 8 },
-            PasswordSalt = new byte[] { 9, 8, 7, 6, 5, 4, 3, 2 },
+            PasswordHash = [1, 2, 3, 4, 5, 6, 7, 8],
+            PasswordSalt = [9, 8, 7, 6, 5, 4, 3, 2],
 
         };
 
@@ -123,8 +123,8 @@ public class UserRepositoryTest
             Gender = 'M',
             DateOfBirth = new DateOnly(2002, 5, 10),
             PhoneNumber = "123456789",
-            PasswordHash = new byte[] { 1, 2, 3, 4, 5, 6, 7, 8 },
-            PasswordSalt = new byte[] { 9, 8, 7, 6, 5, 4, 3, 2 },
+            PasswordHash = [1, 2, 3, 4, 5, 6, 7, 8],
+            PasswordSalt = [9, 8, 7, 6, 5, 4, 3, 2],
             EmailConfirmed = true,
         };
         User user2 = new User()
@@ -136,8 +136,8 @@ public class UserRepositoryTest
             Gender = 'F',
             DateOfBirth = new DateOnly(2002, 5, 10),
             PhoneNumber = "322144443",
-            PasswordHash = new byte[] { 1, 2, 3, 4, 5, 6, 7, 8 },
-            PasswordSalt = new byte[] { 9, 8, 7, 6, 5, 4, 3, 2 },
+            PasswordHash = [1, 2, 3, 4, 5, 6, 7, 8],
+            PasswordSalt = [9, 8, 7, 6, 5, 4, 3, 2],
             EmailConfirmed = true,
         };
 

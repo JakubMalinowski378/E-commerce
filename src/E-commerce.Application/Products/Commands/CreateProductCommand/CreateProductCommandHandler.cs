@@ -12,10 +12,12 @@ public class CreateProductCommandHandler(ICategoryRepository categoryRepository,
     IMapper mapper,
     IUserContext userContext,
     IProductRepository productRepository,
-    IProductAuthorizationService productAuthorizationService)
+    IProductAuthorizationService productAuthorizationService,
+    IProductImageService productImageService)
     : IRequestHandler<CreateProductCommand, Guid>
 {
     private readonly IProductAuthorizationService _productAuthorizationService = productAuthorizationService;
+    private readonly IProductImageService _productImageService = productImageService;
     private readonly ICategoryRepository _categoryRepository = categoryRepository;
     private readonly IProductRepository _productRepository = productRepository;
     private readonly IUserContext _userContext = userContext;
@@ -28,15 +30,16 @@ public class CreateProductCommandHandler(ICategoryRepository categoryRepository,
 
         var product = _mapper.Map<Product>(request);
         if (!_productAuthorizationService.Authorize(product, ResourceOperation.Create))
-        {
             throw new ForbidException();
-        }
 
         var user = _userContext.GetCurrentUser();
         product.UserId = user!.Id;
         product.Categories = categories;
 
         await _productRepository.Create(product);
+
+        await _productImageService.HandleImageUploads(product, request.Images);
+
         return product.Id;
     }
 }

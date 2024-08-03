@@ -11,6 +11,7 @@ public class EcommerceDbContext(DbContextOptions<EcommerceDbContext> options) : 
     public DbSet<Rating> Ratings { get; set; }
     public DbSet<Category> Categories { get; set; }
     public DbSet<Role> Roles { get; set; }
+    public DbSet<ProductImage> ProductImages { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -20,5 +21,6 @@ public class EcommerceDbContext(DbContextOptions<EcommerceDbContext> options) : 
         modelBuilder.ApplyConfiguration(new UserConfiguration());
         modelBuilder.ApplyConfiguration(new ProductConfiguration());
         modelBuilder.ApplyConfiguration(new RatingConfiguration());
+        modelBuilder.ApplyConfiguration(new ProductImageConfiguration());
     }
 }

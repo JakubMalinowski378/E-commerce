@@ -14,7 +14,7 @@ public class GetAllProductsQueryHandler(IProductRepository productRepository, IM
     public async Task<PagedResult<ProductDto>> Handle(GetAllProductsQuery request, CancellationToken cancellationToken)
     {
         var (products, totalCount) = await _productRepository
-            .GetAllMatchingAsync(request.SearchPhrase, request.PageSize, request.PageNumber);
+            .GetAllMatchingAsync(request.SearchPhrase, request.PageSize, request.PageNumber, x => x.ProductImages);
 
         var productDtos = _mapper.Map<IEnumerable<ProductDto>>(products);
 

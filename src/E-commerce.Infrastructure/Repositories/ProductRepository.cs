@@ -17,9 +17,6 @@ public class ProductRepository(EcommerceDbContext dbContext) : IProductRepositor
         return product.Id;
     }
 
-    public async Task<IEnumerable<Product>> GetProductsAsync()
-        => await _dbContext.Products.ToListAsync();
-
     public async Task<Product?> GetProductByIdAsync(Guid id, params Expression<Func<Product, object>>[] includePredicates)
     {
         var query = ApplyIncludes(includePredicates);
@@ -43,15 +40,20 @@ public class ProductRepository(EcommerceDbContext dbContext) : IProductRepositor
     public Task SaveChanges()
         => _dbContext.SaveChangesAsync();
 
-    public async Task<IEnumerable<Product>> GetUserProducts(Guid userId)
-        => await _dbContext.Products.Where(x => x.UserId == userId).ToListAsync();
+    public async Task<IEnumerable<Product>> GetUserProducts(Guid userId, params Expression<Func<Product, object>>[] includePredicates)
+    {
+        var query = ApplyIncludes(includePredicates);
+        return await query.Where(x => x.UserId == userId).ToListAsync();
+    }
 
-    public async Task<(IEnumerable<Product>, int)> GetAllMatchingAsync(string? searchPhrase, int pageSize, int pageNumber)
+    public async Task<(IEnumerable<Product>, int)> GetAllMatchingAsync(string? searchPhrase, int pageSize, int pageNumber,
+        params Expression<Func<Product, object>>[] includePredicates)
     {
         var searchPhraseLower = searchPhrase?.Trim().ToLower();
 
-        var query = _dbContext.Products
-            .Where(x => searchPhraseLower == null
+        var query = ApplyIncludes(includePredicates);
+
+        query = query.Where(x => searchPhraseLower == null
             || x.Name.ToLower().Contains(searchPhraseLower));
 
         var count = await query.CountAsync();

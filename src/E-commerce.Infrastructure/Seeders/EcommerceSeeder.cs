@@ -1,19 +1,23 @@
 ﻿using Bogus;
+using E_commerce.Application.Interfaces;
 using E_commerce.Domain.Constants;
 using E_commerce.Domain.Entities;
 using E_commerce.Infrastructure.Persistance;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Hosting;
 using System.Security.Cryptography;
 using System.Text;
 
 namespace E_commerce.Infrastructure.Seeders;
 public class EcommerceSeeder(EcommerceDbContext dbContext,
-    IWebHostEnvironment webHostEnvironment)
+    IWebHostEnvironment webHostEnvironment,
+    IProductImageService productImageService)
     : IEcommerceSeeder
 {
     private readonly EcommerceDbContext _dbContext = dbContext;
     private readonly IWebHostEnvironment _webHostEnvironment = webHostEnvironment;
+    private readonly IProductImageService _productImageService = productImageService;
     private const string Locale = "pl";
     private const int RowCount = 10;
 
@@ -63,9 +67,28 @@ public class EcommerceSeeder(EcommerceDbContext dbContext,
             {
                 var userIds = _dbContext.Users.Select(x => x.Id);
                 var productCategories = _dbContext.Categories.ToArray();
-                var products = GetProducts(RowCount * 10, userIds, productCategories);
+                var products = GetProducts(RowCount * 3, userIds, productCategories);
                 _dbContext.Products.AddRange(products);
                 await _dbContext.SaveChangesAsync();
+            }
+
+            if (!_dbContext.ProductImages.Any())
+            {
+                var products = _dbContext.Products.ToArray();
+                var seederHelper = new SeederHelper();
+                using var httpClient = new HttpClient();
+                foreach (var product in products)
+                {
+                    var finalUrl = await seederHelper.GetFinalUrlAsync("https://picsum.photos/1280/768");
+                    var fileBytes = await httpClient.GetByteArrayAsync(finalUrl);
+                    var stream = new MemoryStream(fileBytes);
+                    IFormFile formFile = new FormFile(stream, 0, stream.Length, null, seederHelper.GetFileNameFromUrl(finalUrl))
+                    {
+                        Headers = new HeaderDictionary(),
+                        ContentType = seederHelper.GetContentType(finalUrl)
+                    };
+                    await _productImageService.HandleImageUploads(product, [formFile]);
+                }
             }
 
             if (!_dbContext.Ratings.Any())
