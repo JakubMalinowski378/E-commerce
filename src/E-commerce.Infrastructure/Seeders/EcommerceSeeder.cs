@@ -116,7 +116,7 @@ public class EcommerceSeeder(EcommerceDbContext dbContext,
         var (passwordHash, passwordSalt) = GeneratePassword("Password#123");
         char[] availableGenders = ['F', 'M'];
         var users = new Faker<User>(Locale)
-                .RuleFor(x => x.Firstname, y => y.Name.FirstName())
+                .RuleFor(x => x.FirstName, y => y.Name.FirstName())
                 .RuleFor(x => x.LastName, y => y.Name.LastName())
                 .RuleFor(x => x.Email, y => y.Internet.Email())
                 .RuleFor(x => x.Gender, y => y.PickRandom(availableGenders))

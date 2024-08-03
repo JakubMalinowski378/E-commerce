@@ -3,11 +3,10 @@ using E_commerce.Domain.Repositories;
 using E_commerce.Infrastructure.Persistance;
 using E_commerce.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.VisualBasic;
 
 namespace E_commerce.Infrastructure.Tests.Repositories;
 
-public class CategoryRepositoryTests 
+public class CategoryRepositoryTests
 {
     private readonly DbContextOptions<EcommerceDbContext> _dbContextOptions;
     private readonly EcommerceDbContext _context;
@@ -78,7 +77,5 @@ public class CategoryRepositoryTests
 
         //assert
         Assert.Contains(categoryFromDb, a => a.CategoryName == category.CategoryName);
-
-
     }
 }

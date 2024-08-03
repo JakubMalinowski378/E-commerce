@@ -40,7 +40,7 @@ public class RatingRepositoryTests
         var ratingFromDb = await _ratingRepository.GetRatingById(rating.Id);
 
         //assert
-        Assert.Equal(ratingFromDb.Comment , rating.Comment);
+        Assert.Equal(ratingFromDb.Comment, rating.Comment);
     }
 
     [Fact()]
@@ -72,7 +72,7 @@ public class RatingRepositoryTests
         // arrange
         Product product = new Product()
         {
-            Id= Guid.NewGuid(),
+            Id = Guid.NewGuid(),
             Name = "Test",
         };
         Rating rating = new Rating()
@@ -89,7 +89,7 @@ public class RatingRepositoryTests
             Id = Guid.NewGuid(),
             UserId = Guid.NewGuid(),
             ProductId = product.Id,
-            AddedDate = new DateTime(2022,3,5),
+            AddedDate = new DateTime(2022, 3, 5),
             Rate = Domain.Constants.Ratings.Good,
             Comment = "Kinda good",
         };
@@ -132,8 +132,8 @@ public class RatingRepositoryTests
         // arrange
         User user = new User()
         {
-            Id= Guid.NewGuid(),
-            Firstname = "Tester",
+            Id = Guid.NewGuid(),
+            FirstName = "Tester",
         };
         Product product = new Product()
         {
@@ -165,7 +165,7 @@ public class RatingRepositoryTests
         var ratingsFromDb = await _ratingRepository.GetRatingByUserIdAndProductId(user.Id, product.Id);
 
         //assert
-        Assert.Equal(ratingsFromDb.AddedDate,rating.AddedDate);
+        Assert.Equal(rating.AddedDate, ratingsFromDb?.AddedDate);
     }
 
     [Fact()]
@@ -199,8 +199,5 @@ public class RatingRepositoryTests
         //assert
         Assert.Contains(ratingsFromDb, r => r.AddedDate == rating.AddedDate && r.Rate == rating.Rate && r.Comment == rating.Comment);
         Assert.Contains(ratingsFromDb, r => r.AddedDate == rating2.AddedDate && r.Rate == rating2.Rate && r.Comment == rating2.Comment);
-
     }
-
-
 }

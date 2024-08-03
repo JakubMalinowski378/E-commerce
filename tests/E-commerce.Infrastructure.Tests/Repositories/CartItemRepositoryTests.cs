@@ -94,7 +94,7 @@ public class CartItemRepositoryTests
         User user = new User()
         {
             Id = Guid.NewGuid(),
-            Firstname = "Tester",
+            FirstName = "Tester",
         };
         CartItem cartItem = new CartItem()
         {
