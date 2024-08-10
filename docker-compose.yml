@@ -1,0 +1,59 @@
+version: '3.4'
+name: e-commerce
+
+volumes:
+  e-commerce-volume:
+    name: e-commerce-volume
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: D:/e-commerce/
+
+networks:
+  e-commerce-network:
+    driver: bridge
+
+services:
+  e-commerce.api:
+    container_name: e-commerce.api
+    image: ${DOCKER_REGISTRY-}ecommerceapi
+    build:
+      context: .
+      dockerfile: src/E-commerce.API/Dockerfile
+    depends_on:
+      e-commerce.database:
+        condition: service_started
+      e-commerce.blobstorage:
+        condition: service_started
+    ports:
+      - "8000:8000"
+      - "8001:8001"
+    networks:
+      - e-commerce-network
+    environment:
+      - AzureStorageConnectionString=DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;BlobEndpoint=http://host.docker.internal:10000/devstoreaccount1;
+  e-commerce.database:
+    container_name: e-commerce.database
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    environment:
+      MSSQL_SA_PASSWORD: "Password123$"
+      ACCEPT_EULA: "Y"
+    ports:
+      - "1433:1433"
+    volumes:
+      - D:/e-commerce/data:/var/opt/mssql/data
+    networks:
+      - e-commerce-network
+  e-commerce.blobstorage:
+    container_name: e-commerce.azurite
+    image: mcr.microsoft.com/azure-storage/azurite
+    command: "azurite-blob --blobHost 0.0.0.0 --blobPort 10000 --skipApiVersionCheck"
+    ports:
+      - "10000:10000"
+    environment:
+      - AZURITE_ACCOUNTS=devstoreaccount1:Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==
+    volumes:
+      - e-commerce-volume:/data
+    networks:
+      - e-commerce-network

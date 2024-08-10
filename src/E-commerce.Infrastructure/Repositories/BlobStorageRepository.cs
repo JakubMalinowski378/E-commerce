@@ -6,7 +6,8 @@ using Microsoft.Extensions.Configuration;
 namespace E_commerce.Infrastructure.Repositories;
 public class BlobStorageRepository(IConfiguration configuration) : IBlobStorageRepository
 {
-    private readonly string blobStorageConnectionString = configuration["blobStorageConnectionString"]!;
+    private readonly string blobStorageConnectionString = configuration["BlobStorageSettings:BlobStorageConnectionString"]!;
+
     public async Task DeleteBlobAsync(string containerName, string blobName)
     {
         var blobServiceClient = new BlobServiceClient(blobStorageConnectionString);
