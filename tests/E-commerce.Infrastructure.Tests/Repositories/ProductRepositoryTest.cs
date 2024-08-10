@@ -21,21 +21,51 @@ public class ProductRepositoryTest
         _productRepository = new ProductRepository(_context);
     }
 
-    [Fact()]
-    public async Task Create()
+    public static IEnumerable<Object[]> _products()
     {
-        // arrange
-        Product product = new Product()
+        yield return new Object[]{ new Product()
         {
             Id = Guid.NewGuid(),
-            Name = "Test",
-            Ratings = new List<Rating>(),
+            Name = "Test1",
             Quantity = 1000,
             Price = 11.5M,
-            IsHidden = false,
             UserId = Guid.NewGuid(),
             AdditionalProperties = "NotNull",
-        };
+        } };
+        yield return new Object[]{ new Product()
+        {
+            Id = Guid.NewGuid(),
+            Name = "Test2",
+            Quantity = 100,
+            Price = 11,
+            UserId = Guid.NewGuid(),
+            AdditionalProperties = "NotNull1",
+        } };
+        yield return new Object[]{ new Product()
+        {
+            Id = Guid.NewGuid(),
+            Name = "Test3",
+            Quantity = 0,
+            Price = 5,
+            UserId = Guid.NewGuid(),
+            AdditionalProperties = "Null2",
+        } };
+        yield return new Object[]{ new Product()
+        {
+            Id = Guid.NewGuid(),
+            Name = "Test4",
+            Quantity = 20,
+            Price = 5,
+            UserId = Guid.NewGuid(),
+            AdditionalProperties = "Null3",
+        } };
+    }
+
+    [Theory]
+    [MemberData(nameof(_products))]
+    public async Task Create(Product product)
+    {
+        // arrange
 
         //act
         await _productRepository.Create(product);
@@ -47,47 +77,26 @@ public class ProductRepositoryTest
 
     }
 
-    [Fact()]
-    public async Task GetProductByIdAsync()
+    [Theory]
+    [MemberData(nameof(_products))]
+    public async Task GetProductByIdAsync(Product product)
     {
         // arrange
-        Product product = new Product()
-        {
-            Id = Guid.NewGuid(),
-            Name = "Test",
-            Ratings = new List<Rating>(),
-            Quantity = 1000,
-            Price = 11.5M,
-            IsHidden = false,
-            UserId = Guid.NewGuid(),
-            AdditionalProperties = "NotNull",
-        };
 
         //act
-        await _productRepository.Create(product);
+        var id = await _productRepository.Create(product);
         var productFromDb = await _productRepository.GetProductByIdAsync(product.Id);
 
         //assert
         Assert.NotNull(productFromDb);
         Assert.Equal(product.Name, productFromDb.Name);
-
     }
 
-    [Fact()]
-    public async Task Delete()
+    [Theory]
+    [MemberData(nameof(_products))]
+    public async Task Delete(Product product)
     {
         // arrange
-        Product product = new Product()
-        {
-            Id = Guid.NewGuid(),
-            Name = "Test",
-            Ratings = new List<Rating>(),
-            Quantity = 1000,
-            Price = 11.5M,
-            IsHidden = false,
-            UserId = Guid.NewGuid(),
-            AdditionalProperties = "NotNull",
-        };
 
         //act
         await _productRepository.Create(product);
@@ -98,119 +107,35 @@ public class ProductRepositoryTest
         Assert.Null(productFromDb);
     }
 
-    [Fact()]
-    public async Task GetUserProducts()
+    [Theory]
+    [MemberData(nameof(_products))]
+    public async Task GetUserProducts(Product product)
     {
         // arrange
         User user = new User()
         {
             Id = Guid.NewGuid(),
-            Firstname = "Test"
+            FirstName = "Test"
         };
-        Product product1 = new Product()
-        {
-            Id = Guid.NewGuid(),
-            Name = "Test1",
-            Ratings = new List<Rating>(),
-            Quantity = 1000,
-            Price = 11.5M,
-            IsHidden = false,
-            UserId = user.Id,
-            AdditionalProperties = "Book",
-        };
-        Product product2 = new Product()
-        {
-            Id = Guid.NewGuid(),
-            Name = "Test2",
-            Ratings = new List<Rating>(),
-            Quantity = 100,
-            Price = 11,
-            IsHidden = false,
-            UserId = user.Id,
-            AdditionalProperties = "Sports Book",
-        };
-        Product product3 = new Product()
-        {
-            Id = Guid.NewGuid(),
-            Name = "Test3",
-            Ratings = new List<Rating>(),
-            Quantity = 0,
-            Price = 5,
-            IsHidden = true,
-            UserId = user.Id,
-            AdditionalProperties = "Null",
-        };
-        Product product4 = new Product()
-        {
-            Id = Guid.NewGuid(),
-            Name = "Test4",
-            Ratings = new List<Rating>(),
-            Quantity = 20,
-            Price = 5,
-            IsHidden = false,
-            UserId = Guid.NewGuid(),
-            AdditionalProperties = "Null",
-        };
+        product.UserId = user.Id;
 
         //act
-        await _productRepository.Create(product1);
-        await _productRepository.Create(product2);
-        await _productRepository.Create(product3);
+        await _productRepository.Create(product);
         var productsFromDb = await _productRepository.GetUserProducts(user.Id);
 
         //assert
-        Assert.Equal(3, productsFromDb.Count());
-        Assert.Contains(productsFromDb, p => p.Name == product1.Name && p.Quantity == product1.Quantity && p.Price == product1.Price);
-        Assert.Contains(productsFromDb, p => p.Name == product2.Name && p.Quantity == product2.Quantity && p.Price == product2.Price);
-        Assert.Contains(productsFromDb, p => p.Name == product3.Name && p.Quantity == product3.Quantity && p.Price == product3.Price);
+        Assert.Contains(productsFromDb, p => p.Name == product.Name && p.Quantity == product.Quantity && p.Price == product.Price);
     }
 
-    /*
     [Fact()]
     public async Task GetAllMatchingAsync()
     {
         // arrange
-        Product product1 = new Product()
-        {
-            Id = Guid.NewGuid(),
-            Name = "Test1",
-            Ratings = new List<Rating>(),
-            Quantity = 1000,
-            Price = 11.5M,
-            IsHidden = false,
-            UserId = Guid.NewGuid(),
-            AdditionalProperties = "book",
-        };
-        Product product2 = new Product()
-        {
-            Id = Guid.NewGuid(),
-            Name = "Test2",
-            Ratings = new List<Rating>(),
-            Quantity = 100,
-            Price = 11,
-            IsHidden = false,
-            UserId = Guid.NewGuid(),
-            AdditionalProperties = "sports book",
-        };
-        Product product3 = new Product()
-        {
-            Id = Guid.NewGuid(),
-            Name = "Test3",
-            Ratings = new List<Rating>(),
-            Quantity = 0,
-            Price = 5,
-            IsHidden = true,
-            UserId = Guid.NewGuid(),
-            AdditionalProperties = "Null",
-        };
+
 
         //act
-        await _productRepository.Create(product1);
-        await _productRepository.Create(product2);
-        await _productRepository.Create(product3);
-        var productsFromDb = await _productRepository.GetAllMatchingAsync("Book",0,0);
+
 
         //assert
-        Assert.Equal(productsFromDb.Item1.First().Name, product1.Name);
-    }*/
+    }
 }

@@ -12,6 +12,16 @@ public class UserRepositoryTest
     private readonly EcommerceDbContext _context;
     private readonly IUserRepository _userRepository;
     private readonly IRolesRepository _rolesRepository;
+    private readonly User _user = new()
+    {
+        Id = Guid.NewGuid(),
+        FirstName = "Tester",
+        LastName = "Test",
+        Email = "email@gmail.com",
+        Gender = 'M',
+        DateOfBirth = new DateOnly(2002, 5, 10),
+        PhoneNumber = "123456789"
+    };
 
     public UserRepositoryTest()
     {
@@ -34,122 +44,66 @@ public class UserRepositoryTest
     public async Task Create()
     {
         // arrange
-        User user = new User()
-        {
-            Id = Guid.NewGuid(),
-            Firstname = "Tester",
-            LastName = "Test",
-            Email = "email@gmail.com",
-            Gender = 'M',
-            DateOfBirth = new DateOnly(2002, 5, 10),
-            PhoneNumber = "123456789",
-            PasswordHash = [1, 2, 3, 4, 5, 6, 7, 8],
-            PasswordSalt = [9, 8, 7, 6, 5, 4, 3, 2],
-
-        };
 
         //act
-        var id = await _userRepository.Create(user);
-        var userFromDb = await _userRepository.GetUserByIdAsync(user.Id);
+        await _userRepository.Create(_user);
+        var userFromDb = await _userRepository.GetUserByIdAsync(_user.Id);
 
         //assert
-        Assert.NotNull(id);
         Assert.NotNull(userFromDb);
-        //Assert.Equal(userFromDb.Firstname, user.Firstname);
+        Assert.Equal(_user.FirstName, userFromDb.FirstName);
     }
 
     [Fact()]
     public async Task GetUserByIdAsync()
     {
         // arrange
-        User user = new User()
-        {
-            Id = Guid.NewGuid(),
-            Firstname = "Tester",
-            LastName = "Test",
-            Email = "email@gmail.com",
-            Gender = 'M',
-            DateOfBirth = new DateOnly(2002, 5, 10),
-            PhoneNumber = "123456789",
-            PasswordHash = [1, 2, 3, 4, 5, 6, 7, 8],
-            PasswordSalt = [9, 8, 7, 6, 5, 4, 3, 2],
-            EmailConfirmed = true,
-        };
 
         //act
-        await _userRepository.Create(user);
-        var userFromDb = await _userRepository.GetUserByIdAsync(user.Id);
+        await _userRepository.Create(_user);
+        var userFromDb = await _userRepository.GetUserByIdAsync(_user.Id);
 
         //assert
-        Assert.Equal(userFromDb.Firstname, user.Firstname);
+        Assert.Equal(_user.FirstName, userFromDb?.FirstName);
     }
 
     [Fact()]
     public async Task GetUserByEmailAsync()
     {
         // arrange
-        User user = new User()
-        {
-            Id = Guid.NewGuid(),
-            Firstname = "Tester",
-            LastName = "Test",
-            Email = "email@gmail.com",
-            Gender = 'M',
-            DateOfBirth = new DateOnly(2002, 5, 10),
-            PhoneNumber = "123456789",
-            PasswordHash = [1, 2, 3, 4, 5, 6, 7, 8],
-            PasswordSalt = [9, 8, 7, 6, 5, 4, 3, 2],
-
-        };
 
         //act
-        await _userRepository.Create(user);
+        await _userRepository.Create(_user);
         var userFromDb = await _userRepository.GetUserByEmailAsync("email@gmail.com");
 
         //assert
-        Assert.Equal(userFromDb.Firstname, user.Firstname);
+        Assert.Equal(_user.FirstName, userFromDb?.FirstName);
     }
 
     [Fact()]
     public async Task GetUsersAsync()
     {
         // arrange
-        User user = new User()
-        {
-            Id = Guid.NewGuid(),
-            Firstname = "Tester",
-            LastName = "Test",
-            Email = "email@gmail.com",
-            Gender = 'M',
-            DateOfBirth = new DateOnly(2002, 5, 10),
-            PhoneNumber = "123456789",
-            PasswordHash = [1, 2, 3, 4, 5, 6, 7, 8],
-            PasswordSalt = [9, 8, 7, 6, 5, 4, 3, 2],
-            EmailConfirmed = true,
-        };
         User user2 = new User()
         {
             Id = Guid.NewGuid(),
-            Firstname = "Tester2",
+            FirstName = "Tester2",
             LastName = "Test2",
             Email = "email2@gmail.com",
             Gender = 'F',
             DateOfBirth = new DateOnly(2002, 5, 10),
             PhoneNumber = "322144443",
-            PasswordHash = [1, 2, 3, 4, 5, 6, 7, 8],
-            PasswordSalt = [9, 8, 7, 6, 5, 4, 3, 2],
             EmailConfirmed = true,
         };
 
         //act
-        await _userRepository.Create(user);
+        await _userRepository.Create(_user);
         await _userRepository.Create(user2);
         var usersFromDb = await _userRepository.GetUsersAsync();
 
         //assert
-        Assert.Contains(usersFromDb, u => u.Firstname == user.Firstname && u.LastName == user.Firstname);
-        Assert.Contains(usersFromDb, u => u.Firstname == user2.Firstname && u.LastName == user2.Firstname);
-
+        Assert.Contains(usersFromDb, u => u.FirstName == _user.FirstName && u.LastName == _user.LastName);
+        Assert.Contains(usersFromDb, u => u.FirstName == user2.FirstName && u.LastName == user2.LastName);
     }
 
     [Fact()]

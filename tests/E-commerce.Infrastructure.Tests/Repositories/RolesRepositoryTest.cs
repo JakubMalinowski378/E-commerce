@@ -25,19 +25,18 @@ public class RolesRepositoryTest
     public async Task GetRole()
     {
         // arrange
-        await _context.Roles.AddRangeAsync(new Role
+        await _context.Roles.AddAsync(new Role
         {
             Id = Guid.NewGuid(),
             Name = "Test",
         }
         );
         _context.SaveChanges();
-        
 
         //act
         var roleFromDb = await _rolesRepository.GetRole("Test");
 
         //assert
-        Assert.Equal(roleFromDb.Name,"Test");
-   }
+        Assert.Equal("Test", roleFromDb?.Name);
+    }
 }

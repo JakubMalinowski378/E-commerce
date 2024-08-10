@@ -7,4 +7,5 @@ public class ProductDto
     public decimal Price { get; set; }
     public List<string> ProductCategories { get; set; } = default!;
     public List<string> ImageUrls { get; set; } = default!;
+    public string AdditionalProperties { get; set; } = string.Empty;
 }

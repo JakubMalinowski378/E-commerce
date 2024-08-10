@@ -5,7 +5,7 @@ using E_commerce.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 namespace E_commerce.Infrastructure.Tests.Repositories;
-public class AddressRepositoryTests 
+public class AddressRepositoryTests
 {
     private readonly DbContextOptions<EcommerceDbContext> _dbContextOptions;
     private readonly EcommerceDbContext _context;
@@ -36,7 +36,7 @@ public class AddressRepositoryTests
         //act
         await _addressRepository.Create(address);
         var addressFromDb = await _addressRepository.GetByIdAsync(address.Id);
-        
+
         //assert
         Assert.NotNull(addressFromDb);
         Assert.Equal(address.City, addressFromDb.City);
@@ -120,6 +120,4 @@ public class AddressRepositoryTests
         Assert.Contains(addressesFromDb, a => a.Street == "Glowna" && a.City == "Lapy" && a.PostalCode == "18-100");
         Assert.Contains(addressesFromDb, a => a.Street == "Witosa" && a.City == "Warszawa" && a.PostalCode == "10-012");
     }
-
-
 }
