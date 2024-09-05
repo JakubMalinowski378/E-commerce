@@ -22,7 +22,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "E-commerce.Infrastructure.T
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "E-commerce.API.Tests", "tests\E-commerce.API.Tests\E-commerce.API.Tests.csproj", "{F72960F1-5B61-4ADD-8520-9E9971438ED0}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "E-commerce.Application", "tests\E-commerce.Application\E-commerce.Application.csproj", "{7D6CCA76-60BA-4231-9A38-7DD1693DC4DE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "E-commerce.Application.Tests", "tests\E-commerce.Application\E-commerce.Application.Tests.csproj", "{7D6CCA76-60BA-4231-9A38-7DD1693DC4DE}"
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{05E64E38-B6EA-4CA3-994B-5AAFB2490F40}"
 EndProject
