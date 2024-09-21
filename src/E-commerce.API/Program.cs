@@ -1,9 +1,9 @@
 using E_commerce.API.Middlewares;
 using E_commerce.Application.Extensions;
+using E_commerce.Domain.Interfaces;
 using E_commerce.Infrastructure.Extensions;
-using E_commerce.Infrastructure.Persistance;
 using E_commerce.Infrastructure.Seeders;
-using Microsoft.EntityFrameworkCore;
+using E_commerce.Infrastructure.Services;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -36,16 +36,13 @@ builder.Services.AddSwaggerGen(config =>
 });
 builder.Services.AddInfrastucture(builder.Configuration);
 builder.Services.AddApplication(builder.Configuration);
+builder.Services.AddScoped<IDatabaseMigrator, DatabaseMigrator>();
 builder.Services.AddScoped<ErrorHandlingMiddleware>();
 var app = builder.Build();
 
 var scope = app.Services.CreateScope();
-using var dbContext = scope.ServiceProvider.GetRequiredService<EcommerceDbContext>();
-
-if ((await dbContext.Database.GetPendingMigrationsAsync()).Any())
-{
-    await dbContext.Database.MigrateAsync();
-}
+var databaseMigrator = scope.ServiceProvider.GetRequiredService<IDatabaseMigrator>();
+await databaseMigrator.MigrateAsync();
 
 if (app.Environment.IsDevelopment())
 {
@@ -65,3 +62,5 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+public partial class Program { }
