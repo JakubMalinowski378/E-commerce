@@ -10,10 +10,10 @@ public class ErrorHandlingMiddleware : IMiddleware
         {
             await next.Invoke(context);
         }
-        catch (NotFoundException notFound)
+        catch (NotFoundException e)
         {
             context.Response.StatusCode = StatusCodes.Status404NotFound;
-            await context.Response.WriteAsync(notFound.Message);
+            await context.Response.WriteAsync(e.Message);
         }
         catch (ForbidException)
         {
@@ -23,6 +23,11 @@ public class ErrorHandlingMiddleware : IMiddleware
         catch (InvalidOperationException e)
         {
             context.Response.StatusCode = StatusCodes.Status400BadRequest;
+            await context.Response.WriteAsync(e.Message);
+        }
+        catch (UnauthorizedException e)
+        {
+            context.Response.StatusCode = StatusCodes.Status401Unauthorized;
             await context.Response.WriteAsync(e.Message);
         }
         catch (Exception)

@@ -28,7 +28,6 @@ public class ErrorHandlingMiddlewareTests
         var exception = new ForbidException();
 
         await middleware.InvokeAsync(context, _ => throw exception);
-
         context.Response.StatusCode.Should().Be(StatusCodes.Status403Forbidden);
     }
 
@@ -43,6 +42,18 @@ public class ErrorHandlingMiddlewareTests
         await middleware.InvokeAsync(context, _ => throw exception);
 
         context.Response.StatusCode.Should().Be(StatusCodes.Status404NotFound);
+    }
+
+    [Fact]
+    public async Task InvokeAsync_WhenUnauthorizedExceptionThrown_ShouldSetStatusCode401()
+    {
+        var middleware = new ErrorHandlingMiddleware();
+        var context = new DefaultHttpContext();
+        var exception = new UnauthorizedException("Invalid username or password");
+
+        await middleware.InvokeAsync(context, _ => throw exception);
+
+        context.Response.StatusCode.Should().Be(StatusCodes.Status401Unauthorized);
     }
 
     [Fact]
