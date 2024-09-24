@@ -4,6 +4,7 @@ using E_commerce.Domain.Entities;
 using E_commerce.Domain.Exceptions;
 using E_commerce.Domain.Repositories;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -18,7 +19,7 @@ public class RegisterUserCommandHandler(IEmailSender emailSender, IUserRepositor
     public async Task<Guid> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
     {
         if (await _userRepository.UserExists(request.Email))
-            throw new NotFoundException(nameof(User), request.Email);
+            throw new ConflictException($"Email {request.Email} is in use");
 
         using var hmac = new HMACSHA512();
 
@@ -29,6 +30,9 @@ public class RegisterUserCommandHandler(IEmailSender emailSender, IUserRepositor
         user.EmailConfirmed = false;
         user.ConfirmationToken = Guid.NewGuid().ToString();
         user.ConfirmationTokenExpiration = DateTime.UtcNow.AddDays(1);
+        var contextAccessor = new HttpContextAccessor();
+        var appUrl = $"{contextAccessor.HttpContext.Request.Scheme}://{contextAccessor.HttpContext.Request.Host}";
+
         var tempraryAppUrl = "https://localhost:7202";
         var confirmationUrl = $"{tempraryAppUrl}/api/Mail/confirm-email?token={user.ConfirmationToken}&email={user.Email}";
         var message = $"Please confirm your email by clicking on the following link: <a href='{confirmationUrl}'>Confirm Email .</a>";

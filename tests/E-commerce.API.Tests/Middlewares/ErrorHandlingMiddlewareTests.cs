@@ -57,6 +57,18 @@ public class ErrorHandlingMiddlewareTests
     }
 
     [Fact]
+    public async Task InvokeAsync_WhenConflictExceptionThrown_ShouldSetStatusCode409()
+    {
+        var middleware = new ErrorHandlingMiddleware();
+        var context = new DefaultHttpContext();
+        var exception = new ConflictException("Conflict occurred");
+
+        await middleware.InvokeAsync(context, _ => throw exception);
+
+        context.Response.StatusCode.Should().Be(StatusCodes.Status409Conflict);
+    }
+
+    [Fact]
     public async Task InvokeAsync_WhenGenericExceptionThrown_ShouldSetStatusCode500()
     {
         var middleware = new ErrorHandlingMiddleware();
