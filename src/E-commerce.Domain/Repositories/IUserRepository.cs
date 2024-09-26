@@ -14,4 +14,5 @@ public interface IUserRepository
     Task<IEnumerable<Rating>?> GetAllRatingsOfUser(Guid id);
     Task<User?> GetUserByConfirmationTokenAsync(string token);
     Task<User?> GetUserByResetPasswordTokenAsync(string token);
+    bool IsPhoneNumberInUse(string phoneNumber);
 }

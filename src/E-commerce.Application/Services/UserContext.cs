@@ -10,10 +10,8 @@ public class UserContext(IHttpContextAccessor httpContextAccessor) : IUserContex
 
     public CurrentUser? GetCurrentUser()
     {
-        var user = _httpContextAccessor?.HttpContext?.User;
-        if (user == null)
-            throw new InvalidOperationException("User context is not present");
-
+        var user = (_httpContextAccessor?.HttpContext?.User)
+            ?? throw new InvalidOperationException("User context is not present");
         if (user.Identity == null || !user.Identity.IsAuthenticated)
             return null;
 

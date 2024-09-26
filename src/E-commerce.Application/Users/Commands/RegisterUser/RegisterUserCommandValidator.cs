@@ -1,11 +1,12 @@
-﻿using FluentValidation;
+﻿using E_commerce.Domain.Repositories;
+using FluentValidation;
 using System.Text.RegularExpressions;
 
 namespace E_commerce.Application.Users.Commands.RegisterUser;
 public class RegisterUserCommandValidator : AbstractValidator<RegisterUserCommand>
 {
     private readonly char[] _avaiableGenders = ['M', 'F'];
-    public RegisterUserCommandValidator()
+    public RegisterUserCommandValidator(IUserRepository userRepository)
     {
         RuleFor(x => x.Firstname)
             .NotEmpty()
@@ -25,7 +26,10 @@ public class RegisterUserCommandValidator : AbstractValidator<RegisterUserComman
 
         RuleFor(x => x.PhoneNumber)
             .NotEmpty()
-            .Matches(new Regex(@"(\+48\s?)?(\d{3}[-\s]?\d{3}[-\s]?\d{3})")).WithMessage("PhoneNumber not valid");
+            .Matches(new Regex(@"(\+48\s?)?(\d{3}[-\s]?\d{3}[-\s]?\d{3})"))
+            .WithMessage("PhoneNumber not valid")
+            .Must(phoneNumber => !userRepository.IsPhoneNumberInUse(phoneNumber))
+            .WithMessage("Phone number is already in use");
 
         RuleFor(x => x.Password)
             .NotEmpty()

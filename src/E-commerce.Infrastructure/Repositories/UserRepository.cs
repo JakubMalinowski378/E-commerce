@@ -88,4 +88,7 @@ public class UserRepository(EcommerceDbContext dbContext,
 
     public async Task<User?> GetUserByResetPasswordTokenAsync(string token)
         => await _dbContext.Users.SingleOrDefaultAsync(x => x.ResetPasswordToken == token);
+
+    public bool IsPhoneNumberInUse(string phoneNumber)
+        => _dbContext.Users.Any(x => x.PhoneNumber == phoneNumber);
 }

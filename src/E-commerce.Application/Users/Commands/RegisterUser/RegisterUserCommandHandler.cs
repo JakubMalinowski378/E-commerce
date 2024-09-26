@@ -4,18 +4,16 @@ using E_commerce.Domain.Entities;
 using E_commerce.Domain.Exceptions;
 using E_commerce.Domain.Repositories;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using System.Security.Cryptography;
 using System.Text;
 
 namespace E_commerce.Application.Users.Commands.RegisterUser;
-public class RegisterUserCommandHandler(IEmailSender emailSender, IUserRepository userRepository, IRolesRepository rolesRepository, IMapper mapper)
+public class RegisterUserCommandHandler(IEmailNotificationService emailNotificationService, IUserRepository userRepository, IMapper mapper)
     : IRequestHandler<RegisterUserCommand, Guid>
 {
+    private readonly IEmailNotificationService _emailNotificationService = emailNotificationService;
     private readonly IUserRepository _userRepository = userRepository;
     private readonly IMapper _mapper = mapper;
-    private readonly IRolesRepository _rolesRepository = rolesRepository;
-    public readonly IEmailSender _emailSender = emailSender;
     public async Task<Guid> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
     {
         if (await _userRepository.UserExists(request.Email))
@@ -30,15 +28,9 @@ public class RegisterUserCommandHandler(IEmailSender emailSender, IUserRepositor
         user.EmailConfirmed = false;
         user.ConfirmationToken = Guid.NewGuid().ToString();
         user.ConfirmationTokenExpiration = DateTime.UtcNow.AddDays(1);
-        var contextAccessor = new HttpContextAccessor();
-        var appUrl = $"{contextAccessor.HttpContext.Request.Scheme}://{contextAccessor.HttpContext.Request.Host}";
 
-        var tempraryAppUrl = "https://localhost:7202";
-        var confirmationUrl = $"{tempraryAppUrl}/api/Mail/confirm-email?token={user.ConfirmationToken}&email={user.Email}";
-        var message = $"Please confirm your email by clicking on the following link: <a href='{confirmationUrl}'>Confirm Email .</a>";
-
-        await _emailSender.SendEmailAsync(user.Email, "Confirm your email", message);
         await _userRepository.Create(user);
+        await _emailNotificationService.SendConfirmationEmailAsync(user.Email, user.ConfirmationToken);
         return user.Id;
     }
 }

@@ -15,10 +15,10 @@ public class ErrorHandlingMiddleware : IMiddleware
             context.Response.StatusCode = StatusCodes.Status404NotFound;
             await context.Response.WriteAsync(e.Message);
         }
-        catch (ForbidException)
+        catch (ForbidException e)
         {
             context.Response.StatusCode = StatusCodes.Status403Forbidden;
-            await context.Response.WriteAsync("Access forbidden");
+            await context.Response.WriteAsync(e.Message ?? "Access forbidden");
         }
         catch (InvalidOperationException e)
         {

@@ -35,6 +35,7 @@ public static class ServiceCollectionExtension
         services.AddScoped<IProductAuthorizationService, ProductAuthorizationService>();
         services.AddScoped<IAddressAuthorizationService, AddressAuthorizationService>();
         services.AddTransient<IProductImageService, ProductImageService>();
+        services.AddTransient<IEmailNotificationService, EmailNotificationService>();
         services.AddTransient<IEmailSender, EmailSender>();
 
         services.Configure<SmtpSettings>(configuration.GetSection("SmtpSettings"));

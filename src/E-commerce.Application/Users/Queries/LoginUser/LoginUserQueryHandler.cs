@@ -18,9 +18,8 @@ public class LoginUserQueryHandler(IUserRepository userRepository, ITokenService
 
     public async Task<UserDto> Handle(LoginUserQuery request, CancellationToken cancellationToken)
     {
-        var user = await _userRepository.GetUserByEmailAsync(request.Email, u => u.Roles);
-        if (user == null)
-            throw new UnauthorizedException("Invalid username or password");
+        var user = await _userRepository.GetUserByEmailAsync(request.Email, u => u.Roles)
+            ?? throw new UnauthorizedException("Invalid username or password");
 
         using var hmac = new HMACSHA512(user.PasswordSalt);
         var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(request.Password));
