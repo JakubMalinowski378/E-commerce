@@ -32,6 +32,7 @@ services:
     networks:
       - e-commerce-network
     environment:
+      - ASPNETCORE_URLS=https://+:8000;http://+:8001
       - AzureStorageConnectionString=DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;BlobEndpoint=http://host.docker.internal:10000/devstoreaccount1;
   e-commerce.database:
     container_name: e-commerce.database
