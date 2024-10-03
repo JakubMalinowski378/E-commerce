@@ -3,10 +3,12 @@ using E_commerce.Application.Addresses.Commands.Dtos;
 using E_commerce.Application.Addresses.Commands.UpdateAddress;
 using E_commerce.Application.Addresses.Queries.GetAddressById;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace E_commerce.API.Controllers;
 
+[Authorize]
 public class AddressesController(ISender sender) : BaseController
 {
     private readonly ISender _sender = sender;

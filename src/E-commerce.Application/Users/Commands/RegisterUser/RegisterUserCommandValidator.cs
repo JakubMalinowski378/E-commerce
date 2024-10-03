@@ -8,7 +8,7 @@ public class RegisterUserCommandValidator : AbstractValidator<RegisterUserComman
     private readonly char[] _avaiableGenders = ['M', 'F'];
     public RegisterUserCommandValidator(IUserRepository userRepository)
     {
-        RuleFor(x => x.Firstname)
+        RuleFor(x => x.FirstName)
             .NotEmpty()
             .MinimumLength(3);
 

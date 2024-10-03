@@ -31,7 +31,7 @@ public class AccountControllerTests : IClassFixture<WebApplicationFactory<Progra
         DateOfBirth = new DateOnly(2000, 1, 1),
         Email = "test@example.com",
         Password = "Password#123",
-        Firstname = "Jan",
+        FirstName = "Jan",
         LastName = "Nowak",
         Gender = 'M',
         PhoneNumber = "555555555"

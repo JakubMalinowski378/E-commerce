@@ -1,9 +1,10 @@
-﻿using MediatR;
+﻿using E_commerce.Application.Users.Dtos;
+using MediatR;
 
 namespace E_commerce.Application.Users.Commands.RegisterUser;
-public class RegisterUserCommand : IRequest<Guid>
+public class RegisterUserCommand : IRequest<UserDto>
 {
-    public string Firstname { get; set; } = string.Empty;
+    public string FirstName { get; set; } = string.Empty;
     public string LastName { get; set; } = string.Empty;
     public string Email { get; set; } = string.Empty;
     public DateOnly DateOfBirth { get; set; }

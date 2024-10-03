@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using E_commerce.Application.Interfaces;
+using E_commerce.Application.Users.Dtos;
 using E_commerce.Domain.Entities;
 using E_commerce.Domain.Exceptions;
 using E_commerce.Domain.Repositories;
@@ -8,13 +9,19 @@ using System.Security.Cryptography;
 using System.Text;
 
 namespace E_commerce.Application.Users.Commands.RegisterUser;
-public class RegisterUserCommandHandler(IEmailNotificationService emailNotificationService, IUserRepository userRepository, IMapper mapper)
-    : IRequestHandler<RegisterUserCommand, Guid>
+public class RegisterUserCommandHandler(IEmailNotificationService emailNotificationService,
+    IUserRepository userRepository,
+    IMapper mapper,
+    ITokenService tokenService
+    )
+    : IRequestHandler<RegisterUserCommand, UserDto>
 {
     private readonly IEmailNotificationService _emailNotificationService = emailNotificationService;
     private readonly IUserRepository _userRepository = userRepository;
     private readonly IMapper _mapper = mapper;
-    public async Task<Guid> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
+    private readonly ITokenService _tokenService = tokenService;
+
+    public async Task<UserDto> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
     {
         if (await _userRepository.UserExists(request.Email))
             throw new ConflictException($"Email {request.Email} is in use");
@@ -31,6 +38,10 @@ public class RegisterUserCommandHandler(IEmailNotificationService emailNotificat
 
         await _userRepository.Create(user);
         await _emailNotificationService.SendConfirmationEmailAsync(user.Email, user.ConfirmationToken);
-        return user.Id;
+
+        var userDto = _mapper.Map<UserDto>(user);
+        userDto.Token = _tokenService.CreateToken(user);
+
+        return userDto;
     }
 }

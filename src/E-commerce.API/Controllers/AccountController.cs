@@ -19,7 +19,7 @@ public class AccountController(ISender sender) : BaseController
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
-    public async Task<ActionResult<Guid>> Register(RegisterUserCommand command)
+    public async Task<ActionResult<UserDto>> Register(RegisterUserCommand command)
     {
         return Ok(await _sender.Send(command));
     }
