@@ -29,6 +29,12 @@ public class AddressAuthorizationService(IUserContext userContext) : IAddressAut
             return true;
         }
 
+        if (resourceOperation == ResourceOperation.Read
+            && (user!.Id == address.UserId || user!.IsInRole(UserRoles.Admin)))
+        {
+            return true;
+        }
+
         return false;
     }
 }

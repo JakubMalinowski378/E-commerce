@@ -11,7 +11,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace E_commerce.API.Controllers;
 
-public class AccountController(ISender sender) : BaseController
+[ApiController]
+[Route("api/[controller]")]
+public class AccountController(ISender sender) : ControllerBase
 {
     public readonly ISender _sender = sender;
 

@@ -21,7 +21,10 @@ public class CreateCartItemCommandHandler(ICartItemRepository cartItemRepository
     {
         var product = await _productsRepository.GetProductByIdAsync(request.ProductId)
             ?? throw new NotFoundException(nameof(Product), request.ProductId.ToString());
-        var user = _userContext.GetCurrentUser();
+
+        var user = _userContext.GetCurrentUser()
+            ?? throw new ForbidException();
+
         var cartItem = _mapper.Map<CartItem>(request);
         cartItem.UserId = user!.Id;
         await _cartItemRepository.CreateCartItem(cartItem);
