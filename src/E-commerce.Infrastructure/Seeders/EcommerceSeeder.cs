@@ -139,8 +139,8 @@ public class EcommerceSeeder(EcommerceDbContext dbContext,
     private static List<Address> GetAddresses(int count)
     {
         var addresses = new Faker<Address>(Locale)
-            .RuleFor(x => x.StreetNumber, y => y.Random.Int(1, 255))
-            .RuleFor(x => x.ApartmentNumber, y => y.Random.Int(1, 100))
+            .RuleFor(x => x.StreetNumber, y => y.Random.Int(1, 255).ToString())
+            .RuleFor(x => x.ApartmentNumber, y => y.Random.Int(1, 100).ToString())
             .RuleFor(x => x.PostalCode, y => y.Address.ZipCode())
             .RuleFor(x => x.Street, y => y.Address.StreetName())
             .RuleFor(x => x.City, y => y.Address.City())

@@ -10,6 +10,14 @@ public class AddressRepositoryTests
     private readonly DbContextOptions<EcommerceDbContext> _dbContextOptions;
     private readonly EcommerceDbContext _context;
     private readonly IAddressRepository _addressRepository;
+    private readonly Address _address = new()
+    {
+        StreetNumber = "4",
+        ApartmentNumber = null,
+        PostalCode = "18-100",
+        Street = "Glowna",
+        City = "Lapy"
+    };
 
     public AddressRepositoryTests()
     {
@@ -23,42 +31,22 @@ public class AddressRepositoryTests
     [Fact()]
     public async Task Create_AddressIsCreatedSuccessfully_ShouldPass()
     {
-        // arrange
-        var address = new Address
-        {
-            StreetNumber = 4,
-            ApartmentNumber = 15,
-            PostalCode = "18-100",
-            Street = "Glowna",
-            City = "Lapy"
-        };
-
         //act
-        await _addressRepository.Create(address);
-        var addressFromDb = await _addressRepository.GetByIdAsync(address.Id);
+        await _addressRepository.Create(_address);
+        var addressFromDb = await _addressRepository.GetByIdAsync(_address.Id);
 
         //assert
         Assert.NotNull(addressFromDb);
-        Assert.Equal(address.City, addressFromDb.City);
+        Assert.Equal(_address.City, addressFromDb.City);
     }
 
     [Fact()]
     public async Task Delete_AddressIsDeletedSuccessfully_ShouldPass()
     {
-        // arrange
-        var address = new Address
-        {
-            StreetNumber = 4,
-            ApartmentNumber = 15,
-            PostalCode = "18-100",
-            Street = "Glowna",
-            City = "Lapy"
-        };
-
         //act
-        await _addressRepository.Create(address);
-        await _addressRepository.Delete(address);
-        var addressFromDb = await _addressRepository.GetByIdAsync(address.Id);
+        await _addressRepository.Create(_address);
+        await _addressRepository.Delete(_address);
+        var addressFromDb = await _addressRepository.GetByIdAsync(_address.Id);
 
         //assert
         Assert.Null(addressFromDb);
@@ -67,19 +55,9 @@ public class AddressRepositoryTests
     [Fact()]
     public async Task GetByIdAsync()
     {
-        // arrange
-        var address = new Address
-        {
-            StreetNumber = 4,
-            ApartmentNumber = 15,
-            PostalCode = "18-100",
-            Street = "Glowna",
-            City = "Lapy"
-        };
-
         //act
-        await _addressRepository.Create(address);
-        var addressFromDb = await _addressRepository.GetByIdAsync(address.Id);
+        await _addressRepository.Create(_address);
+        var addressFromDb = await _addressRepository.GetByIdAsync(_address.Id);
 
         //assert
         Assert.NotNull(addressFromDb);
@@ -91,11 +69,11 @@ public class AddressRepositoryTests
     {
         // arrange
         var userId = Guid.NewGuid();
-        var address = new Address
+        var _address = new Address
         {
             UserId = userId,
-            StreetNumber = 4,
-            ApartmentNumber = 15,
+            StreetNumber = "4",
+            ApartmentNumber = "15",
             PostalCode = "18-100",
             Street = "Glowna",
             City = "Lapy",
@@ -103,15 +81,15 @@ public class AddressRepositoryTests
         var address2 = new Address
         {
             UserId = userId,
-            StreetNumber = 5,
-            ApartmentNumber = 45,
+            StreetNumber = "5",
+            ApartmentNumber = "45",
             PostalCode = "10-012",
             Street = "Witosa",
             City = "Warszawa",
         };
 
         //act
-        await _addressRepository.Create(address);
+        await _addressRepository.Create(_address);
         await _addressRepository.Create(address2);
         var addressesFromDb = await _addressRepository.GetUserAddressesAsync(userId);
 
