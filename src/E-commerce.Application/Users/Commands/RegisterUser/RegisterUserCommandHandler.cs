@@ -14,14 +14,14 @@ public class RegisterUserCommandHandler(IEmailNotificationService emailNotificat
     IMapper mapper,
     ITokenService tokenService
     )
-    : IRequestHandler<RegisterUserCommand, UserDto>
+    : IRequestHandler<RegisterUserCommand, JwtToken>
 {
     private readonly IEmailNotificationService _emailNotificationService = emailNotificationService;
     private readonly IUserRepository _userRepository = userRepository;
     private readonly IMapper _mapper = mapper;
     private readonly ITokenService _tokenService = tokenService;
 
-    public async Task<UserDto> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
+    public async Task<JwtToken> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
     {
         if (await _userRepository.UserExists(request.Email))
             throw new ConflictException($"Email {request.Email} is in use");
@@ -39,9 +39,8 @@ public class RegisterUserCommandHandler(IEmailNotificationService emailNotificat
         await _userRepository.Create(user);
         await _emailNotificationService.SendConfirmationEmailAsync(user.Email, user.ConfirmationToken);
 
-        var userDto = _mapper.Map<UserDto>(user);
-        userDto.Token = _tokenService.CreateToken(user);
+        var jwtToken = new JwtToken(_tokenService.CreateToken(user));
 
-        return userDto;
+        return jwtToken;
     }
 }

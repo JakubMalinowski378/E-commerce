@@ -21,7 +21,7 @@ public class AccountController(ISender sender) : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
-    public async Task<ActionResult<UserDto>> Register(RegisterUserCommand command)
+    public async Task<ActionResult<JwtToken>> Register(RegisterUserCommand command)
     {
         return Ok(await _sender.Send(command));
     }
@@ -29,7 +29,7 @@ public class AccountController(ISender sender) : ControllerBase
     [HttpPost("login")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    public async Task<ActionResult<UserDto>> Login(LoginUserQuery loginUserQuery)
+    public async Task<ActionResult<JwtToken>> Login(LoginUserQuery loginUserQuery)
     {
         var userDto = await _sender.Send(loginUserQuery);
         return Ok(userDto);
