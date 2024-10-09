@@ -115,46 +115,46 @@ UpgradeLog*.XML
 src/.vs/config/applicationhost.config
 
 # JetBrains Rider's auto generated files
-.idea/
+/src/E-commerce.Web/.idea/
 
-/dist
-/tmp
-/out-tsc
-/bazel-out
+/src/E-commerce.Web/dist
+/src/E-commerce.Web/tmp
+/src/E-commerce.Web/out-tsc
+/src/E-commerce.Web/bazel-out
 
 # Node
-node_modules
-npm-debug.log
-yarn-error.log
+/src/E-commerce.Web/node_modules
+/src/E-commerce.Web/npm-debug.log
+/src/E-commerce.Web/yarn-error.log
 
 # IDEs and editors
-.idea/
-.project
-.classpath
-.c9/
-*.launch
-.settings/
-*.sublime-workspace
+/src/E-commerce.Web/.idea/
+/src/E-commerce.Web/.project
+/src/E-commerce.Web/.classpath
+/src/E-commerce.Web/.c9/
+/src/E-commerce.Web/*.launch
+/src/E-commerce.Web/.settings/
+/src/E-commerce.Web/*.sublime-workspace
 
 # Visual Studio Code
-.vscode/*
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
-.history/*
+/src/E-commerce.Web/.vscode/*
+!/src/E-commerce.Web/.vscode/settings.json
+!/src/E-commerce.Web/.vscode/tasks.json
+!/src/E-commerce.Web/.vscode/launch.json
+!/src/E-commerce.Web/.vscode/extensions.json
+/src/E-commerce.Web/.history/*
 
 # Miscellaneous
-/.angular/cache
-.sass-cache/
-/connect.lock
-/coverage
-/libpeerconnection.log
-testem.log
-/typings
+/src/E-commerce.Web/.angular/cache
+/src/E-commerce.Web/.sass-cache/
+/src/E-commerce.Web/connect.lock
+/src/E-commerce.Web/coverage
+/src/E-commerce.Web/libpeerconnection.log
+/src/E-commerce.Web/testem.log
+/src/E-commerce.Web/typings
 
 # System files
-.DS_Store
-Thumbs.db
+/src/E-commerce.Web/.DS_Store
+/src/E-commerce.Web/Thumbs.db
 /src/E-commerce.Web/.vscode
 /src/E-commerce.Web/node_modules
