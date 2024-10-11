@@ -1,0 +1,90 @@
+<div class="bg-black h-full flex  justify-center">
+    <div class=" text-white   w-1/3 mb-10">
+        <form (change)="change()" [formGroup]="registerForm">
+            <h1 class="text-3xl font-roboto font-light">Załóż konto</h1>
+            <section class="bg-background_gray w-full min-h-24 p-5 flex">
+                <div class="w-full  flex justify-between mx-8">
+                    <div class="flex">
+                        <input type="radio" name="account" checked
+                            class="mr-2  text-orange-500 focus:ring-orange-500 bg-background_gray focus:boreder-transparent">
+                        <label for="normal_account" class="font-open_sans text-sm flex flex-col justify-end pb-1">
+                            Konto Zwykłe
+                            <div class="text-text_gray text-xs">Konto dla klientów indywidualnych</div>
+                        </label>
+                    </div>
+                    <div class="flex">
+                        <input type="radio" name="account"
+                            class="mr-2  text-orange-500 focus:ring-orange-500 bg-background_gray">
+                        <label for="normal_account" class="font-open_sans text-sm flex flex-col justify-end pb-1">
+                            Konto Firmowa
+                            <div class="text-text_gray text-xs">Konto dla klientów biznesowych</div>
+                        </label>
+                    </div>
+                </div>
+            </section>
+            <section class="bg-background_gray w-full p-5 flex flex-col mt-4 space-y-4">
+                <div class="w-full flex mx-8 space-x-5">
+                    <div class="flex">
+                        <input type="radio" name="register_type" checked
+                            class="mr-2  text-orange-500 focus:ring-orange-500 bg-background_gray focus:boreder-transparent">
+                        <label for="normal_account" class="font-open_sans text-sm flex flex-col justify-end pb-1">
+                            E-Mail
+                        </label>
+                    </div>
+                    <div class="flex">
+                        <input type="radio" name="register_type"
+                            class="mr-2  text-orange-500 focus:ring-orange-500 bg-background_gray focus:boreder-transparent">
+                        <label for="normal_account" class="font-open_sans text-sm flex flex-col justify-end pb-1">
+                            Numer telefonu
+                        </label>
+                    </div>
+                </div>
+                <div class="w-full flex flex-col px-8 space-y-4">
+                    <div>
+                        <input type="text" name="email" placeholder="e-mail"
+                            class="w-full px-4 py-2 border border-white rounded bg-background_gray text-white placeholder-gray-500 focus:outline-none focus:border-orange-500">
+                    </div>
+                    <div>
+                        <input type="password" name="password" placeholder="hasło" formControlName="password"
+                            class="w-full px-4 py-2 border border-white rounded bg-background_gray text-white placeholder-gray-500 focus:outline-none focus:border-orange-500">
+                    </div>
+                </div>
+                <div>
+                    <div class="flex items-start space-x-2 mx-8 border-b-[1px] border-b-gray-700 pb-5 ">
+                        <input type="checkbox" name="agreement"
+                            class="bg-background_gray w-5 h-5 border-white rounded-sm ">
+                        <label for="agreement">Zaznacz wszystkie zgody</label>
+                    </div>
+                    <div>
+                        <div class="flex items-center space-x-2 mx-8  pb-5 ">
+                            <input type="checkbox" name="agreement"
+                                class="bg-background_gray w-5 h-5 border-white rounded-sm checked:border-orange-500  checked:bg-background_gray">
+                            <label for="agreement" class="">Oświadczam, że znam i akceptuję postanowienia <span
+                                    class="text-teal-400 ">Regulaminu E-Commerce.</span></label>
+                        </div>
+                        <div class="flex items-start  space-x-2 mx-8  pb-5">
+                            <input type="checkbox" name="agreement"
+                                class="bg-background_gray w-5 h-5 border-white rounded-sm ">
+                            <label for="agreement">Chcę otrzymywać od E-Commerce: kody zniżkowe, oferty specjalne lub
+                                inne treści marketingowe, w tym dopasowane do mnie informacje o usługach i towarach
+                                E-Commerce dostępnych w serwisie, za pośrednictwem komunikacji elektronicznej. W każdej
+                                chwili możesz wycofać udzieloną zgodę. <span
+                                    class="text-text_gray">(opcjonalnie)</span><span
+                                    class="text-teal-400">rozwiń</span></label>
+                        </div>
+                        <div class="flex items-start space-x-2 mx-8  pb-5">
+                            <input type="checkbox" name="agreement"
+                                class="bg-background_gray w-5 h-5 border-white rounded-sm">
+                            <label for="agreement">Chcę otrzymywać od E-Commerce: kody zniżkowe, oferty specjalne lub
+                                inne treści marketingowe, w tym dopasowane do mnie informacje o usługach i towarach
+                                podmiotów współpracujących z E-Commerce, które są dostępne w serwisie, za pośrednictwem
+                                komunikacji elektronicznej. W każdej chwili możesz wycofać udzieloną zgodę. <span
+                                    class="text-text_gray">(opcjonalnie)</span><span class="text-teal-400">rozwiń</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </form>
+    </div>
+</div>
