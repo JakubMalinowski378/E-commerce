@@ -1,10 +1,11 @@
 import { Component, inject, signal } from '@angular/core';
-import { LoginModel } from '../types/LoginModel';
+import { LoginModel } from '../../types/LoginModel';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { AccountService } from '../_services/account.service';
+import { AccountService } from '../../_services/account.service';
 import { RouterLink } from '@angular/router';
 import { LoginRegisterNavbarComponent } from '../login-register-navbar/login-register-navbar.component';
 import { LoginRegisterFooterComponent } from '../login-register-footer/login-register-footer.component';
+import { FormInputComponent } from "../app-form-input/form-input.component";
 
 @Component({
   selector: 'app-login-page',
@@ -14,12 +15,13 @@ import { LoginRegisterFooterComponent } from '../login-register-footer/login-reg
     RouterLink,
     LoginRegisterNavbarComponent,
     LoginRegisterFooterComponent,
-  ],
+    FormInputComponent
+],
   templateUrl: './login-page.component.html',
 })
 export class LoginPageComponent {
   loginModel: LoginModel | null = null;
-  passwordVisibility = signal<boolean>(false);
+  passwordVisible = signal<boolean>(false);
   private fb = inject(FormBuilder);
   private accountService = inject(AccountService);
 
@@ -38,6 +40,6 @@ export class LoginPageComponent {
     this.accountService.login(loginData);
   }
   togglePasswordVisibility() {
-    this.passwordVisibility.set(!this.passwordVisibility());
+    this.passwordVisible.set(!this.passwordVisible());
   }
 }

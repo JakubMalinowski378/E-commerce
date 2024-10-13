@@ -7,8 +7,13 @@ body {
   height: 100%;
   margin: 0;
 }
+
 app-root {
   display: flex;
   flex-direction: column;
   height: 100%;
+}
+
+.login-register-input {
+  @apply w-full px-4 py-2 border border-white rounded bg-background_gray text-white placeholder-gray-500 focus:outline-none focus:border-orange-500;
 }

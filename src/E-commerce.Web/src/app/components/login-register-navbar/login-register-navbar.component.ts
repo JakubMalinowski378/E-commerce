@@ -6,6 +6,5 @@ import { RouterLink } from '@angular/router';
   standalone: true,
   imports: [RouterLink],
   templateUrl: './login-register-navbar.component.html',
-  styleUrl: './login-register-navbar.component.css',
 })
 export class LoginRegisterNavbarComponent {}

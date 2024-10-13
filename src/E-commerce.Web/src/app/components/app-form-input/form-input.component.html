@@ -1,0 +1,10 @@
+<div class="form-group">
+  <label [htmlFor]="controlName()" class="mb-1 pb-4">{{ label() }}</label>
+  <input
+    [type]="type()"
+    [formControlName]="controlName()"
+    [placeholder]="placeholder() ? placeholder() : ''"
+    [id]="controlName()"
+    class="login-register-input"
+  />
+</div>
