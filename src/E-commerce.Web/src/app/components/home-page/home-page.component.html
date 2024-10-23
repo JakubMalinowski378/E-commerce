@@ -1,6 +1,11 @@
+<app-navbar />
 <button [routerLink]="'/login'" class="p-5 bg-red-700 m-3 rounded-xl">
   LOGIN
 </button>
 <button [routerLink]="'/register'" class="p-5 bg-red-700 m-3 rounded-xl">
   REGISTER
 </button>
+
+<p>TOKEN: {{ accountService.token()?.token }}</p>
+
+<app-footer />

@@ -11,10 +11,11 @@
             [type]="'text'"
             [label]="'e-mail'"
           />
+          <label for="password">Hasło</label>
           <div class="mb-4 relative">
             <input
               [type]="passwordVisible() ? 'text' : 'password'"
-              name="password"
+              id="password"
               formControlName="password"
               placeholder="hasło"
               class="login-register-input"

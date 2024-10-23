@@ -4,6 +4,8 @@ import { PasswordValidator } from '../../_validators/passwordValidator';
 import { LoginRegisterNavbarComponent } from '../login-register-navbar/login-register-navbar.component';
 import { LoginRegisterFooterComponent } from '../login-register-footer/login-register-footer.component';
 import { FormInputComponent } from '../app-form-input/form-input.component';
+import { AccountService } from '../../_services/account.service';
+import { RegisterModel } from '../../types/RegisterModel';
 
 @Component({
   selector: 'app-register-page',
@@ -18,6 +20,7 @@ import { FormInputComponent } from '../app-form-input/form-input.component';
   templateUrl: './register-page.component.html',
 })
 export class RegisterPageComponent {
+  private accountService = inject(AccountService);
   private fb = inject(FormBuilder);
   registerForm = this.fb.group({
     firstName: ['', [Validators.required]],
@@ -30,8 +33,11 @@ export class RegisterPageComponent {
     phoneNumber: ['', [Validators.required]],
   });
 
-  change() {
-    console.log(this.registerForm);
-    console.log(this.registerForm.value);
+  submit() {
+    if (this.registerForm.valid) {
+      const registerModel = this.registerForm.value as unknown as RegisterModel;
+      console.log(registerModel);
+      this.accountService.register(registerModel);
+    }
   }
 }
