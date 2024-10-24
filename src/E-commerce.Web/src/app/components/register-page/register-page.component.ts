@@ -6,6 +6,7 @@ import { LoginRegisterFooterComponent } from '../login-register-footer/login-reg
 import { FormInputComponent } from '../app-form-input/form-input.component';
 import { AccountService } from '../../_services/account.service';
 import { RegisterModel } from '../../types/RegisterModel';
+import { passwordMatchValidator } from '../../_validators/passwordMatchValidator';
 
 @Component({
   selector: 'app-register-page',
@@ -22,22 +23,30 @@ import { RegisterModel } from '../../types/RegisterModel';
 export class RegisterPageComponent {
   private accountService = inject(AccountService);
   private fb = inject(FormBuilder);
-  registerForm = this.fb.group({
-    firstName: ['', [Validators.required]],
-    lastName: ['', [Validators.required]],
-    email: ['', [Validators.required]],
-    gender: ['', [Validators.required]],
-    dateOfBirth: ['', [Validators.required]],
-    password: ['', [Validators.required, PasswordValidator]],
-    confirmPassword: ['', [Validators.required]],
-    phoneNumber: ['', [Validators.required]],
-  });
+  registerForm = this.fb.group(
+    {
+      firstName: ['', [Validators.required]],
+      lastName: ['', [Validators.required]],
+      email: ['', [Validators.required]],
+      gender: ['', [Validators.required]],
+      dateOfBirth: ['', [Validators.required]],
+      password: ['', [Validators.required, PasswordValidator]],
+      confirmPassword: ['', [Validators.required]],
+      phoneNumber: ['', [Validators.required]],
+    },
+    {
+      validators: passwordMatchValidator,
+    }
+  );
 
   submit() {
     if (this.registerForm.valid) {
       const registerModel = this.registerForm.value as unknown as RegisterModel;
       console.log(registerModel);
       this.accountService.register(registerModel);
+    } else {
+      console.log('error');
+      console.log(this.registerForm.errors);
     }
   }
 }
