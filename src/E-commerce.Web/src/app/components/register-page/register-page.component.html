@@ -4,6 +4,7 @@
     <h1 class="text-3xl font-roboto font-light">Załóż konto</h1>
     <form
       (submit)="submit()"
+      (change)="change()"
       [formGroup]="registerForm"
       class="bg-background_gray flex flex-col px-8 pb-5 space-y-4"
     >
@@ -25,12 +26,14 @@
         [type]="'text'"
         [label]="'Nazwisko'"
       />
+      <pre>{{ registerForm.controls.password.errors | json }}</pre>
       <app-form-input
         [controlName]="'password'"
         [placeholder]="'Hasło'"
         [type]="'password'"
         [label]="'Hasło'"
       />
+      <app-validation-messages [control]="registerForm.controls.password" />
       <app-form-input
         [controlName]="'confirmPassword'"
         [placeholder]="'Powtórz hasło'"

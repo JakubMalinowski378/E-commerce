@@ -7,6 +7,8 @@ import { FormInputComponent } from '../app-form-input/form-input.component';
 import { AccountService } from '../../_services/account.service';
 import { RegisterModel } from '../../types/RegisterModel';
 import { passwordMatchValidator } from '../../_validators/passwordMatchValidator';
+import { CommonModule } from '@angular/common';
+import { ValidationMessagesComponent } from "../validation-messages/validation-messages.component";
 
 @Component({
   selector: 'app-register-page',
@@ -17,7 +19,9 @@ import { passwordMatchValidator } from '../../_validators/passwordMatchValidator
     LoginRegisterFooterComponent,
     FormInputComponent,
     FormInputComponent,
-  ],
+    CommonModule,
+    ValidationMessagesComponent
+],
   templateUrl: './register-page.component.html',
 })
 export class RegisterPageComponent {
@@ -30,16 +34,21 @@ export class RegisterPageComponent {
       email: ['', [Validators.required]],
       gender: ['', [Validators.required]],
       dateOfBirth: ['', [Validators.required]],
-      password: ['', [Validators.required, PasswordValidator]],
+      password: [
+        '',
+        [Validators.required, PasswordValidator(), Validators.minLength(8)],
+      ],
       confirmPassword: ['', [Validators.required]],
       phoneNumber: ['', [Validators.required]],
     },
     {
+      updateOn: 'blur',
       validators: passwordMatchValidator,
     }
   );
 
   submit() {
+    console.log(this.registerForm);
     if (this.registerForm.valid) {
       const registerModel = this.registerForm.value as unknown as RegisterModel;
       console.log(registerModel);
@@ -48,5 +57,9 @@ export class RegisterPageComponent {
       console.log('error');
       console.log(this.registerForm.errors);
     }
+  }
+
+  change() {
+    console.log(this.registerForm);
   }
 }
