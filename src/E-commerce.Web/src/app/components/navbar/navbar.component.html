@@ -1,8 +1,10 @@
-<nav class="flex bg-navbar_bg justify-around p-6 items-center">
-  <a href="#">
+<nav class="flex bg-navbar_bg justify-around p-6 items-center flex-wrap">
+  <a href="#" class="order-1">
     <img src="logo.svg" alt="LOGO" />
   </a>
-  <form class="flex items-center h-9 border-solid border border-[#9b9b9a]">
+  <form
+    class="flex items-center h-9 border-solid border border-[#9b9b9a] md:order-2 order-3"
+  >
     <input
       type="text"
       placeholder="czego szukasz?"
@@ -41,18 +43,12 @@
       class="bg-[#fe5a01] border-0 h-full p-2 text-[#fee0fe] border-none px-5"
     />
   </form>
-  <div class="flex justify-around">
-    <button>
-      <img src="truck.svg" alt="image" />
-      <span
-        class="absolut bg-orange-600 text-white p-2 rounded-full text-xs top-10 right-bottom"
-        >10</span
-      >
-    </button>
-    <button><img src="heart.svg" alt="image" /></button>
-    <button><img src="chat.svg" alt="image" /></button>
-    <button><img src="bell.svg" alt="image" /></button>
-    <button><img src="bag.svg" alt="image" /></button>
-    <button><img src="user.svg" alt="image" /></button>
+  <div class="flex justify-around md:order-3 order-2">
+    <app-navbar-button [imageName]="'truck.svg'" [numberToDisplay]="4" />
+    <app-navbar-button [imageName]="'heart.svg'" [numberToDisplay]="1" />
+    <app-navbar-button [imageName]="'chat.svg'" [numberToDisplay]="7" />
+    <app-navbar-button [imageName]="'bell.svg'" />
+    <app-navbar-button [imageName]="'bag.svg'" />
+    <app-navbar-button [imageName]="'user.svg'" />
   </div>
 </nav>
