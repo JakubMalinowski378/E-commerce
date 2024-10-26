@@ -8,7 +8,8 @@ import { AccountService } from '../../_services/account.service';
 import { RegisterModel } from '../../types/RegisterModel';
 import { passwordMatchValidator } from '../../_validators/passwordMatchValidator';
 import { CommonModule } from '@angular/common';
-import { ValidationMessagesComponent } from "../validation-messages/validation-messages.component";
+import { ValidationMessagesComponent } from '../validation-messages/validation-messages.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-register-page',
@@ -20,13 +21,16 @@ import { ValidationMessagesComponent } from "../validation-messages/validation-m
     FormInputComponent,
     FormInputComponent,
     CommonModule,
-    ValidationMessagesComponent
-],
+    ValidationMessagesComponent,
+  ],
   templateUrl: './register-page.component.html',
 })
 export class RegisterPageComponent {
   private accountService = inject(AccountService);
   private fb = inject(FormBuilder);
+  private router = inject(Router);
+  isSubmitted: boolean = false;
+
   registerForm = this.fb.group(
     {
       firstName: ['', [Validators.required]],
@@ -40,6 +44,7 @@ export class RegisterPageComponent {
       ],
       confirmPassword: ['', [Validators.required]],
       phoneNumber: ['', [Validators.required]],
+      rulesAggrement: [false, [Validators.requiredTrue]],
     },
     {
       updateOn: 'blur',
@@ -48,18 +53,25 @@ export class RegisterPageComponent {
   );
 
   submit() {
+    this.isSubmitted = true;
     console.log(this.registerForm);
-    if (this.registerForm.valid) {
-      const registerModel = this.registerForm.value as unknown as RegisterModel;
-      console.log(registerModel);
-      this.accountService.register(registerModel);
-    } else {
-      console.log('error');
-      console.log(this.registerForm.errors);
-    }
-  }
+    if (this.registerForm.invalid) return;
+    const registerModel = this.registerForm.value as unknown as RegisterModel;
 
-  change() {
-    console.log(this.registerForm);
+    this.accountService.register(registerModel).subscribe({
+      next: (token) => {
+        this.accountService.setCurrentToken(token);
+        this.router.navigate(['/']);
+      },
+      error: (error) => {
+        switch (error.status) {
+          case 409:
+            this.registerForm.get('email')?.setErrors({
+              emailExists: 'Konto o podanym adresem email już istnieje',
+            });
+            break;
+        }
+      },
+    });
   }
 }

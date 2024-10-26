@@ -4,6 +4,7 @@ import { JwtToken } from '../types/JwtToken';
 import { LoginModel } from '../types/LoginModel';
 import { RegisterModel } from '../types/RegisterModel';
 import { Router } from '@angular/router';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -28,18 +29,18 @@ export class AccountService {
       });
   }
 
-  register(registerModel: RegisterModel): void {
-    this.http
-      .post<JwtToken>(this.baseUrl + 'Account/register', registerModel)
-      .subscribe({
-        next: (token) => {
-          this.setCurrentToken(token);
-          this.router.navigate(['/']);
-        },
-        error: (error) => {
-          console.error(error);
-        },
-      });
+  register(registerModel: RegisterModel): Observable<JwtToken> {
+    return this.http
+      .post<JwtToken>(this.baseUrl + 'Account/register', registerModel);
+      // .subscribe({
+      //   next: (token) => {
+      //     this.setCurrentToken(token);
+      //     this.router.navigate(['/']);
+      //   },
+      //   error: (error) => {
+      //     console.error(error);
+      //   },
+      // });
   }
 
   setCurrentToken(token: JwtToken): void {

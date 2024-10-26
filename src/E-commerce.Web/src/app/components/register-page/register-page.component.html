@@ -4,7 +4,6 @@
     <h1 class="text-3xl font-roboto font-light">Załóż konto</h1>
     <form
       (submit)="submit()"
-      (change)="change()"
       [formGroup]="registerForm"
       class="bg-background_gray flex flex-col px-8 pb-5 space-y-4"
     >
@@ -14,37 +13,78 @@
         [type]="'text'"
         [label]="'E-mail'"
       />
+      <app-validation-messages
+        [control]="registerForm.controls.email"
+        *ngIf="
+          registerForm.controls.email.errors &&
+          (registerForm.controls.email.touched || isSubmitted)
+        "
+      />
       <app-form-input
         [controlName]="'firstName'"
         [placeholder]="'Imię'"
         [type]="'text'"
         [label]="'Imię'"
       />
+      <app-validation-messages
+        [control]="registerForm.controls.firstName"
+        *ngIf="
+          registerForm.controls.firstName.errors &&
+          (registerForm.controls.firstName.touched || isSubmitted)
+        "
+      />
+
       <app-form-input
         [controlName]="'lastName'"
         [placeholder]="'Nazwisko'"
         [type]="'text'"
         [label]="'Nazwisko'"
       />
-      <pre>{{ registerForm.controls.password.errors | json }}</pre>
+      <app-validation-messages
+        [control]="registerForm.controls.lastName"
+        *ngIf="
+          registerForm.controls.lastName.errors &&
+          (registerForm.controls.lastName.touched || isSubmitted)
+        "
+      />
       <app-form-input
         [controlName]="'password'"
         [placeholder]="'Hasło'"
         [type]="'password'"
         [label]="'Hasło'"
       />
-      <app-validation-messages [control]="registerForm.controls.password" />
+      <app-validation-messages
+        [control]="registerForm.controls.password"
+        *ngIf="
+          registerForm.controls.password.errors &&
+          (registerForm.controls.password.touched || isSubmitted)
+        "
+      />
       <app-form-input
         [controlName]="'confirmPassword'"
         [placeholder]="'Powtórz hasło'"
         [type]="'password'"
         [label]="'Powtórz hasło'"
       />
+      <app-validation-messages
+        [control]="registerForm.controls.confirmPassword"
+        *ngIf="
+          registerForm.controls.confirmPassword.errors &&
+          (registerForm.controls.confirmPassword.touched || isSubmitted)
+        "
+      />
       <app-form-input
         [controlName]="'phoneNumber'"
         [placeholder]="'Numer telefonu'"
         [type]="'text'"
         [label]="'Numer telefonu'"
+      />
+      <app-validation-messages
+        [control]="registerForm.controls.phoneNumber"
+        *ngIf="
+          registerForm.controls.phoneNumber.errors &&
+          (registerForm.controls.phoneNumber.touched || isSubmitted)
+        "
       />
       <div>
         <label for="gender">Płeć</label>
@@ -58,27 +98,45 @@
           <option value="F">Kobieta</option>
         </select>
       </div>
+      <app-validation-messages
+        [control]="registerForm.controls.gender"
+        *ngIf="
+          registerForm.controls.gender.errors &&
+          (registerForm.controls.gender.touched || isSubmitted)
+        "
+      />
       <app-form-input
         [controlName]="'dateOfBirth'"
         [placeholder]="'Data urodzenia'"
         [type]="'date'"
         [label]="'Data urodzenia'"
       />
-      <div>
-        <div>
-          <div class="flex items-center space-x-2 mx-8 pb-5">
-            <input
-              type="checkbox"
-              id="agreement"
-              class="bg-background_gray w-5 h-5 border-white rounded-sm checked:border-orange-500 checked:bg-background_gray"
-            />
-            <label for="agreement" class=""
-              >Oświadczam, że znam i akceptuję postanowienia
-              <span class="text-teal-400">Regulaminu E-Commerce.</span></label
-            >
-          </div>
-        </div>
+      <app-validation-messages
+        [control]="registerForm.controls.dateOfBirth"
+        *ngIf="
+          registerForm.controls.dateOfBirth.errors &&
+          (registerForm.controls.dateOfBirth.touched || isSubmitted)
+        "
+      />
+      <div class="flex items-center space-x-2 mx-8 pb-5">
+        <input
+          type="checkbox"
+          id="agreement"
+          [formControl]="registerForm.controls.rulesAggrement"
+          class="bg-background_gray w-5 h-5 border-white rounded-sm checked:border-orange-500 checked:bg-background_gray"
+        />
+        <label for="agreement" class=""
+          >Oświadczam, że znam i akceptuję postanowienia
+          <span class="text-teal-400">Regulaminu E-Commerce.</span></label
+        >
       </div>
+      <app-validation-messages
+        [control]="registerForm.controls.rulesAggrement"
+        *ngIf="
+          registerForm.controls.rulesAggrement.errors &&
+          (registerForm.controls.rulesAggrement.touched || isSubmitted)
+        "
+      />
       <button
         type="submit"
         class="w-1/2 bg-orange-600 hover:bg-orange-700 text-white py-2 rounded self-center mb-5"

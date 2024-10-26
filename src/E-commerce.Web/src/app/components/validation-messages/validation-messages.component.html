@@ -1,15 +1,14 @@
-@if(control().errors && control().touched){
 <div>
-  <div *ngFor="let error of control().errors | keyvalue">
-    @if(error.key === 'minlength'){
-    <div class="text-red-500 text-sm">
-      * Minimalna długość hasła to
-      {{ error.value["requiredLength"] }} znaków
-    </div>
-    } @else{
-    <div class="text-red-500 text-sm">* {{ error.value }}</div>
-
+  <p
+    *ngFor="let error of control().errors | keyvalue"
+    class="text-red-500 text-sm"
+  >
+    @if(error.key === 'minlength'){ 
+      * Minimalna długość hasła to {{ error.value["requiredLength"] }} znaków 
+    } @else if(error.key === 'required'){ 
+      * Pole jest wymagane 
+    } @else{ 
+      * {{ error.value }}
     }
-  </div>
+  </p>
 </div>
-}
