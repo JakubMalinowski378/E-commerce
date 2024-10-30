@@ -189,7 +189,7 @@ public class EcommerceSeeder(EcommerceDbContext dbContext,
         List<string> categories = ["Electronics", "Clothing", "Home & Kitchen", "Beauty & Personal Care",
             "Sports & Outdoors", "Automotive", "Books", "Toys & Games", "Health & Household",
             "Grocery & Gourmet Food", "Office Products", "Pet Supplies", "Baby", "Tools & Home Improvement",
-            "Garden & Outdoor", "Jewelry", "Shoes", "Computers", "Video Games", "Musical Instruments",
+            "Garden & Outdoor", "Shoes", "Computers", "Video Games", "Musical Instruments",
             "Industrial", "Sports", "Jewelery", "Games", "Grocery", "Kids", "Music", "Outdoors", "Toys", "Tools"];
         return categories.Select(x => new Category() { CategoryName = x });
     }
