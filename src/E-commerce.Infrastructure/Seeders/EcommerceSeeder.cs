@@ -19,7 +19,7 @@ public class EcommerceSeeder(EcommerceDbContext dbContext,
     private readonly IWebHostEnvironment _webHostEnvironment = webHostEnvironment;
     private readonly IProductImageService _productImageService = productImageService;
     private const string Locale = "pl";
-    private const int RowCount = 10;
+    private const int RowCount = 5;
 
     public async Task Seed()
     {
@@ -151,12 +151,16 @@ public class EcommerceSeeder(EcommerceDbContext dbContext,
     private static IEnumerable<Product> GetProducts(int count, IEnumerable<Guid> usersId,
         IEnumerable<Category> productCategories)
     {
+        string[] additionalProperties = ["{}", "{\"property1\": \"value1\"}",
+            "{\"property1\": \"value1\", \"property2\": \"value2\"}"];
+
         var products = new Faker<Product>(Locale)
             .RuleFor(x => x.Name, y => y.Commerce.ProductName())
             .RuleFor(x => x.Quantity, y => y.Random.Int(0, 1000))
             .RuleFor(x => x.Price, y => y.Random.Decimal(1, 200))
             .RuleFor(x => x.UserId, y => y.PickRandom(usersId))
             .RuleFor(x => x.Categories, y => y.PickRandom(productCategories, Random.Shared.Next(1, 5)).ToList())
+            .RuleFor(x => x.AdditionalProperties, y => y.PickRandom(additionalProperties))
             .Generate(count);
         return products;
     }
