@@ -1,72 +1,76 @@
-<nav class="flex bg-navbar_bg justify-around p-6 items-center flex-wrap">
-  <a href="#" class="order-1">
-    <img src="logo.svg" alt="LOGO" />
-  </a>
-  <form
-    class="flex items-center h-9 border-solid border border-[#9b9b9a] order-3 min-[1035px]:order-2"
-    [formGroup]="searchForm"
-    (submit)="onSubmit()"
-  >
-    <input
-      type="text"
-      placeholder="czego szukasz?"
-      class="border-0 p-2 bg-transparent text-[#c1d5dd] focus:outline-none min-w-64"
-      [formControlName]="'searchPhrase'"
-    />
-    <select
-      class="bg-navbar_bg text-[#c1d5dd] border-l border-solid h-full sm:inline-block focus:outline-none hidden"
-      [formControlName]="'category'"
+<div class="nav-wrapper bg-navbar_bg flex justify-center">
+  <nav class="flex justify-around p-6 items-center flex-wrap max-w-7xl">
+    <a href="#" class="order-1">
+      <img src="logo.svg" alt="LOGO" />
+    </a>
+    <form
+      class="flex items-center h-9 border-solid border border-[#9b9b9a] order-3 min-[1035px]:order-2 mx-10"
+      [formGroup]="searchForm"
+      (submit)="onSubmit()"
     >
-      <option value="every" [selected]="true">Wszystkie kategorie</option>
-      <optgroup label="Kategorie">
-        <option value="electronics">Elektronika</option>
-        <option value="clothing">Odzież</option>
-        <option value="home_kitchen">Dom i Kuchnia</option>
-        <option value="beauty_personal_care">Uroda i Pielęgnacja</option>
-        <option value="sports_outdoors">Sport i Outdoor</option>
-        <option value="automotive">Motoryzacja</option>
-        <option value="books">Książki</option>
-        <option value="toys_games">Zabawki i Gry</option>
-        <option value="health_household">Zdrowie i Gospodarstwo Domowe</option>
-        <option value="grocery_gourmet_food">Żywność i Delikatesy</option>
-        <option value="office_products">Produkty Biurowe</option>
-        <option value="pet_supplies">Dla Zwierząt</option>
-        <option value="baby">Dla Niemowląt</option>
-        <option value="tools_home_improvement">Narzędzia domowe</option>
-        <option value="garden_outdoor">Ogród</option>
-        <option value="jewelry">Biżuteria</option>
-        <option value="shoes">Buty</option>
-        <option value="computers">Komputery</option>
-        <option value="video_games">Gry Wideo</option>
-        <option value="musical_instruments">Instrumenty Muzyczne</option>
-        <option value="industrial">Przemysł</option>
-        <option value="sports">Sport</option>
-        <option value="jewelry">Biżuteria</option>
-        <option value="games">Gry</option>
-        <option value="grocery">Spożywcze</option>
-        <option value="kids">Dla Dzieci</option>
-        <option value="music">Muzyka</option>
-        <option value="outdoors">Outdoor</option>
-        <option value="toys">Zabawki</option>
-        <option value="tools">Narzędzia</option>
-      </optgroup>
-    </select>
-    <button
-      type="submit"
-      class="bg-[#fe5a01] border-0 h-full py-1 text-[#fee0fe] border-none px-3 sm:px-5"
+      <input
+        type="text"
+        placeholder="czego szukasz?"
+        class="border-0 p-2 bg-transparent text-[#c1d5dd] focus:outline-none min-w-64"
+        [formControlName]="'searchPhrase'"
+      />
+      <select
+        class="bg-navbar_bg text-[#c1d5dd] border-l border-solid h-full sm:inline-block focus:outline-none hidden"
+        [formControlName]="'category'"
+      >
+        <option value="every" [selected]="true">Wszystkie kategorie</option>
+        <optgroup label="Kategorie">
+          <option value="electronics">Elektronika</option>
+          <option value="clothing">Odzież</option>
+          <option value="home_kitchen">Dom i Kuchnia</option>
+          <option value="beauty_personal_care">Uroda i Pielęgnacja</option>
+          <option value="sports_outdoors">Sport i Outdoor</option>
+          <option value="automotive">Motoryzacja</option>
+          <option value="books">Książki</option>
+          <option value="toys_games">Zabawki i Gry</option>
+          <option value="health_household">
+            Zdrowie i Gospodarstwo Domowe
+          </option>
+          <option value="grocery_gourmet_food">Żywność i Delikatesy</option>
+          <option value="office_products">Produkty Biurowe</option>
+          <option value="pet_supplies">Dla Zwierząt</option>
+          <option value="baby">Dla Niemowląt</option>
+          <option value="tools_home_improvement">Narzędzia domowe</option>
+          <option value="garden_outdoor">Ogród</option>
+          <option value="jewelry">Biżuteria</option>
+          <option value="shoes">Buty</option>
+          <option value="computers">Komputery</option>
+          <option value="video_games">Gry Wideo</option>
+          <option value="musical_instruments">Instrumenty Muzyczne</option>
+          <option value="industrial">Przemysł</option>
+          <option value="sports">Sport</option>
+          <option value="jewelry">Biżuteria</option>
+          <option value="games">Gry</option>
+          <option value="grocery">Spożywcze</option>
+          <option value="kids">Dla Dzieci</option>
+          <option value="music">Muzyka</option>
+          <option value="outdoors">Outdoor</option>
+          <option value="toys">Zabawki</option>
+          <option value="tools">Narzędzia</option>
+        </optgroup>
+      </select>
+      <button
+        type="submit"
+        class="bg-[#fe5a01] border-0 h-full py-1 text-[#fee0fe] border-none px-3 sm:px-5"
+      >
+        <span class="hidden sm:inline">SZUKAJ</span>
+        <img src="search.svg" alt="search" class="sm:hidden" />
+      </button>
+    </form>
+    <div
+      class="flex justify-around order-2 min-[1035px]:order-3 relative shrink-1"
     >
-      <span class="hidden sm:inline">SZUKAJ</span>
-      <img src="search.svg" alt="search" class="sm:hidden" />
-    </button>
-  </form>
-  <div
-    class="flex justify-around order-2 min-[1035px]:order-3 relative shrink-1"
-  >
-    <app-navbar-button [imageName]="'truck.svg'" [numberToDisplay]="4" />
-    <app-navbar-button [imageName]="'heart.svg'" [numberToDisplay]="1" />
-    <app-navbar-button [imageName]="'chat.svg'" [numberToDisplay]="7" />
-    <app-navbar-button [imageName]="'bell.svg'" />
-    <app-navbar-button [imageName]="'bag.svg'" />
-    <app-navbar-button [imageName]="'user.svg'" />
-  </div>
-</nav>
+      <app-navbar-button [imageName]="'truck.svg'" [numberToDisplay]="4" />
+      <app-navbar-button [imageName]="'heart.svg'" [numberToDisplay]="1" />
+      <app-navbar-button [imageName]="'chat.svg'" [numberToDisplay]="7" />
+      <app-navbar-button [imageName]="'bell.svg'" />
+      <app-navbar-button [imageName]="'bag.svg'" />
+      <app-navbar-button [imageName]="'user.svg'" />
+    </div>
+  </nav>
+</div>

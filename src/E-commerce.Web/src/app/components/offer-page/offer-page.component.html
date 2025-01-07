@@ -1,0 +1,43 @@
+<app-navbar />
+<div class="bg-black_bg">
+  <main class="max-w-7xl bg-navbar_bg mx-auto">
+    <p>offer-page works!</p>
+    <p>{{ offerId }}</p>
+    <h1 class="text-7xl">{{ product?.name }}</h1>
+    @if(product != undefined){
+    <img [src]="product.imageUrls[0]" alt="image" style="height: 600px" />
+    }@else {
+    <p>Product not found</p>
+    }
+    <table>
+      <tr>
+        <td>Nazwa</td>
+        <td>{{ product?.name }}</td>
+      </tr>
+      <tr>
+        <td>Ilość</td>
+        <td>{{ product?.quantity }}</td>
+      </tr>
+      <tr>
+        <td>Cena</td>
+        <td>{{ product?.price }} zł</td>
+      </tr>
+      <tr>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr
+        *ngFor="
+          let property of product?.additionalProperties | keyvalue;
+          let isEven = even
+        "
+        [ngClass]="isEven ? 'even' : 'odd'"
+      >
+        <td>{{ isEven }}</td>
+        <td>{{ property.key }}</td>
+        <td>{{ property.value }}</td>
+      </tr>
+    </table>
+  </main>
+</div>
+<app-footer />
