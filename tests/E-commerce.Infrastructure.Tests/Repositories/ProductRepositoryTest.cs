@@ -1,7 +1,6 @@
 ﻿using E_commerce.Domain.Entities;
 using E_commerce.Domain.Repositories;
 using E_commerce.Infrastructure.Persistance;
-using E_commerce.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 namespace E_commerce.Infrastructure.Tests.Repositories;
@@ -18,7 +17,6 @@ public class ProductRepositoryTest
                             .UseInMemoryDatabase(databaseName: "TestDatabase")
                             .Options;
         _context = new EcommerceDbContext(_dbContextOptions);
-        _productRepository = new ProductRepository(_context);
     }
 
     public static IEnumerable<Object[]> _products()
@@ -30,7 +28,7 @@ public class ProductRepositoryTest
             Quantity = 1000,
             Price = 11.5M,
             UserId = Guid.NewGuid(),
-            AdditionalProperties = "NotNull",
+            AdditionalProperties = new Dictionary<string, object>()
         } };
         yield return new Object[]{ new Product()
         {
@@ -39,7 +37,7 @@ public class ProductRepositoryTest
             Quantity = 100,
             Price = 11,
             UserId = Guid.NewGuid(),
-            AdditionalProperties = "NotNull1",
+            AdditionalProperties = new Dictionary<string, object>()
         } };
         yield return new Object[]{ new Product()
         {
@@ -48,7 +46,7 @@ public class ProductRepositoryTest
             Quantity = 0,
             Price = 5,
             UserId = Guid.NewGuid(),
-            AdditionalProperties = "Null2",
+            AdditionalProperties = new Dictionary<string, object>()
         } };
         yield return new Object[]{ new Product()
         {
@@ -57,7 +55,7 @@ public class ProductRepositoryTest
             Quantity = 20,
             Price = 5,
             UserId = Guid.NewGuid(),
-            AdditionalProperties = "Null3",
+            AdditionalProperties = new Dictionary<string, object>()
         } };
     }
 

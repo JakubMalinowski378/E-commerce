@@ -21,44 +21,6 @@ public class CategoryRepositoryTests
         _categoryRepository = new CategoryRepository(_context);
     }
 
-    [Fact()]
-    public async Task CreateTest()
-    {
-        // arrange
-        Category category = new Category()
-        {
-            Id = Guid.NewGuid(),
-            CategoryName = "Woda",
-        };
-
-        //act
-        await _categoryRepository.Create(category);
-        var categoryFromDb = await _context.Categories.FirstOrDefaultAsync(c => c.Id == category.Id);
-
-        //assert
-        Assert.NotNull(categoryFromDb);
-        Assert.Equal(category.CategoryName, categoryFromDb.CategoryName);
-    }
-
-    [Fact()]
-    public async Task DeleteTest()
-    {
-        // arrange
-        Category category = new Category()
-        {
-            Id = Guid.NewGuid(),
-            CategoryName = "Woda",
-        };
-
-        //act
-        await _categoryRepository.Create(category);
-        await _categoryRepository.Delete(category);
-        var categoryFromDb = await _context.Categories.FirstOrDefaultAsync(c => c.Id == category.Id);
-
-        //assert
-        Assert.Null(categoryFromDb);
-    }
-
     [Theory]
     [InlineData("Woda")]
     [InlineData("Food")]

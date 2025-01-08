@@ -19,6 +19,10 @@ public static class ServiceCollectionExtension
         services.AddDbContext<EcommerceDbContext>(
             options => options.UseSqlServer(configuration.GetConnectionString("DockerDb")));
 
+        services.AddSingleton(sp => new ProductsDbContext(
+            configuration.GetConnectionString("ProductsDb")!,
+            configuration.GetConnectionString("ProductsDbName")!));
+
         services.AddScoped<IEcommerceSeeder, EcommerceSeeder>();
 
         services.AddScoped<IUserRepository, UserRepository>();
@@ -29,7 +33,6 @@ public static class ServiceCollectionExtension
         services.AddScoped<IRatingRepository, RatingRepository>();
         services.AddScoped<ICategoryRepository, CategoryRepository>();
         services.AddTransient<IBlobStorageRepository, BlobStorageRepository>();
-        services.AddTransient<IProductImageRepository, ProductImageRepository>();
 
         services.AddScoped<ICartItemAuthorizationService, CartItemAuthorizationService>();
         services.AddScoped<IProductAuthorizationService, ProductAuthorizationService>();

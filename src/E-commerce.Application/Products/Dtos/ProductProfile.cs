@@ -14,13 +14,13 @@ public class ProductProfile : Profile
             .ForMember(p => p.ProductCategories,
                 opt => opt.MapFrom(src => src.Categories.Select(x => x.CategoryName)))
             .ForMember(p => p.ImageUrls,
-                opt => opt.MapFrom(src => src.ProductImages.Select(x => blobStorageUrl + x.FileName)));
+                opt => opt.MapFrom(src => src.ProductImages));
 
         CreateMap<Product, ProductDetailsDto>()
             .ForMember(p => p.ProductCategories,
                 opt => opt.MapFrom(src => src.Categories.Select(x => x.CategoryName)))
             .ForMember(p => p.ImageUrls,
-                opt => opt.MapFrom(src => src.ProductImages.Select(x => blobStorageUrl + x.FileName)));
+                opt => opt.MapFrom(src => src.ProductImages.Select(x => blobStorageUrl + x)));
 
         CreateMap<CreateProductCommand, Product>();
         CreateMap<UpdateProductCommand, Product>();

@@ -12,11 +12,8 @@ public class DeleteUserCommandHandler(IUserRepository userRepository) : IRequest
     {
         var user = await _userRepository.GetUserByIdAsync(request.UserId,
             u => u.CartItems,
-            u => u.Ratings,
-            u => u.Products);
-        if (user == null)
-            throw new NotFoundException(nameof(User), request.UserId.ToString());
-
+            u => u.Ratings)
+            ?? throw new NotFoundException(nameof(User), request.UserId.ToString());
         await _userRepository.DeleteUser(user);
     }
 }

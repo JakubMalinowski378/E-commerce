@@ -9,6 +9,13 @@ volumes:
       type: none
       o: bind
       device: D:/e-commerce/data/
+  e-commerce-mongodb-volume:
+    name: e-commerce-mongodb-volume
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: D:/e-commerce/mongodb/
 
 networks:
   e-commerce-network:
@@ -25,6 +32,8 @@ services:
       e-commerce.database:
         condition: service_started
       e-commerce.azurite:
+        condition: service_started
+      e-commerce.mongoDb:
         condition: service_started
     ports:
       - "8000:8000"
@@ -56,5 +65,19 @@ services:
       - AZURITE_ACCOUNTS=devstoreaccount1:Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==
     volumes:
       - D:/e-commerce/azurite:/workspace
+    networks:
+      - e-commerce-network
+  e-commerce.mongoDb:
+    container_name: e-commerce.mongoDb
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=Password#2
+      - ME_CONFIG_MONGODB_ADMINUSERNAME=root
+      - ME_CONFIG_MONGODB_ADMINPASSWORD=example
+    volumes:
+      - e-commerce-mongodb-volume:/data/db
     networks:
       - e-commerce-network

@@ -13,7 +13,7 @@ public class GetUserProductsHandler(IProductRepository productRepository,
 
     public async Task<IEnumerable<ProductDto>> Handle(GetUserProducts request, CancellationToken cancellationToken)
     {
-        var products = await _productRepository.GetUserProducts(request.UserId, x => x.ProductImages);
+        var products = await _productRepository.GetUserProducts(request.UserId);
         var productDtos = _mapper.Map<IEnumerable<ProductDto>>(products);
         return productDtos;
     }

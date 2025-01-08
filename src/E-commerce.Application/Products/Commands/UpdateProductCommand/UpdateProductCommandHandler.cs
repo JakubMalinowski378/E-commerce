@@ -27,6 +27,6 @@ public class UpdateProductCommandHandler(IProductRepository productRepository,
         }
 
         _mapper.Map(request, product);
-        await _productRepository.SaveChanges();
+        await _productRepository.Update(product);
     }
 }

@@ -7,10 +7,12 @@ using System.Linq.Expressions;
 
 namespace E_commerce.Infrastructure.Repositories;
 public class UserRepository(EcommerceDbContext dbContext,
-    IRolesRepository rolesRepository)
+    IRolesRepository rolesRepository,
+    IProductRepository productRepository)
     : IUserRepository
 {
     private readonly EcommerceDbContext _dbContext = dbContext;
+    private readonly IProductRepository _productRepository = productRepository;
     private readonly IRolesRepository _rolesRepository = rolesRepository;
 
     public async Task<Guid> Create(User user)
@@ -45,17 +47,10 @@ public class UserRepository(EcommerceDbContext dbContext,
 
     public async Task DeleteUser(User user)
     {
-        foreach (var product in user.Products)
-        {
-            await _dbContext.Entry(product).Collection(p => p.CartItems).LoadAsync();
-            await _dbContext.Entry(product).Collection(p => p.Ratings).LoadAsync();
-
-            _dbContext.CartItems.RemoveRange(product.CartItems);
-            _dbContext.Ratings.RemoveRange(product.Ratings);
-        }
         _dbContext.CartItems.RemoveRange(user.CartItems);
         _dbContext.Ratings.RemoveRange(user.Ratings);
-        _dbContext.Products.RemoveRange(user.Products);
+
+        await _productRepository.DeleteUserProducts(user.Id);
 
         _dbContext.Users.Remove(user);
 
@@ -91,4 +86,9 @@ public class UserRepository(EcommerceDbContext dbContext,
 
     public bool IsPhoneNumberInUse(string phoneNumber)
         => _dbContext.Users.Any(x => x.PhoneNumber == phoneNumber);
+
+    public Task RemoveAllUserProduct(Guid userId)
+    {
+        throw new NotImplementedException();
+    }
 }

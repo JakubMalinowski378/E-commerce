@@ -19,5 +19,4 @@ public class User
     public List<CartItem> CartItems { get; set; } = default!;
     public List<Rating> Ratings { get; set; } = default!;
     public List<Role> Roles { get; set; } = default!;
-    public List<Product> Products { get; set; } = default!;
 }
