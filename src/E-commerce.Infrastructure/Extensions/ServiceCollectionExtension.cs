@@ -1,4 +1,5 @@
 ﻿using E_commerce.Application.Interfaces;
+using E_commerce.Domain.Helpers;
 using E_commerce.Domain.Interfaces;
 using E_commerce.Domain.Repositories;
 using E_commerce.Infrastructure.Authorization;
@@ -10,6 +11,7 @@ using E_commerce.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using MongoDB.Bson.Serialization;
 
 namespace E_commerce.Infrastructure.Extensions;
 public static class ServiceCollectionExtension
@@ -19,9 +21,9 @@ public static class ServiceCollectionExtension
         services.AddDbContext<EcommerceDbContext>(
             options => options.UseSqlServer(configuration.GetConnectionString("DockerDb")));
 
-        services.AddSingleton(sp => new ProductsDbContext(
-            configuration.GetConnectionString("ProductsDb")!,
-            configuration.GetConnectionString("ProductsDbName")!));
+        services.AddSingleton<ProductsDbContext>();
+
+        BsonSerializer.RegisterSerializer(typeof(Guid), new GuidAsStringSerializer());
 
         services.AddScoped<IEcommerceSeeder, EcommerceSeeder>();
 
@@ -32,6 +34,7 @@ public static class ServiceCollectionExtension
         services.AddScoped<IRolesRepository, RolesRepository>();
         services.AddScoped<IRatingRepository, RatingRepository>();
         services.AddScoped<ICategoryRepository, CategoryRepository>();
+        services.AddScoped<IProductCategoryRepository, ProductCategoryRepository>();
         services.AddTransient<IBlobStorageRepository, BlobStorageRepository>();
 
         services.AddScoped<ICartItemAuthorizationService, CartItemAuthorizationService>();
@@ -41,6 +44,7 @@ public static class ServiceCollectionExtension
         services.AddTransient<IEmailNotificationService, EmailNotificationService>();
         services.AddTransient<IEmailSender, EmailSender>();
 
+        services.Configure<MongoDbSettings>(configuration.GetSection("MongoDbSettings"));
         services.Configure<SmtpSettings>(configuration.GetSection("SmtpSettings"));
     }
 }

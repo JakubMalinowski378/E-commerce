@@ -8,36 +8,40 @@ using E_commerce.Domain.Repositories;
 using MediatR;
 
 namespace E_commerce.Application.Products.Commands.CreateProductCommand;
-public class CreateProductCommandHandler(ICategoryRepository categoryRepository,
-    IMapper mapper,
+public class CreateProductCommandHandler(IMapper mapper,
     IUserContext userContext,
     IProductRepository productRepository,
     IProductAuthorizationService productAuthorizationService,
-    IProductImageService productImageService)
+    IProductImageService productImageService,
+    IProductCategoryRepository productCategoryRepository)
     : IRequestHandler<CreateProductCommand, Guid>
 {
     private readonly IProductAuthorizationService _productAuthorizationService = productAuthorizationService;
     private readonly IProductImageService _productImageService = productImageService;
-    private readonly ICategoryRepository _categoryRepository = categoryRepository;
     private readonly IProductRepository _productRepository = productRepository;
     private readonly IUserContext _userContext = userContext;
+    private readonly IProductCategoryRepository _productCategoryRepository = productCategoryRepository;
     private readonly IMapper _mapper = mapper;
 
     public async Task<Guid> Handle(CreateProductCommand request, CancellationToken cancellationToken)
     {
-        var categories = (await _categoryRepository.GetAllAsync())
-            .Where(c => request.ProductCategoriesIds.Contains(c.Id)).ToList();
-
         var product = _mapper.Map<Product>(request);
+
         if (!_productAuthorizationService.Authorize(product, ResourceOperation.Create))
             throw new ForbidException();
 
         var user = _userContext.GetCurrentUser();
         product.UserId = user!.Id;
-        product.Categories = categories;
+        product.AdditionalProperties = request.AdditionalProperties;
+        var productId = await _productRepository.Create(product);
 
-        await _productRepository.Create(product);
+        var productCategories = request.ProductCategoriesIds.Select(x => new ProductCategory()
+        {
+            CategoryId = x,
+            ProductId = productId
+        }).ToArray();
 
+        await _productCategoryRepository.AddCategoriesToProduct(productCategories);
         await _productImageService.HandleImageUploads(product, request.Images);
 
         return product.Id;

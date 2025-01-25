@@ -1,14 +1,15 @@
-﻿using MongoDB.Driver;
+﻿using Microsoft.Extensions.Options;
+using MongoDB.Driver;
 
 namespace E_commerce.Infrastructure.Persistance;
 public class ProductsDbContext
 {
-    private IMongoDatabase _database { get; set; }
+    private readonly IMongoDatabase _database;
 
-    public ProductsDbContext(string connectionString, string databaseName)
+    public ProductsDbContext(IOptions<MongoDbSettings> dbSettings)
     {
-        var mongoClient = new MongoClient(connectionString);
-        _database = mongoClient.GetDatabase(databaseName);
+        var mongoClient = new MongoClient(dbSettings.Value.ConnectionString);
+        _database = mongoClient.GetDatabase(dbSettings.Value.DatabaseName);
     }
 
     public IMongoCollection<T> GetCollection<T>(string collectionName)

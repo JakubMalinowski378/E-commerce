@@ -1,4 +1,6 @@
-﻿namespace E_commerce.Application.Products.Dtos;
+﻿using System.Text.Json.Serialization;
+
+namespace E_commerce.Application.Products.Dtos;
 public class ProductDto
 {
     public Guid Id { get; set; }
@@ -7,5 +9,6 @@ public class ProductDto
     public decimal Price { get; set; }
     public List<string> ProductCategories { get; set; } = default!;
     public List<string> ImageUrls { get; set; } = default!;
-    public string AdditionalProperties { get; set; } = string.Empty;
+    [JsonExtensionData]
+    public IDictionary<string, object> AdditionalProperties { get; set; } = new Dictionary<string, object>();
 }

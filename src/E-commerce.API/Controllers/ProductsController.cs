@@ -28,7 +28,7 @@ public class ProductsController(ISender sender) : ControllerBase
     }
 
     [HttpPost("Products")]
-    public async Task<ActionResult> CreateProduct(CreateProductCommand command)
+    public async Task<ActionResult> CreateProduct([FromForm] CreateProductCommand command)
     {
         var productId = await _sender.Send(command);
         return CreatedAtAction(nameof(GetProduct), new { productId }, null);

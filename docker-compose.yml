@@ -76,7 +76,7 @@ services:
       - MONGO_INITDB_ROOT_USERNAME=root
       - MONGO_INITDB_ROOT_PASSWORD=Password#2
       - ME_CONFIG_MONGODB_ADMINUSERNAME=root
-      - ME_CONFIG_MONGODB_ADMINPASSWORD=example
+      - ME_CONFIG_MONGODB_ADMINPASSWORD=Password#2
     volumes:
       - e-commerce-mongodb-volume:/data/db
     networks:

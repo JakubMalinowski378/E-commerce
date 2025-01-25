@@ -74,7 +74,7 @@ public class EcommerceSeeder(EcommerceDbContext dbContext,
             {
                 var userIds = _dbContext.Users.Select(x => x.Id);
                 var productCategories = _dbContext.Categories.ToArray();
-                var products = GetProducts(RowCount * 3, userIds, productCategories);
+                var products = GetProducts(RowCount * 3, userIds);
 
                 foreach (var product in products)
                 {
@@ -167,14 +167,13 @@ public class EcommerceSeeder(EcommerceDbContext dbContext,
         return addresses;
     }
 
-    private static IEnumerable<Product> GetProducts(int count, IEnumerable<Guid> usersId,
-        IEnumerable<Category> productCategories)
+    private static IEnumerable<Product> GetProducts(int count, IEnumerable<Guid> usersId)
     {
         Dictionary<string, object>[] additionalProperties = [
             null!,
             new(){{"prop1", 20.5}},
-            new(){{"prop1", "propvalue1"}, {"prop2", false}},
-            new(){{"abc", "def"}, {"prop2", 234}, {"prop2", true}},
+            new(){{"prop2", "propvalue1"}, {"prop3", false}},
+            new(){{"abc", "def"}, {"prop4", 234}, {"prop5", true}},
         ];
 
         var products = new Faker<Product>(Locale)
@@ -182,7 +181,6 @@ public class EcommerceSeeder(EcommerceDbContext dbContext,
             .RuleFor(x => x.Quantity, y => y.Random.Int(0, 1000))
             .RuleFor(x => x.Price, y => y.Random.Decimal(1, 200))
             .RuleFor(x => x.UserId, y => y.PickRandom(usersId))
-            .RuleFor(x => x.Categories, y => y.PickRandom(productCategories, Random.Shared.Next(1, 5)).ToList())
             .RuleFor(x => x.AdditionalProperties, y => y.PickRandom(additionalProperties))
             .Generate(count);
         return products;
