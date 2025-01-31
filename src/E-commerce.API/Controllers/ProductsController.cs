@@ -42,7 +42,7 @@ public class ProductsController(ISender sender) : ControllerBase
     }
 
     [HttpPatch("Products/{productId}")]
-    public async Task<ActionResult> UpdateProduct([FromRoute] Guid productId, UpdateProductCommand command)
+    public async Task<ActionResult> UpdateProduct([FromRoute] Guid productId, [FromForm] UpdateProductCommand command)
     {
         command.ProductId = productId;
         await _sender.Send(command);

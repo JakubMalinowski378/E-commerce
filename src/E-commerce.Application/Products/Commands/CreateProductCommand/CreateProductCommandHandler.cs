@@ -32,7 +32,7 @@ public class CreateProductCommandHandler(IMapper mapper,
 
         var user = _userContext.GetCurrentUser();
         product.UserId = user!.Id;
-        product.AdditionalProperties = request.AdditionalProperties;
+        await _productImageService.HandleImageUploads(product, request.Images);
         var productId = await _productRepository.Create(product);
 
         var productCategories = request.ProductCategoriesIds.Select(x => new ProductCategory()
@@ -42,7 +42,6 @@ public class CreateProductCommandHandler(IMapper mapper,
         }).ToArray();
 
         await _productCategoryRepository.AddCategoriesToProduct(productCategories);
-        await _productImageService.HandleImageUploads(product, request.Images);
 
         return product.Id;
     }

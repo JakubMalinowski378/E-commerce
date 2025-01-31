@@ -7,4 +7,6 @@ public interface IProductCategoryRepository
     Task AddCategoriesToProduct(IEnumerable<ProductCategory> productCategories);
     Task RemoveCategoryFromProduct(ProductCategory productCategory);
     Task RemoveCategoriesFromProduct(IEnumerable<ProductCategory> productCategories);
+    Task<IEnumerable<ProductCategory>> GetProductCategories(Guid productId);
+    Task SaveChangesAsync();
 }

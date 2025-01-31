@@ -1,8 +1,8 @@
 ﻿using E_commerce.Domain.Helpers;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
-namespace E_commerce.Application.Products.Commands.CreateProductCommand;
-public class CreateProductCommandModelBinder : IModelBinder
+namespace E_commerce.Application.Products.Commands.UpdateProductCommand;
+public class UpdateProductCommandModelBinder : IModelBinder
 {
     public Task BindModelAsync(ModelBindingContext bindingContext)
     {
@@ -14,7 +14,7 @@ public class CreateProductCommandModelBinder : IModelBinder
 
         var form = bindingContext.HttpContext.Request.Form;
 
-        var model = new CreateProductCommand()
+        var model = new UpdateProductCommand()
         {
             Images = [.. form.Files]
         };
@@ -23,22 +23,22 @@ public class CreateProductCommandModelBinder : IModelBinder
         {
             switch (key)
             {
-                case nameof(CreateProductCommand.Name):
-                    model.Name = form[nameof(CreateProductCommand.Name)]!.ToString();
+                case nameof(UpdateProductCommand.Name):
+                    model.Name = form[nameof(UpdateProductCommand.Name)]!.ToString();
                     break;
-                case nameof(CreateProductCommand.ProductCategoriesIds):
-                    model.ProductCategoriesIds = form[nameof(CreateProductCommand.ProductCategoriesIds)]
+                case nameof(UpdateProductCommand.ProductCategoriesIds):
+                    model.ProductCategoriesIds = form[nameof(UpdateProductCommand.ProductCategoriesIds)]
                         .Select(int.Parse!)
                         .ToList();
                     break;
-                case nameof(CreateProductCommand.IsHidden):
-                    model.IsHidden = bool.Parse(form[nameof(CreateProductCommand.IsHidden)]!);
+                case nameof(UpdateProductCommand.IsHidden):
+                    model.IsHidden = bool.Parse(form[nameof(UpdateProductCommand.IsHidden)]!);
                     break;
-                case nameof(CreateProductCommand.Quantity):
-                    model.Quantity = int.Parse(form[nameof(CreateProductCommand.Quantity)]!);
+                case nameof(UpdateProductCommand.Quantity):
+                    model.Quantity = int.Parse(form[nameof(UpdateProductCommand.Quantity)]!);
                     break;
-                case nameof(CreateProductCommand.Price):
-                    model.Price = decimal.Parse(form[nameof(CreateProductCommand.Price)]!);
+                case nameof(UpdateProductCommand.Price):
+                    model.Price = decimal.Parse(form[nameof(UpdateProductCommand.Price)]!);
                     break;
                 default:
                     model.AdditionalProperties[key] = DynamicTypeConverter.Convert(form[key]);

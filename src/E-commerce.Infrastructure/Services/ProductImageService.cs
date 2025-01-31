@@ -18,17 +18,19 @@ public class ProductImageService(IBlobStorageRepository blobStorageRepository,
     public async Task HandleImageUploads(Product product, List<IFormFile> images)
     {
         var productImageFileNames = new List<string>(images.Count);
-        for (int i = 0; i < images.Count; i++)
+        foreach (var file in images)
         {
-            var file = images[i];
+            string timestamp = DateTime.UtcNow.ToString("yyyyMMddHHmmss");
+            string randomString = Guid.NewGuid().ToString("N")[..6];
             var fileExtension = Path.GetExtension(file.FileName);
-            var fileName = $"{product.Id}-{i}{fileExtension}";
+            var fileName = $"{timestamp}-{randomString}{fileExtension}";
 
             await _blobStorageRepository.UploadBlobAsync(
                 _blobStorageSettings.Value.ContainerName,
                 fileName,
                 file.ContentType,
                 file.OpenReadStream());
+            productImageFileNames.Add(fileName);
         }
         product.ProductImages = productImageFileNames;
 

@@ -12,9 +12,9 @@ COPY ["src/E-commerce.Application/E-commerce.Application.csproj", "src/E-commerc
 COPY ["src/E-commerce.Domain/E-commerce.Domain.csproj", "src/E-commerce.Domain/"]
 COPY ["src/E-commerce.Infrastructure/E-commerce.Infrastructure.csproj", "src/E-commerce.Infrastructure/"]
 
-COPY ["tests/E-commerce.API.Tests/E-commerce.API.Tests.csproj", "tests/E-commerce.API.Tests/"]
-COPY ["tests/E-commerce.Application.Tests/E-commerce.Application.Tests.csproj", "tests/E-commerce.Application.Tests/"]
-COPY ["tests/E-commerce.Infrastructure.Tests/E-commerce.Infrastructure.Tests.csproj", "tests/E-commerce.Infrastructure.Tests/"]
+#COPY ["tests/E-commerce.API.Tests/E-commerce.API.Tests.csproj", "tests/E-commerce.API.Tests/"]
+#COPY ["tests/E-commerce.Application.Tests/E-commerce.Application.Tests.csproj", "tests/E-commerce.Application.Tests/"]
+#COPY ["tests/E-commerce.Infrastructure.Tests/E-commerce.Infrastructure.Tests.csproj", "tests/E-commerce.Infrastructure.Tests/"]
 
 RUN dotnet restore "./src/E-commerce.API/E-commerce.API.csproj"
 COPY . .
