@@ -7,5 +7,4 @@ public class CartItem
     public Guid ProductId { get; set; }
     public int Quantity { get; set; }
     public User User { get; set; } = default!;
-    public Product Product { get; set; } = default!;
 }

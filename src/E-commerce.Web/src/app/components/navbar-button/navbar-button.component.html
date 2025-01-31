@@ -2,7 +2,7 @@
   <img [src]="imageName()" alt="image" />
   <span
     *ngIf="numberToDisplay() != 0"
-    class="absolute bg-orange-600 text-white p-1 rounded-full text-xs top-10 right-bottom min-w-5"
+    class="absolute bg-orange-600 text-white p-1 rounded-full text-xs top-4 right-bottom min-w-5"
     >{{ numberToDisplay() > 99 ? "99+" : numberToDisplay() }}</span
   >
 </button>

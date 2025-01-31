@@ -1,14 +1,21 @@
-version: '3.4'
+version: '3.9'
 name: e-commerce
 
 volumes:
-  e-commerce-volume:
-    name: e-commerce-volume
+  e-commerce-database-volume:
+    name: e-commerce-database-volume
     driver: local
     driver_opts:
       type: none
       o: bind
-      device: D:/e-commerce/
+      device: D:/e-commerce/data/
+  e-commerce-mongodb-volume:
+    name: e-commerce-mongodb-volume
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: D:/e-commerce/mongodb/
 
 networks:
   e-commerce-network:
@@ -24,7 +31,9 @@ services:
     depends_on:
       e-commerce.database:
         condition: service_started
-      e-commerce.blobstorage:
+      e-commerce.azurite:
+        condition: service_started
+      e-commerce.mongoDb:
         condition: service_started
     ports:
       - "8000:8000"
@@ -43,18 +52,32 @@ services:
     ports:
       - "1433:1433"
     volumes:
-      - D:/e-commerce/data:/var/opt/mssql/data
+      - e-commerce-database-volume:/var/opt/mssql/data
     networks:
       - e-commerce-network
-  e-commerce.blobstorage:
+  e-commerce.azurite:
     container_name: e-commerce.azurite
     image: mcr.microsoft.com/azure-storage/azurite
-    command: "azurite-blob --blobHost 0.0.0.0 --blobPort 10000 --skipApiVersionCheck"
+    command: "azurite-blob --blobHost 0.0.0.0 --blobPort 10000 --skipApiVersionCheck --location /workspace"
     ports:
       - "10000:10000"
     environment:
       - AZURITE_ACCOUNTS=devstoreaccount1:Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==
     volumes:
-      - e-commerce-volume:/data
+      - D:/e-commerce/azurite:/workspace
+    networks:
+      - e-commerce-network
+  e-commerce.mongoDb:
+    container_name: e-commerce.mongoDb
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=Password#2
+      - ME_CONFIG_MONGODB_ADMINUSERNAME=root
+      - ME_CONFIG_MONGODB_ADMINPASSWORD=Password#2
+    volumes:
+      - e-commerce-mongodb-volume:/data/db
     networks:
       - e-commerce-network

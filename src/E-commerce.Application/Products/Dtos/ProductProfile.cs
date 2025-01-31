@@ -11,16 +11,12 @@ public class ProductProfile : Profile
         //TODO: get this value from appsettings.json
         var blobStorageUrl = "http://127.0.0.1:10000/devstoreaccount1/test/";
         CreateMap<Product, ProductDto>()
-            .ForMember(p => p.ProductCategories,
-                opt => opt.MapFrom(src => src.Categories.Select(x => x.CategoryName)))
             .ForMember(p => p.ImageUrls,
-                opt => opt.MapFrom(src => src.ProductImages.Select(x => blobStorageUrl + x.FileName)));
+                opt => opt.MapFrom(src => src.ProductImages));
 
         CreateMap<Product, ProductDetailsDto>()
-            .ForMember(p => p.ProductCategories,
-                opt => opt.MapFrom(src => src.Categories.Select(x => x.CategoryName)))
             .ForMember(p => p.ImageUrls,
-                opt => opt.MapFrom(src => src.ProductImages.Select(x => blobStorageUrl + x.FileName)));
+                opt => opt.MapFrom(src => src.ProductImages.Select(x => blobStorageUrl + x)));
 
         CreateMap<CreateProductCommand, Product>();
         CreateMap<UpdateProductCommand, Product>();

@@ -1,68 +1,62 @@
-﻿using E_commerce.Domain.Entities;
+﻿using E_commerce.Domain.Constants;
+using E_commerce.Domain.Entities;
 using E_commerce.Domain.Repositories;
 using E_commerce.Infrastructure.Persistance;
 using Microsoft.EntityFrameworkCore;
-using System.Linq.Expressions;
+using MongoDB.Driver;
 
 namespace E_commerce.Infrastructure.Repositories;
 
-public class ProductRepository(EcommerceDbContext dbContext) : IProductRepository
+public class ProductRepository(ProductsDbContext dbContext) : IProductRepository
 {
-    private readonly EcommerceDbContext _dbContext = dbContext;
+    private readonly IMongoCollection<Product> _collection =
+        dbContext.GetCollection<Product>(MongoCollections.Products);
 
     public async Task<Guid> Create(Product product)
     {
-        _dbContext.Products.Add(product);
-        await _dbContext.SaveChangesAsync();
+        await _collection.InsertOneAsync(product);
         return product.Id;
-    }
-
-    public async Task<Product?> GetProductByIdAsync(Guid id, params Expression<Func<Product, object>>[] includePredicates)
-    {
-        var query = ApplyIncludes(includePredicates);
-        return await query.FirstOrDefaultAsync(x => x.Id == id);
-    }
-
-    private IQueryable<Product> ApplyIncludes(params Expression<Func<Product, object>>[] includePredicates)
-    {
-        var query = _dbContext.Products.AsQueryable();
-        foreach (var includePredicate in includePredicates)
-            query = query.Include(includePredicate);
-        return query;
     }
 
     public async Task Delete(Product product)
     {
-        _dbContext.Products.Remove(product);
-        await _dbContext.SaveChangesAsync();
+        await _collection.DeleteOneAsync(Builders<Product>.Filter.Eq("_id", product.Id));
     }
 
-    public Task SaveChanges()
-        => _dbContext.SaveChangesAsync();
-
-    public async Task<IEnumerable<Product>> GetUserProducts(Guid userId, params Expression<Func<Product, object>>[] includePredicates)
+    public async Task DeleteUserProducts(Guid userId)
     {
-        var query = ApplyIncludes(includePredicates);
-        return await query.Where(x => x.UserId == userId).ToListAsync();
+        await _collection.DeleteManyAsync(Builders<Product>.Filter.Eq("userId", userId));
     }
 
-    public async Task<(IEnumerable<Product>, int)> GetAllMatchingAsync(string? searchPhrase, int pageSize, int pageNumber,
-        params Expression<Func<Product, object>>[] includePredicates)
+    public async Task<(IEnumerable<Product>, int)> GetAllMatchingAsync(string? searchPhrase,
+        int pageSize, int pageNumber)
     {
         var searchPhraseLower = searchPhrase?.Trim().ToLower();
+        var filter = Builders<Product>.Filter.Empty;
 
-        var query = ApplyIncludes(includePredicates);
+        if (!string.IsNullOrEmpty(searchPhraseLower))
+        {
+            filter = Builders<Product>.Filter.Where(x => x.Name.ToLower().Contains(searchPhraseLower));
+        }
 
-        query = query.Where(x => searchPhraseLower == null
-            || x.Name.ToLower().Contains(searchPhraseLower));
+        var count = await _collection.CountDocumentsAsync(filter);
 
-        var count = await query.CountAsync();
-
-        var products = await query
+        var products = await _collection.Find(filter)
             .Skip(pageSize * (pageNumber - 1))
-            .Take(pageSize)
+            .Limit(pageSize)
             .ToListAsync();
 
-        return (products, count);
+        return (products, (int)count);
+    }
+
+    public async Task<Product?> GetProductByIdAsync(Guid id)
+        => await _collection.Find(Builders<Product>.Filter.Eq("_id", id)).FirstOrDefaultAsync();
+
+    public async Task<IEnumerable<Product>> GetUserProducts(Guid userId)
+        => await _collection.Find(Builders<Product>.Filter.Eq("userId", userId)).ToListAsync();
+
+    public async Task Update(Product product)
+    {
+        await _collection.ReplaceOneAsync(Builders<Product>.Filter.Eq("_id", product.Id), product);
     }
 }

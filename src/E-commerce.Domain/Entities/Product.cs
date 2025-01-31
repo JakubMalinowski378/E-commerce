@@ -1,16 +1,19 @@
-﻿namespace E_commerce.Domain.Entities;
+﻿using E_commerce.Domain.Helpers;
+using MongoDB.Bson.Serialization.Attributes;
+
+namespace E_commerce.Domain.Entities;
 public class Product
 {
+    [BsonId]
+    [BsonSerializer(typeof(GuidAsStringSerializer))]
     public Guid Id { get; set; }
     public string Name { get; set; } = string.Empty;
-    public List<CartItem> CartItems { get; set; } = default!;
-    public List<Category> Categories { get; set; } = default!;
-    public List<Rating> Ratings { get; set; } = default!;
-    public List<ProductImage> ProductImages { get; set; } = default!;
+    public List<string> ProductImages { get; set; } = default!;
     public int Quantity { get; set; }
     public decimal Price { get; set; }
     public bool IsHidden { get; set; }
-    public User User { get; set; } = default!;
+    [BsonSerializer(typeof(GuidAsStringSerializer))]
     public Guid UserId { get; set; }
-    public string AdditionalProperties { get; set; } = string.Empty;
+    [BsonExtraElements]
+    public IDictionary<string, object> AdditionalProperties { get; set; } = new Dictionary<string, object>();
 }

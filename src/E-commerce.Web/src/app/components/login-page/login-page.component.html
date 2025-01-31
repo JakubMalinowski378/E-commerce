@@ -3,13 +3,15 @@
   <div class="bg-black h-full flex justify-center items-center text-white">
     <div class="login-container custom-form flex-col">
       <div class="p-8 shadow-lg w-screen max-w-lg bg-background_gray mb-5">
-        <h2 class="text-2xl text-white font-semibold mb-6">Zaloguj się</h2>
+        <h2 class="text-2xl text-white font-semibold mb-6 text-center">
+          Zaloguj się
+        </h2>
         <form (submit)="login()" [formGroup]="loginForm">
           <app-form-input
             [controlName]="'email'"
             [placeholder]="'e-mail'"
             [type]="'text'"
-            [label]="'e-mail'"
+            [label]="'E-mail'"
           />
           <label for="password">Hasło</label>
           <div class="mb-4 relative">
@@ -47,7 +49,7 @@
       </div>
       <div class="custom-gray flex justify-start py-5">
         <h2 class="mx-4">Pierwszy raz na E-Commerce?</h2>
-        <a class="text-teal-400" [routerLink]="'/register'">Załóż Konto</a>
+        <a class="text-teal-400" [routerLink]="'/rejestracja'">Załóż Konto</a>
       </div>
     </div>
   </div>

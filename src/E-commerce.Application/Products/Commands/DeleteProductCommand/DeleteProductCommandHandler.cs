@@ -21,7 +21,7 @@ public class DeleteProductCommandHandler(IProductRepository productRepository,
 
     public async Task Handle(DeleteProductCommand request, CancellationToken cancellationToken)
     {
-        var product = await _productRepository.GetProductByIdAsync(request.ProductId, x => x.ProductImages)
+        var product = await _productRepository.GetProductByIdAsync(request.ProductId)
             ?? throw new NotFoundException(nameof(Product), request.ProductId.ToString());
 
         if (!_productAuthorizationService.Authorize(product, ResourceOperation.Delete))
@@ -30,6 +30,6 @@ public class DeleteProductCommandHandler(IProductRepository productRepository,
         await _productRepository.Delete(product);
         await _blobStorageRepository.DeleteBlobRangeAsync(
             _blobStorageSettings.Value.ContainerName,
-            product.ProductImages.Select(x => x.FileName));
+            product.ProductImages);
     }
 }

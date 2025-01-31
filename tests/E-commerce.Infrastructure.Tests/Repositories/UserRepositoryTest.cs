@@ -30,7 +30,7 @@ public class UserRepositoryTest
                             .Options;
         _context = new EcommerceDbContext(_dbContextOptions);
         _rolesRepository = new RolesRepository(_context);
-        _userRepository = new UserRepository(_context, _rolesRepository);
+        //_userRepository = new UserRepository(_context, _rolesRepository);
         _context.Roles.AddRangeAsync(new Role
         {
             Id = Guid.NewGuid(),

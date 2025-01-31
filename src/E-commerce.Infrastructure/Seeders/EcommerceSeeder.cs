@@ -2,24 +2,31 @@
 using E_commerce.Application.Interfaces;
 using E_commerce.Domain.Constants;
 using E_commerce.Domain.Entities;
+using E_commerce.Domain.Repositories;
 using E_commerce.Infrastructure.Persistance;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Hosting;
+using MongoDB.Driver;
 using System.Security.Cryptography;
 using System.Text;
 
 namespace E_commerce.Infrastructure.Seeders;
 public class EcommerceSeeder(EcommerceDbContext dbContext,
     IWebHostEnvironment webHostEnvironment,
-    IProductImageService productImageService)
+    IProductImageService productImageService,
+    IProductRepository productRepository,
+    ProductsDbContext productsDbContext)
     : IEcommerceSeeder
 {
     private readonly EcommerceDbContext _dbContext = dbContext;
     private readonly IWebHostEnvironment _webHostEnvironment = webHostEnvironment;
     private readonly IProductImageService _productImageService = productImageService;
+    private readonly IProductRepository _productRepository = productRepository;
+    private readonly IMongoCollection<Product> _productCollection =
+     productsDbContext.GetCollection<Product>(MongoCollections.Products);
     private const string Locale = "pl";
-    private const int RowCount = 10;
+    private const int RowCount = 5;
 
     public async Task Seed()
     {
@@ -63,18 +70,26 @@ public class EcommerceSeeder(EcommerceDbContext dbContext,
                 await _dbContext.SaveChangesAsync();
             }
 
-            if (!_dbContext.Products.Any())
+            if (!(await _productRepository.GetAllMatchingAsync("", 15, 1)).Item1.Any())
             {
                 var userIds = _dbContext.Users.Select(x => x.Id);
                 var productCategories = _dbContext.Categories.ToArray();
-                var products = GetProducts(RowCount * 3, userIds, productCategories);
-                _dbContext.Products.AddRange(products);
+                var products = GetProducts(RowCount * 3, userIds);
+
+                foreach (var product in products)
+                {
+                    await _productRepository.Create(product);
+                }
                 await _dbContext.SaveChangesAsync();
             }
 
-            if (!_dbContext.ProductImages.Any())
+            var filter = Builders<Product>.Filter.And(
+                Builders<Product>.Filter.Exists(p => p.ProductImages, true),
+                Builders<Product>.Filter.Ne(p => p.ProductImages, []));
+
+            if ((await _productCollection.FindAsync(filter)).Any())
             {
-                var products = _dbContext.Products.ToArray();
+                var products = await _productCollection.Find(Builders<Product>.Filter.Empty).ToListAsync();
                 var seederHelper = new SeederHelper();
                 using var httpClient = new HttpClient();
                 foreach (var product in products)
@@ -82,7 +97,7 @@ public class EcommerceSeeder(EcommerceDbContext dbContext,
                     var finalUrl = await seederHelper.GetFinalUrlAsync("https://picsum.photos/1280/768");
                     var fileBytes = await httpClient.GetByteArrayAsync(finalUrl);
                     var stream = new MemoryStream(fileBytes);
-                    IFormFile formFile = new FormFile(stream, 0, stream.Length, null, seederHelper.GetFileNameFromUrl(finalUrl))
+                    IFormFile formFile = new FormFile(stream, 0, stream.Length, null!, seederHelper.GetFileNameFromUrl(finalUrl))
                     {
                         Headers = new HeaderDictionary(),
                         ContentType = seederHelper.GetContentType(finalUrl)
@@ -93,7 +108,9 @@ public class EcommerceSeeder(EcommerceDbContext dbContext,
 
             if (!_dbContext.Ratings.Any())
             {
-                var productIds = _dbContext.Products.Select(x => x.Id).ToArray();
+                var productIds = (await _productCollection.Find(Builders<Product>.Filter.Empty)
+                    .ToListAsync())
+                    .Select(x => x.Id);
                 var userIds = _dbContext.Users.Select(x => x.Id).ToArray();
                 var ratings = GetRatings(userIds, productIds);
                 _dbContext.Ratings.AddRange(ratings);
@@ -102,7 +119,9 @@ public class EcommerceSeeder(EcommerceDbContext dbContext,
 
             if (!_dbContext.CartItems.Any())
             {
-                var productIds = _dbContext.Products.Select(x => x.Id).ToArray();
+                var productIds = (await _productCollection.Find(Builders<Product>.Filter.Empty)
+                    .ToListAsync())
+                    .Select(x => x.Id);
                 var userIds = _dbContext.Users.Select(x => x.Id).ToArray();
                 var cartItems = GetCartItems(productIds, userIds);
                 _dbContext.CartItems.AddRange(cartItems);
@@ -148,15 +167,21 @@ public class EcommerceSeeder(EcommerceDbContext dbContext,
         return addresses;
     }
 
-    private static IEnumerable<Product> GetProducts(int count, IEnumerable<Guid> usersId,
-        IEnumerable<Category> productCategories)
+    private static IEnumerable<Product> GetProducts(int count, IEnumerable<Guid> usersId)
     {
+        Dictionary<string, object>[] additionalProperties = [
+            null!,
+            new(){{"prop1", 20.5}},
+            new(){{"prop2", "propvalue1"}, {"prop3", false}},
+            new(){{"abc", "def"}, {"prop4", 234}, {"prop5", true}},
+        ];
+
         var products = new Faker<Product>(Locale)
             .RuleFor(x => x.Name, y => y.Commerce.ProductName())
             .RuleFor(x => x.Quantity, y => y.Random.Int(0, 1000))
             .RuleFor(x => x.Price, y => y.Random.Decimal(1, 200))
             .RuleFor(x => x.UserId, y => y.PickRandom(usersId))
-            .RuleFor(x => x.Categories, y => y.PickRandom(productCategories, Random.Shared.Next(1, 5)).ToList())
+            .RuleFor(x => x.AdditionalProperties, y => y.PickRandom(additionalProperties))
             .Generate(count);
         return products;
     }
@@ -189,7 +214,7 @@ public class EcommerceSeeder(EcommerceDbContext dbContext,
         List<string> categories = ["Electronics", "Clothing", "Home & Kitchen", "Beauty & Personal Care",
             "Sports & Outdoors", "Automotive", "Books", "Toys & Games", "Health & Household",
             "Grocery & Gourmet Food", "Office Products", "Pet Supplies", "Baby", "Tools & Home Improvement",
-            "Garden & Outdoor", "Jewelry", "Shoes", "Computers", "Video Games", "Musical Instruments",
+            "Garden & Outdoor", "Shoes", "Computers", "Video Games", "Musical Instruments",
             "Industrial", "Sports", "Jewelery", "Games", "Grocery", "Kids", "Music", "Outdoors", "Toys", "Tools"];
         return categories.Select(x => new Category() { CategoryName = x });
     }

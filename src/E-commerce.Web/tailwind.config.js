@@ -8,6 +8,7 @@ module.exports = {
         text_gray: "RGBA(255, 255, 255, 0.54)",
         custom_blue: "#3a4e58",
         navbar_bg: "#222323",
+        black_bg: "#000",
       },
       fontFamily: {
         roboto: ['"Roboto"', "sans-serif"],
