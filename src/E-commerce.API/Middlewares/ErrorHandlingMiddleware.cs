@@ -2,7 +2,7 @@
 
 namespace E_commerce.API.Middlewares;
 
-public class ErrorHandlingMiddleware(ILogger<ErrorHandlingMiddleware> logger) : IMiddleware
+internal class ErrorHandlingMiddleware(ILogger<ErrorHandlingMiddleware> logger) : IMiddleware
 {
     private readonly ILogger<ErrorHandlingMiddleware> _logger = logger;
 

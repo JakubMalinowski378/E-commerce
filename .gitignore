@@ -158,3 +158,4 @@ src/.vs/config/applicationhost.config
 /src/E-commerce.Web/Thumbs.db
 /src/E-commerce.Web/.vscode
 /src/E-commerce.Web/node_modules
+.env

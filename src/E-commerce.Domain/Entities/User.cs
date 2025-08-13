@@ -7,7 +7,7 @@ public class User
     public string Email { get; set; } = string.Empty;
     public char Gender { get; set; }
     public DateOnly DateOfBirth { get; set; }
-    public string PhoneNumber { get; set; } = string.Empty;
+    public string? PhoneNumber { get; set; }
     public byte[] PasswordHash { get; set; } = default!;
     public byte[] PasswordSalt { get; set; } = default!;
     public bool EmailConfirmed { get; set; }
@@ -18,5 +18,5 @@ public class User
     public List<Address> Addresses { get; set; } = default!;
     public List<CartItem> CartItems { get; set; } = default!;
     public List<Rating> Ratings { get; set; } = default!;
-    public List<Role> Roles { get; set; } = default!;
+    public Role Role { get; set; } = default!;
 }

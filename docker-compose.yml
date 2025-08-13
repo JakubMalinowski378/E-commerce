@@ -2,24 +2,8 @@ version: '3.9'
 name: e-commerce
 
 volumes:
-  e-commerce-database-volume:
-    name: e-commerce-database-volume
-    driver: local
-    driver_opts:
-      type: none
-      o: bind
-      device: D:/e-commerce/data/
-  e-commerce-mongodb-volume:
-    name: e-commerce-mongodb-volume
-    driver: local
-    driver_opts:
-      type: none
-      o: bind
-      device: D:/e-commerce/mongodb/
-
-networks:
-  e-commerce-network:
-    driver: bridge
+  postgres_data:
+  azurite_data:
 
 services:
   e-commerce.api:
@@ -29,32 +13,17 @@ services:
       context: .
       dockerfile: src/E-commerce.API/Dockerfile
     depends_on:
-      e-commerce.database:
-        condition: service_started
       e-commerce.azurite:
         condition: service_started
-      e-commerce.mongoDb:
+      e-commerce.postgres:
         condition: service_started
     ports:
       - "8000:8000"
       - "8001:8001"
-    networks:
-      - e-commerce-network
     environment:
       - ASPNETCORE_URLS=https://+:8000;http://+:8001
       - AzureStorageConnectionString=DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;BlobEndpoint=http://host.docker.internal:10000/devstoreaccount1;
-  e-commerce.database:
-    container_name: e-commerce.database
-    image: mcr.microsoft.com/mssql/server:2019-latest
-    environment:
-      MSSQL_SA_PASSWORD: "Password123$"
-      ACCEPT_EULA: "Y"
-    ports:
-      - "1433:1433"
-    volumes:
-      - e-commerce-database-volume:/var/opt/mssql/data
-    networks:
-      - e-commerce-network
+      - ConnectionStrings__ECommerceLocal=Host=e-commerce.postgres;Port=5432;Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD};Database=${POSTGRES_DB}
   e-commerce.azurite:
     container_name: e-commerce.azurite
     image: mcr.microsoft.com/azure-storage/azurite
@@ -64,20 +33,23 @@ services:
     environment:
       - AZURITE_ACCOUNTS=devstoreaccount1:Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==
     volumes:
-      - D:/e-commerce/azurite:/workspace
-    networks:
-      - e-commerce-network
-  e-commerce.mongoDb:
-    container_name: e-commerce.mongoDb
-    image: mongo:latest
-    ports:
-      - "27017:27017"
+      - azurite_data:/workspace
+
+  e-commerce.postgres:
+    image: postgres
+    shm_size: '4gb'
+    container_name: postgres
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     environment:
-      - MONGO_INITDB_ROOT_USERNAME=root
-      - MONGO_INITDB_ROOT_PASSWORD=Password#2
-      - ME_CONFIG_MONGODB_ADMINUSERNAME=root
-      - ME_CONFIG_MONGODB_ADMINPASSWORD=Password#2
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      - 5432:5432
     volumes:
-      - e-commerce-mongodb-volume:/data/db
-    networks:
-      - e-commerce-network
+      - postgres_data:/var/lib/postgresql/data

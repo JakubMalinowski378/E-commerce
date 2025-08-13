@@ -6,13 +6,11 @@ namespace E_commerce.Infrastructure.Services;
 
 public class DatabaseMigrator(EcommerceDbContext dbContext) : IDatabaseMigrator
 {
-    private readonly EcommerceDbContext _dbContext = dbContext;
-
     public async Task MigrateAsync()
     {
-        if ((await _dbContext.Database.GetPendingMigrationsAsync()).Any())
+        if ((await dbContext.Database.GetPendingMigrationsAsync()).Any())
         {
-            await _dbContext.Database.MigrateAsync();
+            await dbContext.Database.MigrateAsync();
         }
     }
 }

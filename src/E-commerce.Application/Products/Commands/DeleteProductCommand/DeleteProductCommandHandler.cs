@@ -30,6 +30,6 @@ public class DeleteProductCommandHandler(IProductRepository productRepository,
         await _productRepository.Delete(product);
         await _blobStorageRepository.DeleteBlobRangeAsync(
             _blobStorageSettings.Value.ContainerName,
-            product.ProductImages);
+            product.ProductImagesUrls);
     }
 }

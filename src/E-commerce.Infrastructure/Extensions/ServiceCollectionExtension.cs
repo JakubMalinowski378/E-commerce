@@ -19,7 +19,7 @@ public static class ServiceCollectionExtension
     public static void AddInfrastucture(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddDbContext<EcommerceDbContext>(
-            options => options.UseSqlServer(configuration.GetConnectionString("DockerDb")));
+            options => options.UseNpgsql(configuration.GetConnectionString("ECommerceLocal")));
 
         services.AddSingleton<ProductsDbContext>();
 

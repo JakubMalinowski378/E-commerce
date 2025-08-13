@@ -84,8 +84,8 @@ public class EcommerceSeeder(EcommerceDbContext dbContext,
             }
 
             var filter = Builders<Product>.Filter.And(
-                Builders<Product>.Filter.Exists(p => p.ProductImages, true),
-                Builders<Product>.Filter.Ne(p => p.ProductImages, []));
+                Builders<Product>.Filter.Exists(p => p.ProductImagesUrls, true),
+                Builders<Product>.Filter.Ne(p => p.ProductImagesUrls, []));
 
             if ((await _productCollection.FindAsync(filter)).Any())
             {

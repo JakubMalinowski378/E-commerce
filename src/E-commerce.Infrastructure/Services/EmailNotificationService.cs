@@ -2,17 +2,12 @@
 using Microsoft.AspNetCore.Http;
 
 namespace E_commerce.Infrastructure.Services;
-public class EmailNotificationService : IEmailNotificationService
+public class EmailNotificationService(
+    IEmailSender emailSender,
+    IHttpContextAccessor httpContextAccessor
+    ) : IEmailNotificationService
 {
-    private readonly IEmailSender _emailNotificationService;
-    private readonly string _appUrl;
-
-    public EmailNotificationService(IEmailSender emailSender)
-    {
-        _emailNotificationService = emailSender;
-        var contextAccessor = new HttpContextAccessor();
-        _appUrl = $"{contextAccessor!.HttpContext!.Request.Scheme}://{contextAccessor.HttpContext.Request.Host}";
-    }
+    private readonly string _appUrl = $"{httpContextAccessor!.HttpContext!.Request.Scheme}://{httpContextAccessor.HttpContext.Request.Host}";
 
     public async Task SendConfirmationEmailAsync(string email, string confirmationToken)
     {
@@ -22,7 +17,7 @@ public class EmailNotificationService : IEmailNotificationService
             <p>Please confirm your email by clicking the link below:</p>
             <p><a href='{confirmationUrl}' target='_blank'>Confirm Email</a></p>
             <p>If you did not create this account, you can ignore this message.</p>";
-        await _emailNotificationService.SendEmailAsync(email, subject, message);
+        await emailSender.SendEmailAsync(email, subject, message);
     }
 
     public async Task SendResetPasswordEmailAsync(string email, string resetPasswordToken)
@@ -30,6 +25,6 @@ public class EmailNotificationService : IEmailNotificationService
         string subject = "Reset Password";
         string message = $"Your reset password code is {resetPasswordToken}";
 
-        await _emailNotificationService.SendEmailAsync(email, subject, message);
+        await emailSender.SendEmailAsync(email, subject, message);
     }
 }
