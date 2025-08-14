@@ -10,29 +10,25 @@ namespace E_commerce.Application.Services;
 
 public class TokenService(IConfiguration config) : ITokenService
 {
-    public readonly SymmetricSecurityKey _key = new(Encoding.UTF8.GetBytes(config["TokenKey"] ?? throw new Exception("token key was not found")));
+    public readonly SymmetricSecurityKey _key = new(Encoding.UTF8.GetBytes(config["Jwt:Key"]
+        ?? throw new Exception("Key was not found")));
 
     public string CreateToken(User user)
     {
         var claims = new List<Claim>()
         {
             new(JwtRegisteredClaimNames.NameId, user.Id.ToString()),
-            new(JwtRegisteredClaimNames.Email, user.Email)
+            new(JwtRegisteredClaimNames.Email, user.Email),
+            new(ClaimTypes.Role, user.Role.Name)
         };
-
-        foreach (var role in user.Roles)
-        {
-            claims.Add(new Claim(ClaimTypes.Role, role.Name));
-        }
 
         var credentials = new SigningCredentials(_key, SecurityAlgorithms.HmacSha512Signature);
         var tokenDescription = new SecurityTokenDescriptor
         {
-           
+
             Subject = new ClaimsIdentity(claims),
             Expires = DateTime.UtcNow.AddDays(7),
             SigningCredentials = credentials,
-           
         };
 
         var handler = new JwtSecurityTokenHandler();

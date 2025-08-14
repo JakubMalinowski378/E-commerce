@@ -8,8 +8,7 @@ public class User
     public char Gender { get; set; }
     public DateOnly DateOfBirth { get; set; }
     public string? PhoneNumber { get; set; }
-    public byte[] PasswordHash { get; set; } = default!;
-    public byte[] PasswordSalt { get; set; } = default!;
+    public string PasswordHash { get; set; } = default!;
     public bool EmailConfirmed { get; set; }
     public string? ConfirmationToken { get; set; }
     public DateTime? ConfirmationTokenExpiration { get; set; }
@@ -19,4 +18,5 @@ public class User
     public List<CartItem> CartItems { get; set; } = default!;
     public List<Rating> Ratings { get; set; } = default!;
     public Role Role { get; set; } = default!;
+    public List<Product>? Products { get; set; }
 }

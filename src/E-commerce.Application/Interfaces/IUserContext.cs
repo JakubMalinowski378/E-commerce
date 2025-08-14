@@ -1,4 +1,4 @@
-﻿using E_commerce.Application.Users;
+﻿using E_commerce.Application.Features.Users;
 
 namespace E_commerce.Application.Interfaces;
 

@@ -1,10 +1,10 @@
-﻿using E_commerce.Application.Users.Commands.ConfirmEmail;
-using E_commerce.Application.Users.Commands.ForgotPassword;
-using E_commerce.Application.Users.Commands.RegisterUser;
-using E_commerce.Application.Users.Commands.ResetPassword;
-using E_commerce.Application.Users.Commands.UpdatePassword;
-using E_commerce.Application.Users.Dtos;
-using E_commerce.Application.Users.Queries.LoginUser;
+﻿using E_commerce.Application.Features.Users.Commands.ConfirmEmail;
+using E_commerce.Application.Features.Users.Commands.ForgotPassword;
+using E_commerce.Application.Features.Users.Commands.RegisterUser;
+using E_commerce.Application.Features.Users.Commands.ResetPassword;
+using E_commerce.Application.Features.Users.Commands.UpdatePassword;
+using E_commerce.Application.Features.Users.Dtos;
+using E_commerce.Application.Features.Users.Queries.LoginUser;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

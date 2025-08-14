@@ -4,9 +4,9 @@ using E_commerce.Infrastructure.Persistance;
 using Microsoft.EntityFrameworkCore;
 
 namespace E_commerce.Infrastructure.Repositories;
-public class CartItemRepository(EcommerceDbContext dbContext) : ICartItemRepository
+public class CartItemRepository(ECommerceDbContext dbContext) : ICartItemRepository
 {
-    private readonly EcommerceDbContext _dbContext = dbContext;
+    private readonly ECommerceDbContext _dbContext = dbContext;
 
     public async Task CreateCartItem(CartItem cartItem)
     {

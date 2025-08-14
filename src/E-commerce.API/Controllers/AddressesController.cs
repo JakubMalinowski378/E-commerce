@@ -1,9 +1,9 @@
-﻿using E_commerce.Application.Addresses.Commands.CreateAddress;
-using E_commerce.Application.Addresses.Commands.DeleteAddress;
-using E_commerce.Application.Addresses.Commands.Dtos;
-using E_commerce.Application.Addresses.Commands.UpdateAddress;
-using E_commerce.Application.Addresses.Queries.GetAddressById;
-using E_commerce.Application.Addresses.Queries.GetUserAddresses;
+﻿using E_commerce.Application.Features.Addresses.Commands.CreateAddress;
+using E_commerce.Application.Features.Addresses.Commands.DeleteAddress;
+using E_commerce.Application.Features.Addresses.Commands.Dtos;
+using E_commerce.Application.Features.Addresses.Commands.UpdateAddress;
+using E_commerce.Application.Features.Addresses.Queries.GetAddressById;
+using E_commerce.Application.Features.Addresses.Queries.GetUserAddresses;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -43,7 +43,7 @@ public class AddressesController(ISender sender) : ControllerBase
     public async Task<ActionResult> CreateAddress(CreateAddressCommand command)
     {
         var addressId = await _sender.Send(command);
-        return CreatedAtAction(nameof(AddressesController.GetAddressById), new { addressId }, null);
+        return CreatedAtAction(nameof(GetAddressById), new { addressId }, null);
     }
 
     [HttpGet("Users/{userId}/Addresses")]

@@ -4,9 +4,9 @@ using E_commerce.Infrastructure.Persistance;
 using Microsoft.EntityFrameworkCore;
 
 namespace E_commerce.Infrastructure.Repositories;
-public class RolesRepository(EcommerceDbContext dbContext) : IRolesRepository
+public class RolesRepository(ECommerceDbContext dbContext) : IRolesRepository
 {
-    private readonly EcommerceDbContext _dbContext = dbContext;
+    private readonly ECommerceDbContext _dbContext = dbContext;
 
     public async Task<Role?> GetRole(string RoleName)
         => await _dbContext.Roles

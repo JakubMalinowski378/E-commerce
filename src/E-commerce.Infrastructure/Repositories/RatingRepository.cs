@@ -4,9 +4,9 @@ using E_commerce.Infrastructure.Persistance;
 using Microsoft.EntityFrameworkCore;
 
 namespace E_commerce.Infrastructure.Repositories;
-public class RatingRepository(EcommerceDbContext dbContext) : IRatingRepository
+public class RatingRepository(ECommerceDbContext dbContext) : IRatingRepository
 {
-    private readonly EcommerceDbContext _dbcontext = dbContext;
+    private readonly ECommerceDbContext _dbcontext = dbContext;
     public async Task CreateRating(Rating rating)
     {
         _dbcontext.Ratings.Add(rating);

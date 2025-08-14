@@ -2,10 +2,8 @@
 
 namespace E_commerce.API.Middlewares;
 
-internal class ErrorHandlingMiddleware(ILogger<ErrorHandlingMiddleware> logger) : IMiddleware
+public class ErrorHandlingMiddleware : IMiddleware
 {
-    private readonly ILogger<ErrorHandlingMiddleware> _logger = logger;
-
     public async Task InvokeAsync(HttpContext context, RequestDelegate next)
     {
         try
@@ -37,10 +35,9 @@ internal class ErrorHandlingMiddleware(ILogger<ErrorHandlingMiddleware> logger) 
             context.Response.StatusCode = StatusCodes.Status409Conflict;
             await context.Response.WriteAsync(e.Message);
         }
-        catch (Exception e)
+        catch (Exception)
         {
             context.Response.StatusCode = StatusCodes.Status500InternalServerError;
-            _logger.LogError(e.Message);
             await context.Response.WriteAsync("Something went wrong");
         }
     }

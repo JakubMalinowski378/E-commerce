@@ -1,62 +1,44 @@
-﻿using E_commerce.Domain.Constants;
-using E_commerce.Domain.Entities;
+﻿using E_commerce.Domain.Entities;
 using E_commerce.Domain.Repositories;
 using E_commerce.Infrastructure.Persistance;
-using Microsoft.EntityFrameworkCore;
-using MongoDB.Driver;
 
 namespace E_commerce.Infrastructure.Repositories;
 
-public class ProductRepository(ProductsDbContext dbContext) : IProductRepository
+public class ProductRepository(ECommerceDbContext dbContext) : IProductRepository
 {
-    private readonly IMongoCollection<Product> _collection =
-        dbContext.GetCollection<Product>(MongoCollections.Products);
-
     public async Task<Guid> Create(Product product)
     {
-        await _collection.InsertOneAsync(product);
+        await dbContext.Products.AddAsync(product);
         return product.Id;
     }
 
-    public async Task Delete(Product product)
+    public Task Delete(Product product)
     {
-        await _collection.DeleteOneAsync(Builders<Product>.Filter.Eq("_id", product.Id));
+        throw new NotImplementedException();
     }
 
-    public async Task DeleteUserProducts(Guid userId)
+    public Task DeleteUserProducts(Guid userId)
     {
-        await _collection.DeleteManyAsync(Builders<Product>.Filter.Eq("userId", userId));
+        throw new NotImplementedException();
     }
 
-    public async Task<(IEnumerable<Product>, int)> GetAllMatchingAsync(string? searchPhrase,
-        int pageSize, int pageNumber)
+    public Task<(IEnumerable<Product>, int)> GetAllMatchingAsync(string? searchPhrase, int pageSize, int pageNumber)
     {
-        var searchPhraseLower = searchPhrase?.Trim().ToLower();
-        var filter = Builders<Product>.Filter.Empty;
-
-        if (!string.IsNullOrEmpty(searchPhraseLower))
-        {
-            filter = Builders<Product>.Filter.Where(x => x.Name.ToLower().Contains(searchPhraseLower));
-        }
-
-        var count = await _collection.CountDocumentsAsync(filter);
-
-        var products = await _collection.Find(filter)
-            .Skip(pageSize * (pageNumber - 1))
-            .Limit(pageSize)
-            .ToListAsync();
-
-        return (products, (int)count);
+        throw new NotImplementedException();
     }
 
-    public async Task<Product?> GetProductByIdAsync(Guid id)
-        => await _collection.Find(Builders<Product>.Filter.Eq("_id", id)).FirstOrDefaultAsync();
-
-    public async Task<IEnumerable<Product>> GetUserProducts(Guid userId)
-        => await _collection.Find(Builders<Product>.Filter.Eq("userId", userId)).ToListAsync();
-
-    public async Task Update(Product product)
+    public Task<Product?> GetProductByIdAsync(Guid id)
     {
-        await _collection.ReplaceOneAsync(Builders<Product>.Filter.Eq("_id", product.Id), product);
+        throw new NotImplementedException();
+    }
+
+    public Task<IEnumerable<Product>> GetUserProducts(Guid userId)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task Update(Product product)
+    {
+        throw new NotImplementedException();
     }
 }

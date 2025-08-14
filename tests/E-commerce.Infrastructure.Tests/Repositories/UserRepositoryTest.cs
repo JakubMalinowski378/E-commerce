@@ -8,8 +8,8 @@ namespace E_commerce.Infrastructure.Tests.Repositories;
 
 public class UserRepositoryTest
 {
-    private readonly DbContextOptions<EcommerceDbContext> _dbContextOptions;
-    private readonly EcommerceDbContext _context;
+    private readonly DbContextOptions<ECommerceDbContext> _dbContextOptions;
+    private readonly ECommerceDbContext _context;
     private readonly IUserRepository _userRepository;
     private readonly IRolesRepository _rolesRepository;
     private readonly User _user = new()
@@ -25,10 +25,10 @@ public class UserRepositoryTest
 
     public UserRepositoryTest()
     {
-        _dbContextOptions = new DbContextOptionsBuilder<EcommerceDbContext>()
+        _dbContextOptions = new DbContextOptionsBuilder<ECommerceDbContext>()
                             .UseInMemoryDatabase(databaseName: "TestDatabase")
                             .Options;
-        _context = new EcommerceDbContext(_dbContextOptions);
+        _context = new ECommerceDbContext(_dbContextOptions);
         _rolesRepository = new RolesRepository(_context);
         //_userRepository = new UserRepository(_context, _rolesRepository);
         _context.Roles.AddRangeAsync(new Role

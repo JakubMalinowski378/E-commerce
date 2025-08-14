@@ -13,7 +13,7 @@ namespace E_commerce.Application.Extensions;
 
 public static class AplicationServiceExtension
 {
-    public static void AddApplication(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddApplication(this IServiceCollection services, IConfiguration configuration)
     {
         var assembly = typeof(AplicationServiceExtension).Assembly;
 
@@ -43,7 +43,10 @@ public static class AplicationServiceExtension
         services.AddHttpContextAccessor();
 
         services.AddScoped<IUserContext, UserContext>();
+        services.AddScoped<IPasswordHasher, PasswordHasher>();
 
         services.Configure<BlobStorageSettings>(configuration.GetSection("BlobStorageSettings"));
+
+        return services;
     }
 }

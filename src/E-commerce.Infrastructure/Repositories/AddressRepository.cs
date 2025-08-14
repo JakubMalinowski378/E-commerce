@@ -4,9 +4,9 @@ using E_commerce.Infrastructure.Persistance;
 using Microsoft.EntityFrameworkCore;
 
 namespace E_commerce.Infrastructure.Repositories;
-public class AddressRepository(EcommerceDbContext dbContext) : IAddressRepository
+public class AddressRepository(ECommerceDbContext dbContext) : IAddressRepository
 {
-    private readonly EcommerceDbContext _dbContext = dbContext;
+    private readonly ECommerceDbContext _dbContext = dbContext;
 
     public async Task Create(Address address)
     {

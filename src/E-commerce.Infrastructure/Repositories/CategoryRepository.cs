@@ -4,10 +4,10 @@ using E_commerce.Infrastructure.Persistance;
 using Microsoft.EntityFrameworkCore;
 
 namespace E_commerce.Infrastructure.Repositories;
-public class CategoryRepository(EcommerceDbContext dbContext)
+public class CategoryRepository(ECommerceDbContext dbContext)
     : ICategoryRepository
 {
-    private readonly EcommerceDbContext _dbContext = dbContext;
+    private readonly ECommerceDbContext _dbContext = dbContext;
 
     public async Task Create(Category category)
     {

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Moq;
 
 namespace E_commerce.API.Tests.Middlewares;
+
 public class ErrorHandlingMiddlewareTests
 {
     [Fact]

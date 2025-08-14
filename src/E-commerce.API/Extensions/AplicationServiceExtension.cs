@@ -31,18 +31,20 @@ public static class AplicationServiceExtension
                 Scheme = "Bearer"
             });
             config.AddSecurityRequirement(new OpenApiSecurityRequirement
-    {
-        {
-            new OpenApiSecurityScheme
             {
-                Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "bearerAuth"}
-            },
-            []
-        }
-    });
+                {
+                    new OpenApiSecurityScheme
+                    {
+                        Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "bearerAuth"}
+                    },
+                    []
+                }
+            });
         });
         services.AddScoped<IDatabaseMigrator, DatabaseMigrator>();
         services.AddScoped<ErrorHandlingMiddleware>();
+        services.AddMemoryCache();
+
         return services;
     }
 }

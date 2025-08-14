@@ -8,16 +8,16 @@ namespace E_commerce.Infrastructure.Tests.Repositories;
 
 public class RatingRepositoryTests
 {
-    private readonly DbContextOptions<EcommerceDbContext> _dbContextOptions;
-    private readonly EcommerceDbContext _context;
+    private readonly DbContextOptions<ECommerceDbContext> _dbContextOptions;
+    private readonly ECommerceDbContext _context;
     private readonly IRatingRepository _ratingRepository;
 
     public RatingRepositoryTests()
     {
-        _dbContextOptions = new DbContextOptionsBuilder<EcommerceDbContext>()
+        _dbContextOptions = new DbContextOptionsBuilder<ECommerceDbContext>()
                             .UseInMemoryDatabase(databaseName: "TestDatabase")
                             .Options;
-        _context = new EcommerceDbContext(_dbContextOptions);
+        _context = new ECommerceDbContext(_dbContextOptions);
         _ratingRepository = new RatingRepository(_context);
     }
 

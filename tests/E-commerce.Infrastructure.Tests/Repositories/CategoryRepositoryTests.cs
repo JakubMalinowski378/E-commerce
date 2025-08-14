@@ -8,16 +8,16 @@ namespace E_commerce.Infrastructure.Tests.Repositories;
 
 public class CategoryRepositoryTests
 {
-    private readonly DbContextOptions<EcommerceDbContext> _dbContextOptions;
-    private readonly EcommerceDbContext _context;
+    private readonly DbContextOptions<ECommerceDbContext> _dbContextOptions;
+    private readonly ECommerceDbContext _context;
     private readonly ICategoryRepository _categoryRepository;
 
     public CategoryRepositoryTests()
     {
-        _dbContextOptions = new DbContextOptionsBuilder<EcommerceDbContext>()
+        _dbContextOptions = new DbContextOptionsBuilder<ECommerceDbContext>()
                             .UseInMemoryDatabase(databaseName: "TestDatabase")
                             .Options;
-        _context = new EcommerceDbContext(_dbContextOptions);
+        _context = new ECommerceDbContext(_dbContextOptions);
         _categoryRepository = new CategoryRepository(_context);
     }
 

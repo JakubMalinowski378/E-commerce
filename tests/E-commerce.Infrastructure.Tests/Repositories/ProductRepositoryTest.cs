@@ -7,16 +7,16 @@ namespace E_commerce.Infrastructure.Tests.Repositories;
 
 public class ProductRepositoryTest
 {
-    private readonly DbContextOptions<EcommerceDbContext> _dbContextOptions;
-    private readonly EcommerceDbContext _context;
+    private readonly DbContextOptions<ECommerceDbContext> _dbContextOptions;
+    private readonly ECommerceDbContext _context;
     private readonly IProductRepository _productRepository;
 
     public ProductRepositoryTest()
     {
-        _dbContextOptions = new DbContextOptionsBuilder<EcommerceDbContext>()
+        _dbContextOptions = new DbContextOptionsBuilder<ECommerceDbContext>()
                             .UseInMemoryDatabase(databaseName: "TestDatabase")
                             .Options;
-        _context = new EcommerceDbContext(_dbContextOptions);
+        _context = new ECommerceDbContext(_dbContextOptions);
     }
 
     public static IEnumerable<Object[]> _products()

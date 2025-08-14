@@ -1,8 +1,8 @@
-﻿using E_commerce.Application.CartItems.Commands.CreateCartItem;
-using E_commerce.Application.CartItems.Commands.DeleteCartItemCommand;
-using E_commerce.Application.CartItems.Commands.UpdateCartItemCommand;
-using E_commerce.Application.CartItems.Dtos;
-using E_commerce.Application.CartItems.Queries.GetUserCartItems;
+﻿using E_commerce.Application.Features.CartItems.Commands.CreateCartItem;
+using E_commerce.Application.Features.CartItems.Commands.DeleteCartItemCommand;
+using E_commerce.Application.Features.CartItems.Commands.UpdateCartItemCommand;
+using E_commerce.Application.Features.CartItems.Dtos;
+using E_commerce.Application.Features.CartItems.Queries.GetUserCartItems;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

@@ -1,10 +1,10 @@
-﻿using E_commerce.Application.Ratings.Commands.CreateRating;
-using E_commerce.Application.Ratings.Commands.DeleteRating;
-using E_commerce.Application.Ratings.Commands.UpdateRating;
-using E_commerce.Application.Ratings.Dtos;
-using E_commerce.Application.Ratings.Queries.GetProductRatings;
-using E_commerce.Application.Ratings.Queries.GetRating;
-using E_commerce.Application.Users.Queries.GetUserRatingsQuery;
+﻿using E_commerce.Application.Features.Ratings.Commands.CreateRating;
+using E_commerce.Application.Features.Ratings.Commands.DeleteRating;
+using E_commerce.Application.Features.Ratings.Commands.UpdateRating;
+using E_commerce.Application.Features.Ratings.Dtos;
+using E_commerce.Application.Features.Ratings.Queries.GetProductRatings;
+using E_commerce.Application.Features.Ratings.Queries.GetRating;
+using E_commerce.Application.Features.Users.Queries.GetUserRatingsQuery;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

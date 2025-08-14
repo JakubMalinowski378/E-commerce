@@ -7,7 +7,6 @@ public interface IRatingRepository
     Task DeleteRating(Rating rating);
     Task<Rating?> GetRatingById(Guid ratingId);
     Task<IEnumerable<Rating>> GetRatings();
-    Task SaveChanges();
     Task<IEnumerable<Rating>> GetProductRatings(Guid productId);
     Task<Rating?> GetRatingByUserIdAndProductId(Guid userId, Guid ProductId);
 }

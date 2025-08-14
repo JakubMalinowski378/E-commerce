@@ -6,19 +6,19 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
 namespace E_commerce.Infrastructure.Repositories;
-public class UserRepository(EcommerceDbContext dbContext,
+public class UserRepository(ECommerceDbContext dbContext,
     IRolesRepository rolesRepository,
     IProductRepository productRepository)
     : IUserRepository
 {
-    private readonly EcommerceDbContext _dbContext = dbContext;
+    private readonly ECommerceDbContext _dbContext = dbContext;
     private readonly IProductRepository _productRepository = productRepository;
     private readonly IRolesRepository _rolesRepository = rolesRepository;
 
     public async Task<Guid> Create(User user)
     {
         var role = await _rolesRepository.GetRole(UserRoles.User);
-        user.Roles = [role!];
+        user.Role = role!;
         _dbContext.Users.Add(user);
         await _dbContext.SaveChangesAsync();
         return user.Id;
@@ -78,17 +78,9 @@ public class UserRepository(EcommerceDbContext dbContext,
     public async Task<User?> GetUserByConfirmationTokenAsync(string token)
         => await _dbContext.Users.FirstOrDefaultAsync(x => x.ConfirmationToken == token);
 
-    public async Task SaveChanges()
-        => await _dbContext.SaveChangesAsync();
-
     public async Task<User?> GetUserByResetPasswordTokenAsync(string token)
         => await _dbContext.Users.SingleOrDefaultAsync(x => x.ResetPasswordToken == token);
 
-    public bool IsPhoneNumberInUse(string phoneNumber)
-        => _dbContext.Users.Any(x => x.PhoneNumber == phoneNumber);
-
-    public Task RemoveAllUserProduct(Guid userId)
-    {
-        throw new NotImplementedException();
-    }
+    public async Task<bool> IsPhoneNumberInUse(string phoneNumber)
+        => await _dbContext.Users.AnyAsync(x => x.PhoneNumber == phoneNumber);
 }

@@ -3,7 +3,6 @@ using E_commerce.API.Middlewares;
 using E_commerce.Application.Extensions;
 using E_commerce.Domain.Interfaces;
 using E_commerce.Infrastructure.Extensions;
-using E_commerce.Infrastructure.Seeders;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,8 +20,8 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
-    var seeder = scope.ServiceProvider.GetRequiredService<IEcommerceSeeder>();
-    await seeder.Seed();
+    //var seeder = scope.ServiceProvider.GetRequiredService<IEcommerceSeeder>();
+    //await seeder.Seed();
 }
 
 app.UseMiddleware<ErrorHandlingMiddleware>();
@@ -37,5 +36,3 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
-
-public partial class Program { }
