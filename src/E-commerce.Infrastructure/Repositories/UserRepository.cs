@@ -7,13 +7,13 @@ using System.Linq.Expressions;
 
 namespace E_commerce.Infrastructure.Repositories;
 public class UserRepository(ECommerceDbContext dbContext,
-    IRolesRepository rolesRepository,
+    IRoleRepository rolesRepository,
     IProductRepository productRepository)
     : IUserRepository
 {
     private readonly ECommerceDbContext _dbContext = dbContext;
     private readonly IProductRepository _productRepository = productRepository;
-    private readonly IRolesRepository _rolesRepository = rolesRepository;
+    private readonly IRoleRepository _rolesRepository = rolesRepository;
 
     public async Task<Guid> Create(User user)
     {

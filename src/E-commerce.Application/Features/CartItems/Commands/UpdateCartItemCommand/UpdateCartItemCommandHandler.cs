@@ -1,25 +1,24 @@
-﻿using E_commerce.Domain.Entities;
+﻿using E_commerce.Domain.Constants;
+using E_commerce.Domain.Entities;
 using E_commerce.Domain.Exceptions;
 using E_commerce.Domain.Interfaces;
 using E_commerce.Domain.Repositories;
 using MediatR;
 
 namespace E_commerce.Application.Features.CartItems.Commands.UpdateCartItemCommand;
+
 public class UpdateCartItemCommandHandler(
+    IUnitOfWork unitOfWork,
     ICartItemRepository cartItemRepository,
-    ICartItemAuthorizationService cartItemAuthorizationService,
-    IUnitOfWork unitOfWork)
+    IAuthorizationService authorizationService)
     : IRequestHandler<UpdateCartItemCommand>
 {
-    private readonly ICartItemRepository _cartItemRepository = cartItemRepository;
-    private readonly ICartItemAuthorizationService _cartItemAuthorizationService = cartItemAuthorizationService;
-
     public async Task Handle(UpdateCartItemCommand request, CancellationToken cancellationToken)
     {
-        var cartItem = await _cartItemRepository.GetCartItemByIdAsync(request.CartItemId)
+        var cartItem = await cartItemRepository.GetCartItemByIdAsync(request.CartItemId)
             ?? throw new NotFoundException(nameof(CartItem), request.CartItemId.ToString());
 
-        if (!_cartItemAuthorizationService.Authorize(cartItem))
+        if (!await authorizationService.HasPermission(cartItem, ResourceOperation.Update))
         {
             throw new ForbidException();
         }

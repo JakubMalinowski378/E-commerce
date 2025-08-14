@@ -10,7 +10,7 @@ public class RolesRepositoryTest
 {
     private readonly DbContextOptions<ECommerceDbContext> _dbContextOptions;
     private readonly ECommerceDbContext _context;
-    private readonly IRolesRepository _rolesRepository;
+    private readonly IRoleRepository _rolesRepository;
 
     public RolesRepositoryTest()
     {
@@ -18,7 +18,7 @@ public class RolesRepositoryTest
                             .UseInMemoryDatabase(databaseName: "TestDatabase")
                             .Options;
         _context = new ECommerceDbContext(_dbContextOptions);
-        _rolesRepository = new RolesRepository(_context);
+        _rolesRepository = new RoleRepository(_context);
     }
 
     [Fact()]

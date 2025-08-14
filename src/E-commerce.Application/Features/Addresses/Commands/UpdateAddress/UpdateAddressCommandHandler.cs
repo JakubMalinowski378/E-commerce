@@ -8,25 +8,22 @@ using MediatR;
 
 namespace E_commerce.Application.Features.Addresses.Commands.UpdateAddress;
 
-public class UpdateAddressCommandHandler(IAddressRepository addressRepository,
-    IAddressAuthorizationService addressAuthorizationService,
+public class UpdateAddressCommandHandler(
+    IAddressRepository addressRepository,
+    IAuthorizationService authorizationService,
     IMapper mapper,
     IUnitOfWork unitOfWork)
     : IRequestHandler<UpdateAddressCommand>
 {
-    private readonly IAddressRepository _addressRepository = addressRepository;
-    private readonly IAddressAuthorizationService _addressAuthorizationService = addressAuthorizationService;
-    private readonly IMapper _mapper = mapper;
-
     public async Task Handle(UpdateAddressCommand request, CancellationToken cancellationToken)
     {
-        var address = await _addressRepository.GetByIdAsync(request.AddressId)
+        var address = await addressRepository.GetByIdAsync(request.AddressId)
             ?? throw new NotFoundException(nameof(Address), request.AddressId.ToString());
 
-        if (!_addressAuthorizationService.Authorize(address, ResourceOperation.Update))
+        if (!await authorizationService.HasPermission(address, ResourceOperation.Update))
             throw new ForbidException();
 
-        _mapper.Map(request, address);
+        mapper.Map(request, address);
 
         await unitOfWork.SaveChangesAsync(cancellationToken);
     }

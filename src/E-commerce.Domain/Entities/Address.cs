@@ -1,5 +1,8 @@
-﻿namespace E_commerce.Domain.Entities;
-public class Address
+﻿using E_commerce.Domain.Interfaces;
+
+namespace E_commerce.Domain.Entities;
+
+public class Address : IUserOwned
 {
     public Guid Id { get; set; }
     public string StreetNumber { get; set; } = string.Empty;

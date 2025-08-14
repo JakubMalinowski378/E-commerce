@@ -8,30 +8,29 @@ using E_commerce.Domain.Repositories;
 using MediatR;
 
 namespace E_commerce.Application.Features.Products.Commands.CreateProductCommand;
-public class CreateProductCommandHandler(IMapper mapper,
+
+public class CreateProductCommandHandler(
+    IMapper mapper,
     IUserContext userContext,
     IProductRepository productRepository,
-    IProductAuthorizationService productAuthorizationService,
-    IProductImageService productImageService)
+    IAuthorizationService authorizationService,
+    IProductImageService productImageService,
+    IUnitOfWork unitOfWork)
     : IRequestHandler<CreateProductCommand, Guid>
 {
-    private readonly IProductAuthorizationService _productAuthorizationService = productAuthorizationService;
-    private readonly IProductImageService _productImageService = productImageService;
-    private readonly IProductRepository _productRepository = productRepository;
-    private readonly IUserContext _userContext = userContext;
-    private readonly IMapper _mapper = mapper;
-
     public async Task<Guid> Handle(CreateProductCommand request, CancellationToken cancellationToken)
     {
-        var product = _mapper.Map<Product>(request);
+        var product = mapper.Map<Product>(request);
 
-        if (!_productAuthorizationService.Authorize(product, ResourceOperation.Create))
+        if (!await authorizationService.HasPermission(product, ResourceOperation.Create))
             throw new ForbidException();
 
-        var user = _userContext.GetCurrentUser();
+        var user = userContext.GetCurrentUser();
         product.UserId = user!.Id;
-        await _productImageService.HandleImageUploads(product, request.Images);
-        var productId = await _productRepository.Create(product);
+
+        await productImageService.HandleImageUploads(product, request.Images);
+        await productRepository.Create(product);
+        await unitOfWork.SaveChangesAsync(cancellationToken);
 
         return product.Id;
     }

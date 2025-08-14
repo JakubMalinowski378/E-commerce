@@ -8,28 +8,31 @@ using E_commerce.Domain.Repositories;
 using MediatR;
 
 namespace E_commerce.Application.Features.Addresses.Commands.CreateAddress;
-public class CreateAddressCommandHandler(IAddressRepository addressRepository,
+
+public class CreateAddressCommandHandler(
     IMapper mapper,
-    IAddressAuthorizationService addressAuthorizationService,
-    IUserContext userContext)
+    IUnitOfWork unitOfWork,
+    IUserContext userContext,
+    IAddressRepository addressRepository,
+    IAuthorizationService authorizationService)
     : IRequestHandler<CreateAddressCommand, Guid>
 {
-    private readonly IAddressRepository _addressRepository = addressRepository;
-    private readonly IMapper _mapper = mapper;
-    private readonly IAddressAuthorizationService _addressAuthorizationService = addressAuthorizationService;
-    private readonly IUserContext _userContext = userContext;
-
     public async Task<Guid> Handle(CreateAddressCommand request, CancellationToken cancellationToken)
     {
-        var address = _mapper.Map<Address>(request);
-        if (!_addressAuthorizationService.Authorize(address, ResourceOperation.Create))
+        var address = mapper.Map<Address>(request);
+
+        if (!await authorizationService.HasPermission(address, ResourceOperation.Create))
         {
             throw new ForbidException();
         }
-        var user = _userContext.GetCurrentUser()
+
+        var user = userContext.GetCurrentUser()
             ?? throw new ForbidException();
         address.UserId = user.Id;
-        await _addressRepository.Create(address);
+
+        await addressRepository.Create(address);
+        await unitOfWork.SaveChangesAsync(cancellationToken);
+
         return address.Id;
     }
 }

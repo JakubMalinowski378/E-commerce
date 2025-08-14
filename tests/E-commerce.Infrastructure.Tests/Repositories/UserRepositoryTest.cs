@@ -11,7 +11,7 @@ public class UserRepositoryTest
     private readonly DbContextOptions<ECommerceDbContext> _dbContextOptions;
     private readonly ECommerceDbContext _context;
     private readonly IUserRepository _userRepository;
-    private readonly IRolesRepository _rolesRepository;
+    private readonly IRoleRepository _rolesRepository;
     private readonly User _user = new()
     {
         Id = Guid.NewGuid(),
@@ -29,7 +29,7 @@ public class UserRepositoryTest
                             .UseInMemoryDatabase(databaseName: "TestDatabase")
                             .Options;
         _context = new ECommerceDbContext(_dbContextOptions);
-        _rolesRepository = new RolesRepository(_context);
+        _rolesRepository = new RoleRepository(_context);
         //_userRepository = new UserRepository(_context, _rolesRepository);
         _context.Roles.AddRangeAsync(new Role
         {

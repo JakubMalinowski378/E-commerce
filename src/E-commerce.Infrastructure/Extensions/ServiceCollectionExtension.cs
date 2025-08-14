@@ -11,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace E_commerce.Infrastructure.Extensions;
+
 public static class ServiceCollectionExtension
 {
     public static IServiceCollection AddInfrastucture(this IServiceCollection services, IConfiguration configuration)
@@ -23,17 +24,15 @@ public static class ServiceCollectionExtension
         services.AddScoped<IAddressRepository, AddressRepository>();
         services.AddScoped<IProductRepository, ProductRepository>();
         services.AddScoped<ICartItemRepository, CartItemRepository>();
-        services.AddScoped<IRolesRepository, RolesRepository>();
+        services.AddScoped<IRoleRepository, RoleRepository>();
         services.AddScoped<IRatingRepository, RatingRepository>();
         services.AddScoped<ICategoryRepository, CategoryRepository>();
         services.AddTransient<IBlobStorageRepository, BlobStorageRepository>();
 
-        services.AddScoped<ICartItemAuthorizationService, CartItemAuthorizationService>();
-        services.AddScoped<IProductAuthorizationService, ProductAuthorizationService>();
-        services.AddScoped<IAddressAuthorizationService, AddressAuthorizationService>();
         services.AddTransient<IProductImageService, ProductImageService>();
         services.AddTransient<IEmailNotificationService, EmailNotificationService>();
         services.AddTransient<IEmailSender, EmailSender>();
+        services.AddTransient<IAuthorizationService, AuthorizationService>();
 
         services.Configure<SmtpSettings>(configuration.GetSection("SmtpSettings"));
 

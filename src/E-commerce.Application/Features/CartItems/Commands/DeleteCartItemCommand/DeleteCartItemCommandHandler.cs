@@ -1,27 +1,29 @@
-﻿using E_commerce.Domain.Entities;
+﻿using E_commerce.Domain.Constants;
+using E_commerce.Domain.Entities;
 using E_commerce.Domain.Exceptions;
 using E_commerce.Domain.Interfaces;
 using E_commerce.Domain.Repositories;
 using MediatR;
 
 namespace E_commerce.Application.Features.CartItems.Commands.DeleteCartItemCommand;
-public class DeleteCartItemCommandHandler(ICartItemRepository cartItemRepository,
-    ICartItemAuthorizationService cartItemAuthorizationService)
+
+public class DeleteCartItemCommandHandler(
+    ICartItemRepository cartItemRepository,
+    IAuthorizationService authorizationService,
+    IUnitOfWork unitOfWork)
     : IRequestHandler<DeleteCartItemCommand>
 {
-    private readonly ICartItemRepository _cartItemRepository = cartItemRepository;
-    private readonly ICartItemAuthorizationService _cartItemAuthorizationService = cartItemAuthorizationService;
-
     public async Task Handle(DeleteCartItemCommand request, CancellationToken cancellationToken)
     {
-        var cartItem = await _cartItemRepository.GetCartItemByIdAsync(request.CartItemId)
+        var cartItem = await cartItemRepository.GetCartItemByIdAsync(request.CartItemId)
             ?? throw new NotFoundException(nameof(CartItem), request.CartItemId.ToString());
 
-        if (!_cartItemAuthorizationService.Authorize(cartItem))
+        if (await authorizationService.HasPermission(cartItem, ResourceOperation.Delete))
         {
             throw new ForbidException();
         }
 
-        await _cartItemRepository.DeleteCartItem(cartItem);
+        await cartItemRepository.DeleteCartItem(cartItem);
+        await unitOfWork.SaveChangesAsync(cancellationToken);
     }
 }
