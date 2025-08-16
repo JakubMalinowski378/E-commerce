@@ -6,6 +6,7 @@ namespace E_commerce.Infrastructure.Persistance;
 public class ECommerceDbContext(DbContextOptions<ECommerceDbContext> options) : DbContext(options)
 {
     public DbSet<Role> Roles { get; set; }
+    public DbSet<Permission> Permissions { get; set; }
     public DbSet<User> Users { get; set; }
     public DbSet<Rating> Ratings { get; set; }
     public DbSet<Address> Addresses { get; set; }

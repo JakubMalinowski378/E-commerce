@@ -3,7 +3,7 @@ using E_commerce.Domain.Interfaces;
 using E_commerce.Domain.Repositories;
 using Microsoft.Extensions.Caching.Memory;
 
-namespace E_commerce.Infrastructure.Authorization;
+namespace E_commerce.Infrastructure.Services;
 
 internal class AuthorizationService(
     IUserContext userContext,

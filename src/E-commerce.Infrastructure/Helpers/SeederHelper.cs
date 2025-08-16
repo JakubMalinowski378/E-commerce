@@ -1,4 +1,5 @@
-﻿namespace E_commerce.Infrastructure.Seeders;
+﻿namespace E_commerce.Infrastructure.Helpers;
+
 internal class SeederHelper
 {
     public string GetContentType(string url)

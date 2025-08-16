@@ -130,7 +130,7 @@ namespace E_commerce.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Permission");
+                    b.ToTable("Permissions");
                 });
 
             modelBuilder.Entity("E_commerce.Domain.Entities.Product", b =>
