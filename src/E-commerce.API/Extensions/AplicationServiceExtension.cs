@@ -9,6 +9,7 @@ public static class AplicationServiceExtension
 {
     public static IServiceCollection AddApi(this IServiceCollection services, IConfiguration configuration)
     {
+        services.AddHttpClient();
         services.AddControllers();
         services.AddCors(options =>
         {

@@ -1,8 +1,8 @@
 ﻿namespace E_commerce.Infrastructure.Helpers;
 
-internal class SeederHelper
+internal static class SeederHelper
 {
-    public string GetContentType(string url)
+    public static string GetContentType(string url)
     {
         var extension = Path.GetExtension(url);
         extension = extension[..extension.IndexOf('?')];
@@ -16,7 +16,7 @@ internal class SeederHelper
         };
     }
 
-    public async Task<string> GetFinalUrlAsync(string url)
+    public static async Task<string> GetFinalUrlAsync(string url)
     {
         using var httpClient = new HttpClient();
         var response = await httpClient.GetAsync(url, HttpCompletionOption.ResponseHeadersRead);
@@ -28,8 +28,6 @@ internal class SeederHelper
         return url;
     }
 
-    public string GetFileNameFromUrl(string url)
-    {
-        return Path.GetFileName(new Uri(url).AbsolutePath);
-    }
+    public static string GetFileNameFromUrl(string url)
+        => Path.GetFileName(new Uri(url).AbsolutePath);
 }
