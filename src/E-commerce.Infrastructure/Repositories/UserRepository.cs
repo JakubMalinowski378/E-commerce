@@ -50,7 +50,7 @@ public class UserRepository(ECommerceDbContext dbContext,
         _dbContext.CartItems.RemoveRange(user.CartItems);
         _dbContext.Ratings.RemoveRange(user.Ratings);
 
-        await _productRepository.DeleteUserProducts(user.Id);
+        await _productRepository.DeleteUserProductsAsync(user.Id);
 
         _dbContext.Users.Remove(user);
 

@@ -66,7 +66,7 @@ public class ProductRepositoryTest
         // arrange
 
         //act
-        await _productRepository.Create(product);
+        await _productRepository.CreateAsync(product);
         var productFromDb = await _productRepository.GetProductByIdAsync(product.Id);
 
         //assert
@@ -82,7 +82,7 @@ public class ProductRepositoryTest
         // arrange
 
         //act
-        var id = await _productRepository.Create(product);
+        var id = await _productRepository.CreateAsync(product);
         var productFromDb = await _productRepository.GetProductByIdAsync(product.Id);
 
         //assert
@@ -97,7 +97,7 @@ public class ProductRepositoryTest
         // arrange
 
         //act
-        await _productRepository.Create(product);
+        await _productRepository.CreateAsync(product);
         await _productRepository.Delete(product);
         var productFromDb = await _productRepository.GetProductByIdAsync(product.Id);
 
@@ -118,8 +118,8 @@ public class ProductRepositoryTest
         product.UserId = user.Id;
 
         //act
-        await _productRepository.Create(product);
-        var productsFromDb = await _productRepository.GetUserProducts(user.Id);
+        await _productRepository.CreateAsync(product);
+        var productsFromDb = await _productRepository.GetUserProductsAsync(user.Id);
 
         //assert
         Assert.Contains(productsFromDb, p => p.Name == product.Name && p.Quantity == product.Quantity && p.Price == product.Price);

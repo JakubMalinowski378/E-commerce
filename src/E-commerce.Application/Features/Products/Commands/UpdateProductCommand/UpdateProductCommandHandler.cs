@@ -6,6 +6,7 @@ using E_commerce.Domain.Repositories;
 using MediatR;
 
 namespace E_commerce.Application.Features.Products.Commands.UpdateProductCommand;
+
 public class UpdateProductCommandHandler(
     IProductRepository productRepository,
     IAuthorizationService authorizationService,
@@ -24,7 +25,6 @@ public class UpdateProductCommandHandler(
         }
 
         mapper.Map(request, product);
-        await productRepository.Update(product);
         await unitOfWork.SaveChangesAsync(cancellationToken);
     }
 }

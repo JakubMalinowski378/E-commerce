@@ -29,7 +29,7 @@ public class CreateProductCommandHandler(
         product.UserId = user!.Id;
 
         await productImageService.HandleImageUploads(product, request.Images);
-        await productRepository.Create(product);
+        await productRepository.CreateAsync(product);
         await unitOfWork.SaveChangesAsync(cancellationToken);
 
         return product.Id;

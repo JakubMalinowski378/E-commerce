@@ -6,6 +6,6 @@ namespace E_commerce.Application.Features.Products.Queries.GetAllProducts;
 public class GetAllProductsQuery : IRequest<PagedResult<ProductDto>>
 {
     public string? SearchPhrase { get; set; }
-    public int PageNumber { get; set; }
-    public int PageSize { get; set; }
+    public int PageNumber { get; set; } = 1;
+    public int PageSize { get; set; } = 10;
 }

@@ -6,6 +6,7 @@ using MediatR;
 using Microsoft.Extensions.Options;
 
 namespace E_commerce.Application.Features.Products.Commands.DeleteProductCommand;
+
 public class DeleteProductCommandHandler(IProductRepository productRepository,
     IBlobStorageRepository blobStorageRepository,
     IOptions<BlobStorageSettings> blobStorageSettings)
@@ -23,7 +24,7 @@ public class DeleteProductCommandHandler(IProductRepository productRepository,
         //if (!_productAuthorizationService.Authorize(product, ResourceOperation.Delete))
         //    throw new ForbidException();
 
-        await _productRepository.Delete(product);
+        await _productRepository.DeleteAsync(product.Id);
         await _blobStorageRepository.DeleteBlobRangeAsync(
             _blobStorageSettings.Value.ContainerName,
             product.ProductImagesUrls);
