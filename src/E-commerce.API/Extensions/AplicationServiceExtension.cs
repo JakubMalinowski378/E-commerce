@@ -29,7 +29,7 @@ public static class AplicationServiceExtension
             config.AddSecurityDefinition("bearerAuth", new OpenApiSecurityScheme
             {
                 Type = SecuritySchemeType.Http,
-                Scheme = "Bearer"
+                Scheme = "Bearer",
             });
             config.AddSecurityRequirement(new OpenApiSecurityRequirement
             {

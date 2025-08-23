@@ -21,7 +21,7 @@ public static class AplicationServiceExtension
 
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(opt =>
         {
-            var tokenKey = configuration["TokenKey"] ?? throw new Exception("Token key was not found");
+            var tokenKey = configuration["Jwt:Key"] ?? throw new Exception("Token key was not found");
             opt.TokenValidationParameters = new TokenValidationParameters
             {
                 ValidateIssuerSigningKey = true,

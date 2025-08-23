@@ -12,20 +12,15 @@ public class LoginUserQueryHandler(
     IPasswordHasher passwordHasher)
     : IRequestHandler<LoginUserQuery, JwtToken>
 {
-    private readonly IUserRepository _userRepository = userRepository;
-    private readonly ITokenService _tokenService = tokenService;
-
     public async Task<JwtToken> Handle(LoginUserQuery request, CancellationToken cancellationToken)
     {
-        var user = await _userRepository.GetUserByEmailAsync(request.Email, u => u.Role)
+        var user = await userRepository.GetUserByEmailAsync(request.Email, u => u.Role)
             ?? throw new UnauthorizedException("Invalid username or password");
 
-        var computedHash = passwordHasher.Hash(request.Password);
-
-        if (!passwordHasher.Verify(user.PasswordHash, computedHash))
+        if (!passwordHasher.Verify(request.Password, user.PasswordHash))
             throw new UnauthorizedException("Invalid username or password");
 
-        var jwtToken = new JwtToken(_tokenService.CreateToken(user));
+        var jwtToken = new JwtToken(tokenService.CreateToken(user));
         return jwtToken;
     }
 }
