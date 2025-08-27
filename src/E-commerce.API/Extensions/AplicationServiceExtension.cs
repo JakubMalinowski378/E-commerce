@@ -1,13 +1,11 @@
 ﻿using E_commerce.API.Middlewares;
-using E_commerce.Domain.Interfaces;
-using E_commerce.Infrastructure.Services;
 using Microsoft.OpenApi.Models;
 
 namespace E_commerce.API.Extensions;
 
 public static class AplicationServiceExtension
 {
-    public static IServiceCollection AddApi(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddApi(this IServiceCollection services)
     {
         services.AddHttpClient();
         services.AddControllers();
@@ -42,7 +40,6 @@ public static class AplicationServiceExtension
                 }
             });
         });
-        services.AddScoped<IDatabaseMigrator, DatabaseMigrator>();
         services.AddScoped<ErrorHandlingMiddleware>();
         services.AddMemoryCache();
 
