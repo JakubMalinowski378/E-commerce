@@ -25,10 +25,10 @@ public class Repository<TEntity>(
         var query = _dbSet.AsQueryable();
 
         if (asNoTracking)
-            _ = query.AsNoTracking();
+            query.AsNoTracking();
 
         if (include is not null)
-            _ = include(query);
+            include(query);
 
         return await _dbSet.Where(predicate).ToListAsync();
     }
@@ -54,9 +54,8 @@ public class Repository<TEntity>(
         bool asNoTracking = false)
     {
         var keyProperty = typeof(TEntity).GetProperties()
-            .FirstOrDefault(p => p.Name.Equals("Id", StringComparison.OrdinalIgnoreCase));
-        if (keyProperty == null)
-            throw new InvalidOperationException($"Entity {typeof(TEntity).Name} does not have an 'Id' property.");
+            .FirstOrDefault(p => p.Name.Equals("Id", StringComparison.OrdinalIgnoreCase))
+            ?? throw new InvalidOperationException($"Entity {typeof(TEntity).Name} does not have an 'Id' property.");
 
         var parameter = Expression.Parameter(typeof(TEntity), "e");
         var property = Expression.Property(parameter, keyProperty);
@@ -73,6 +72,38 @@ public class Repository<TEntity>(
             query = include(query);
 
         return await query.FirstOrDefaultAsync(lambda);
+    }
+
+    public async Task<(IEnumerable<TEntity> Items, int TotalCount)> GetPagedAsync(
+        int pageNumber,
+        int pageSize,
+        Expression<Func<TEntity, bool>>? filter = null,
+        Func<IQueryable<TEntity>, IQueryable<TEntity>>? include = null,
+        Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null,
+        bool asNoTracking = false)
+    {
+        var query = _dbSet.AsQueryable();
+
+        if (asNoTracking)
+            query.AsNoTracking();
+
+        if (include is not null)
+            include(query);
+
+        if (filter is not null)
+            query.Where(filter);
+
+        var totalCount = await query.CountAsync();
+
+        if (orderBy is not null)
+            orderBy(query);
+
+        var items = await query
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+
+        return (items, totalCount);
     }
 
     public void Remove(TEntity entity)

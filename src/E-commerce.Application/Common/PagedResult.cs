@@ -6,6 +6,7 @@ public class PagedResult<T>
     public int TotalItemsCount { get; set; }
     public int ItemsFrom { get; set; }
     public int ItemsTo { get; set; }
+
     public PagedResult(IEnumerable<T> items, int totalCount, int pageSize, int pageNumber)
     {
         Items = items;
