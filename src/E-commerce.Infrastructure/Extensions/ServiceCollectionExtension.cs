@@ -23,6 +23,7 @@ public static class ServiceCollectionExtension
         var dataSource = dataSourceBuilder.Build();
         services.AddDbContext<ECommerceDbContext>(options => options.UseNpgsql(dataSource));
 
+        services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IAddressRepository, AddressRepository>();
