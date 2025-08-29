@@ -6,19 +6,18 @@ using E_commerce.Domain.Repositories;
 using MediatR;
 
 namespace E_commerce.Application.Features.Addresses.Queries.GetAddressById;
-public class GetAddressByIdQueryHandler(IMapper mapper,
-    IAddressRepository addressRepository)
+
+public class GetAddressByIdQueryHandler(
+    IRepository<Address> addressRepository,
+    IMapper mapper)
     : IRequestHandler<GetAddressByIdQuery, AddressDto>
 {
-    private readonly IMapper _mapper = mapper;
-    private readonly IAddressRepository _addressRepository = addressRepository;
-
     public async Task<AddressDto> Handle(GetAddressByIdQuery request, CancellationToken cancellationToken)
     {
-        var address = await _addressRepository.GetByIdAsync(request.AddressId);
-        if (address == null)
+        var address = await addressRepository.GetByIdAsync(request.AddressId);
+        if (address is null)
             throw new NotFoundException(nameof(Address), request.AddressId.ToString());
-        var addressDto = _mapper.Map<AddressDto>(address);
+        var addressDto = mapper.Map<AddressDto>(address);
         return addressDto;
     }
 }

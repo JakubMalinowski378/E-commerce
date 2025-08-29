@@ -25,12 +25,12 @@ public class Repository<TEntity>(
         var query = _dbSet.AsQueryable();
 
         if (asNoTracking)
-            query.AsNoTracking();
+            query = query.AsNoTracking();
 
         if (include is not null)
-            include(query);
+            query = include(query);
 
-        return await _dbSet.Where(predicate).ToListAsync();
+        return await query.Where(predicate).ToListAsync();
     }
 
     public async Task<IEnumerable<TEntity>> GetAllAsync(
@@ -40,10 +40,10 @@ public class Repository<TEntity>(
         var query = _dbSet.AsQueryable();
 
         if (asNoTracking)
-            query.AsNoTracking();
+            query = query.AsNoTracking();
 
         if (include is not null)
-            include(query);
+            query = include(query);
 
         return await query.ToListAsync();
     }
@@ -85,18 +85,18 @@ public class Repository<TEntity>(
         var query = _dbSet.AsQueryable();
 
         if (asNoTracking)
-            query.AsNoTracking();
+            query = query.AsNoTracking();
 
         if (include is not null)
-            include(query);
+            query = include(query);
 
         if (filter is not null)
-            query.Where(filter);
+            query = query.Where(filter);
 
         var totalCount = await query.CountAsync();
 
         if (orderBy is not null)
-            orderBy(query);
+            query = orderBy(query);
 
         var items = await query
             .Skip((pageNumber - 1) * pageSize)

@@ -12,7 +12,7 @@ namespace E_commerce.Application.Features.Products.Commands.CreateProductCommand
 public class CreateProductCommandHandler(
     IMapper mapper,
     IUserContext userContext,
-    IProductRepository productRepository,
+    IRepository<Product> productRepository,
     IAuthorizationService authorizationService,
     IProductImageService productImageService,
     IUnitOfWork unitOfWork)
@@ -29,7 +29,7 @@ public class CreateProductCommandHandler(
         product.UserId = user!.Id;
 
         await productImageService.HandleImageUploads(product, request.Images);
-        await productRepository.CreateAsync(product);
+        await productRepository.AddAsync(product);
         await unitOfWork.SaveChangesAsync(cancellationToken);
 
         return product.Id;

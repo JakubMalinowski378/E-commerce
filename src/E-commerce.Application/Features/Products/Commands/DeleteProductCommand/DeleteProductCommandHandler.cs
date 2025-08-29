@@ -1,32 +1,32 @@
 ﻿using E_commerce.Application.Configuration;
+using E_commerce.Domain.Constants;
 using E_commerce.Domain.Entities;
 using E_commerce.Domain.Exceptions;
+using E_commerce.Domain.Interfaces;
 using E_commerce.Domain.Repositories;
 using MediatR;
 using Microsoft.Extensions.Options;
 
 namespace E_commerce.Application.Features.Products.Commands.DeleteProductCommand;
 
-public class DeleteProductCommandHandler(IProductRepository productRepository,
+public class DeleteProductCommandHandler(
+    IRepository<Product> productRepository,
     IBlobStorageRepository blobStorageRepository,
-    IOptions<BlobStorageSettings> blobStorageSettings)
+    IOptions<BlobStorageSettings> blobStorageSettings,
+    IAuthorizationService authorizationService)
     : IRequestHandler<DeleteProductCommand>
 {
-    private readonly IProductRepository _productRepository = productRepository;
-    private readonly IBlobStorageRepository _blobStorageRepository = blobStorageRepository;
-    private readonly IOptions<BlobStorageSettings> _blobStorageSettings = blobStorageSettings;
-
     public async Task Handle(DeleteProductCommand request, CancellationToken cancellationToken)
     {
-        var product = await _productRepository.GetProductByIdAsync(request.ProductId)
+        var product = await productRepository.GetByIdAsync(request.ProductId)
             ?? throw new NotFoundException(nameof(Product), request.ProductId.ToString());
 
-        //if (!_productAuthorizationService.Authorize(product, ResourceOperation.Delete))
-        //    throw new ForbidException();
+        if (!await authorizationService.HasPermission(product, ResourceOperation.Delete))
+            throw new ForbidException();
 
-        await _productRepository.DeleteAsync(product.Id);
-        await _blobStorageRepository.DeleteBlobRangeAsync(
-            _blobStorageSettings.Value.ContainerName,
+        productRepository.Remove(product);
+        await blobStorageRepository.DeleteBlobRangeAsync(
+            blobStorageSettings.Value.ContainerName,
             product.ProductImagesUrls);
     }
 }

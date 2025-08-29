@@ -61,7 +61,7 @@ public class AccountControllerTests : IClassFixture<WebApplicationFactory<Progra
     [Fact]
     public async Task Login_ForNonExisitingUser_ShouldReturn401Unauthorized()
     {
-        _userRepositoryMock.Setup(m => m.GetUserByEmailAsync(_loginUserQuery.Email))
+        _userRepositoryMock.Setup(m => m.GetByEmail(_loginUserQuery.Email))
             .ReturnsAsync((User?)null);
 
         var client = _factory.CreateClient();

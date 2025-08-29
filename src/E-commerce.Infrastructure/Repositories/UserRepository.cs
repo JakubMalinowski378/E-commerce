@@ -1,86 +1,39 @@
-﻿using E_commerce.Domain.Constants;
-using E_commerce.Domain.Entities;
+﻿using E_commerce.Domain.Entities;
 using E_commerce.Domain.Repositories;
 using E_commerce.Infrastructure.Persistance;
 using Microsoft.EntityFrameworkCore;
-using System.Linq.Expressions;
 
 namespace E_commerce.Infrastructure.Repositories;
-public class UserRepository(ECommerceDbContext dbContext,
-    IRoleRepository rolesRepository,
-    IProductRepository productRepository)
-    : IUserRepository
+
+public class UserRepository(
+    ECommerceDbContext dbContext)
+    : Repository<User>(dbContext), IUserRepository
 {
-    private readonly ECommerceDbContext _dbContext = dbContext;
-    private readonly IProductRepository _productRepository = productRepository;
-    private readonly IRoleRepository _rolesRepository = rolesRepository;
-
-    public async Task<Guid> Create(User user)
-    {
-        var role = await _rolesRepository.GetRole(UserRoles.User);
-        user.Role = role!;
-        _dbContext.Users.Add(user);
-        await _dbContext.SaveChangesAsync();
-        return user.Id;
-    }
-
-    public async Task<User?> GetUserByIdAsync(Guid id, params Expression<Func<User, object>>[] includePredicates)
-    {
-        var query = ApplyIncludes(includePredicates);
-        return await query.FirstOrDefaultAsync(x => x.Id == id);
-    }
-
-    public async Task<User?> GetUserByEmailAsync(string email, params Expression<Func<User, object>>[] includePredicates)
-    {
-        var query = ApplyIncludes(includePredicates);
-        return await query.FirstOrDefaultAsync(x => x.Email == email);
-    }
-
-    public async Task<IEnumerable<User>> GetUsersAsync(params Expression<Func<User, object>>[] includePredicates)
-    {
-        var query = ApplyIncludes(includePredicates);
-        return await query.ToListAsync();
-    }
-
     public async Task<bool> UserExists(string email)
-        => await _dbContext.Users.AnyAsync(x => x.Email == email);
+        => await _dbSet.AnyAsync(x => x.Email == email);
 
-    public async Task DeleteUser(User user)
+    public async Task<User?> GetByEmail(
+        string email,
+        Func<IQueryable<User>, IQueryable<User>>? include = null,
+        bool asNoTracking = false)
     {
-        _dbContext.CartItems.RemoveRange(user.CartItems);
-        _dbContext.Ratings.RemoveRange(user.Ratings);
+        var query = _dbSet.AsQueryable();
 
-        await _productRepository.DeleteUserProductsAsync(user.Id);
+        if (asNoTracking)
+            query = query.AsNoTracking();
 
-        _dbContext.Users.Remove(user);
+        if (include is not null)
+            query = include(query);
 
-        await _dbContext.SaveChangesAsync();
+        return await query.FirstOrDefaultAsync(u => u.Email == email);
     }
 
-    private IQueryable<User> ApplyIncludes(params Expression<Func<User, object>>[] includePredicates)
-    {
-        var query = _dbContext.Users.AsQueryable();
-        foreach (var includePredicate in includePredicates)
-            query = query.Include(includePredicate);
-        return query;
-    }
+    public async Task<User?> GetByConfirmationTokenAsync(string token)
+        => await _dbSet.FirstOrDefaultAsync(x => x.ConfirmationToken == token);
 
-    public async Task<IEnumerable<Rating>?> GetAllRatingsOfUser(Guid id)
-    {
-        var user = await _dbContext.Users.Include(x => x.Ratings).FirstOrDefaultAsync(x => x.Id == id);
-        if (user == null)
-        {
-            return null;
-        }
-        return user.Ratings;
-    }
-
-    public async Task<User?> GetUserByConfirmationTokenAsync(string token)
-        => await _dbContext.Users.FirstOrDefaultAsync(x => x.ConfirmationToken == token);
-
-    public async Task<User?> GetUserByResetPasswordTokenAsync(string token)
-        => await _dbContext.Users.SingleOrDefaultAsync(x => x.ResetPasswordToken == token);
+    public async Task<User?> GetByResetPasswordTokenAsync(string token)
+        => await _dbSet.SingleOrDefaultAsync(x => x.ResetPasswordToken == token);
 
     public async Task<bool> IsPhoneNumberInUse(string phoneNumber)
-        => await _dbContext.Users.AnyAsync(x => x.PhoneNumber == phoneNumber);
+        => await _dbSet.AnyAsync(x => x.PhoneNumber == phoneNumber);
 }

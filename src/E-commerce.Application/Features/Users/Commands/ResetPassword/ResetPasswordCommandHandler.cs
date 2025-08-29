@@ -14,7 +14,7 @@ public class ResetPasswordCommandHandler(
 
     public async Task Handle(ResetPasswordCommand request, CancellationToken cancellationToken)
     {
-        var user = await _userRepository.GetUserByResetPasswordTokenAsync(request.Token)
+        var user = await _userRepository.GetByResetPasswordTokenAsync(request.Token)
             ?? throw new InvalidOperationException("Invalid reset token");
 
         if (user.ResetPasswordTokenExpiration < DateTime.UtcNow)

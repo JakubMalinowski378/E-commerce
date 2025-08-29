@@ -1,20 +1,20 @@
 ﻿using AutoMapper;
 using E_commerce.Application.Features.CartItems.Dtos;
+using E_commerce.Domain.Entities;
 using E_commerce.Domain.Repositories;
 using MediatR;
 
 namespace E_commerce.Application.Features.CartItems.Queries.GetUserCartItems;
-public class GetUserCartItemsQueryHandler(ICartItemRepository cartItemRepository,
+
+public class GetUserCartItemsQueryHandler(
+    IRepository<CartItem> cartItemRepository,
     IMapper mapper)
     : IRequestHandler<GetUserCartItemsQuery, IEnumerable<CartItemDto>>
 {
-    private readonly ICartItemRepository _cartItemRepository = cartItemRepository;
-    private readonly IMapper _mapper = mapper;
-
     public async Task<IEnumerable<CartItemDto>> Handle(GetUserCartItemsQuery request, CancellationToken cancellationToken)
     {
-        var cartItems = await _cartItemRepository.GetUserCartItemsAsync(request.UserId);
-        var cartItemDtos = _mapper.Map<IEnumerable<CartItemDto>>(cartItems);
+        var cartItems = await cartItemRepository.FindAsync(ci => ci.UserId == request.UserId);
+        var cartItemDtos = mapper.Map<IEnumerable<CartItemDto>>(cartItems);
         return cartItemDtos;
     }
 }

@@ -12,15 +12,12 @@ public class UpdateRatingCommandHandler(
     IUnitOfWork unitOfWork)
     : IRequestHandler<UpdateRatingCommand>
 {
-    public readonly IRatingRepository _ratingRepository = ratingRepository;
-    private readonly IMapper _mapper = mapper;
-
     public async Task Handle(UpdateRatingCommand request, CancellationToken cancellationToken)
     {
-        var rating = await _ratingRepository.GetRatingById(request.RatingId)
+        var rating = await ratingRepository.GetByIdAsync(request.RatingId)
             ?? throw new NotFoundException(nameof(Rating), request.RatingId.ToString());
 
-        _mapper.Map(request, rating);
+        mapper.Map(request, rating);
         await unitOfWork.SaveChangesAsync(cancellationToken);
     }
 }

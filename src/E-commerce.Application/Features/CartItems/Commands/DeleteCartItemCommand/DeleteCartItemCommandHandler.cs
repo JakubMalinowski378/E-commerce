@@ -8,22 +8,22 @@ using MediatR;
 namespace E_commerce.Application.Features.CartItems.Commands.DeleteCartItemCommand;
 
 public class DeleteCartItemCommandHandler(
-    ICartItemRepository cartItemRepository,
+    IRepository<CartItem> cartItemRepository,
     IAuthorizationService authorizationService,
     IUnitOfWork unitOfWork)
     : IRequestHandler<DeleteCartItemCommand>
 {
     public async Task Handle(DeleteCartItemCommand request, CancellationToken cancellationToken)
     {
-        var cartItem = await cartItemRepository.GetCartItemByIdAsync(request.CartItemId)
+        var cartItem = await cartItemRepository.GetByIdAsync(request.CartItemId)
             ?? throw new NotFoundException(nameof(CartItem), request.CartItemId.ToString());
 
-        if (await authorizationService.HasPermission(cartItem, ResourceOperation.Delete))
+        if (!await authorizationService.HasPermission(cartItem, ResourceOperation.Delete))
         {
             throw new ForbidException();
         }
 
-        await cartItemRepository.DeleteCartItem(cartItem);
+        cartItemRepository.Remove(cartItem);
         await unitOfWork.SaveChangesAsync(cancellationToken);
     }
 }

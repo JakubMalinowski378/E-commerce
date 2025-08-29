@@ -1,4 +1,5 @@
 ﻿namespace E_commerce.Domain.Constants;
+
 public static class ResourceOperation
 {
     public const string Create = "create";

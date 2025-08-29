@@ -16,7 +16,7 @@ public class ForgotPasswordCommandHandler(
 
     public async Task Handle(ForgotPasswordCommand request, CancellationToken cancellationToken)
     {
-        var user = await _userRepository.GetUserByEmailAsync(request.Email)
+        var user = await _userRepository.GetByEmail(request.Email)
             ?? throw new NotFoundException(nameof(User), request.Email);
         user.ResetPasswordToken = Guid.NewGuid().ToString();
         user.ResetPasswordTokenExpiration = DateTime.UtcNow.AddHours(3);

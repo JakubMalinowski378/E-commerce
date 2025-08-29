@@ -9,7 +9,7 @@ using MediatR;
 namespace E_commerce.Application.Features.Addresses.Commands.UpdateAddress;
 
 public class UpdateAddressCommandHandler(
-    IAddressRepository addressRepository,
+    IRepository<Address> addressRepository,
     IAuthorizationService authorizationService,
     IMapper mapper,
     IUnitOfWork unitOfWork)

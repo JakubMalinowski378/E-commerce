@@ -8,7 +8,7 @@ using MediatR;
 namespace E_commerce.Application.Features.Products.Commands.UpdateProductCommand;
 
 public class UpdateProductCommandHandler(
-    IProductRepository productRepository,
+    IRepository<Product> productRepository,
     IAuthorizationService authorizationService,
     IMapper mapper,
     IUnitOfWork unitOfWork)
@@ -16,7 +16,7 @@ public class UpdateProductCommandHandler(
 {
     public async Task Handle(UpdateProductCommand request, CancellationToken cancellationToken)
     {
-        var product = await productRepository.GetProductByIdAsync(request.ProductId)
+        var product = await productRepository.GetByIdAsync(request.ProductId)
             ?? throw new NotFoundException(nameof(Product), request.ProductId.ToString());
 
         if (!await authorizationService.HasPermission(product, "Update"))

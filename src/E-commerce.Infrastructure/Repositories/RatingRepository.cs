@@ -4,36 +4,11 @@ using E_commerce.Infrastructure.Persistance;
 using Microsoft.EntityFrameworkCore;
 
 namespace E_commerce.Infrastructure.Repositories;
-public class RatingRepository(ECommerceDbContext dbContext) : IRatingRepository
+
+public class RatingRepository(
+    ECommerceDbContext dbContext)
+    : Repository<Rating>(dbContext), IRatingRepository
 {
-    private readonly ECommerceDbContext _dbcontext = dbContext;
-    public async Task CreateRating(Rating rating)
-    {
-        _dbcontext.Ratings.Add(rating);
-        await _dbcontext.SaveChangesAsync();
-    }
-
-    public async Task DeleteRating(Rating rating)
-    {
-        _dbcontext.Ratings.Remove(rating);
-        await _dbcontext.SaveChangesAsync();
-    }
-
-    public async Task<IEnumerable<Rating>> GetProductRatings(Guid productId)
-        => await _dbcontext.Ratings
-            .Where(x => x.ProductId == productId).ToListAsync();
-
-    public async Task<Rating?> GetRatingById(Guid ratingId)
-        => await _dbcontext.Ratings
-            .FirstOrDefaultAsync(x => x.Id == ratingId);
-
-    public async Task<Rating?> GetRatingByUserIdAndProductId(Guid userId, Guid ProductId)
-        => await _dbcontext.Ratings
-            .FirstOrDefaultAsync(x => x.UserId == userId && x.ProductId == ProductId);
-
-    public async Task<IEnumerable<Rating>> GetRatings()
-        => await _dbcontext.Ratings.ToListAsync();
-
-    public Task SaveChanges()
-        => _dbcontext.SaveChangesAsync();
+    public async Task<bool> HasUserRatedProductAsync(Guid userId, Guid productId)
+        => await _dbSet.AnyAsync(r => r.UserId == userId && r.ProductId == productId);
 }

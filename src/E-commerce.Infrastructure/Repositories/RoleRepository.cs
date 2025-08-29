@@ -4,14 +4,24 @@ using E_commerce.Infrastructure.Persistance;
 using Microsoft.EntityFrameworkCore;
 
 namespace E_commerce.Infrastructure.Repositories;
-public class RoleRepository(ECommerceDbContext dbContext) : IRoleRepository
-{
-    public async Task<IEnumerable<Role>> GetAllRolesWithPermissions()
-        => await dbContext.Roles
-            .Include(r => r.Permisisons)
-            .ToListAsync();
 
-    public async Task<Role?> GetRole(string RoleName)
-        => await dbContext.Roles
-            .FirstOrDefaultAsync(x => x.Name == RoleName);
+public class RoleRepository(
+    ECommerceDbContext dbContext)
+    : Repository<Role>(dbContext), IRoleRepository
+{
+    public async Task<Role?> GetByNameAsync(
+        string name,
+        Func<IQueryable<Role>, IQueryable<Role>>? include = null,
+        bool asNoTracking = false)
+    {
+        var query = _dbSet.AsQueryable();
+
+        if (asNoTracking)
+            query = query.AsNoTracking();
+
+        if (include is not null)
+            query = include(query);
+
+        return await query.FirstOrDefaultAsync(r => r.Name == name);
+    }
 }

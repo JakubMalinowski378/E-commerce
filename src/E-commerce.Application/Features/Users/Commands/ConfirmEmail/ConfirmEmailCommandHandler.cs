@@ -13,7 +13,7 @@ public class ConfirmEmailCommandHandler(
 
     public async Task Handle(ConfirmEmailCommand request, CancellationToken cancellationToken)
     {
-        var user = await _userRepository.GetUserByConfirmationTokenAsync(request.Token)
+        var user = await _userRepository.GetByConfirmationTokenAsync(request.Token)
             ?? throw new NotFoundException(nameof(User), request.Token);
 
         if (user.ConfirmationTokenExpiration < DateTime.UtcNow)

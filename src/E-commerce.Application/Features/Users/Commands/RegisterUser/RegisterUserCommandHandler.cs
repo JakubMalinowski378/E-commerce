@@ -8,6 +8,7 @@ using MediatR;
 using System.Security.Cryptography;
 
 namespace E_commerce.Application.Features.Users.Commands.RegisterUser;
+
 public class RegisterUserCommandHandler(IEmailNotificationService emailNotificationService,
     IUserRepository userRepository,
     IMapper mapper,
@@ -15,29 +16,24 @@ public class RegisterUserCommandHandler(IEmailNotificationService emailNotificat
     IPasswordHasher passwordHasher)
     : IRequestHandler<RegisterUserCommand, JwtToken>
 {
-    private readonly IEmailNotificationService _emailNotificationService = emailNotificationService;
-    private readonly IUserRepository _userRepository = userRepository;
-    private readonly IMapper _mapper = mapper;
-    private readonly ITokenService _tokenService = tokenService;
-
     public async Task<JwtToken> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
     {
-        if (await _userRepository.UserExists(request.Email))
+        if (await userRepository.UserExists(request.Email))
             throw new ConflictException($"Email {request.Email} is in use");
 
         using var hmac = new HMACSHA512();
 
-        var user = _mapper.Map<User>(request);
+        var user = mapper.Map<User>(request);
 
         user.PasswordHash = passwordHasher.Hash(request.Password);
         user.EmailConfirmed = false;
         user.ConfirmationToken = Guid.NewGuid().ToString();
         user.ConfirmationTokenExpiration = DateTime.UtcNow.AddDays(1);
 
-        await _userRepository.Create(user);
-        await _emailNotificationService.SendConfirmationEmailAsync(user.Email, user.ConfirmationToken);
+        await userRepository.AddAsync(user);
+        await emailNotificationService.SendConfirmationEmailAsync(user.Email, user.ConfirmationToken);
 
-        var jwtToken = new JwtToken(_tokenService.CreateToken(user));
+        var jwtToken = new JwtToken(tokenService.CreateToken(user));
 
         return jwtToken;
     }

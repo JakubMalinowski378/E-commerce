@@ -13,7 +13,7 @@ public class CreateAddressCommandHandler(
     IMapper mapper,
     IUnitOfWork unitOfWork,
     IUserContext userContext,
-    IAddressRepository addressRepository,
+    IRepository<Address> addressRepository,
     IAuthorizationService authorizationService)
     : IRequestHandler<CreateAddressCommand, Guid>
 {
@@ -30,7 +30,7 @@ public class CreateAddressCommandHandler(
             ?? throw new ForbidException();
         address.UserId = user.Id;
 
-        await addressRepository.Create(address);
+        await addressRepository.AddAsync(address);
         await unitOfWork.SaveChangesAsync(cancellationToken);
 
         return address.Id;

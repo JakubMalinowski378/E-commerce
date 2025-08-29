@@ -8,7 +8,7 @@ using MediatR;
 namespace E_commerce.Application.Features.Addresses.Commands.DeleteAddress;
 
 public class DeleteAddressCommandHandler(
-    IAddressRepository addressRepository,
+    IRepository<CartItem> addressRepository,
     IAuthorizationService authorizationService,
     IUnitOfWork unitOfWork)
     : IRequestHandler<DeleteAddressCommand>
@@ -23,7 +23,7 @@ public class DeleteAddressCommandHandler(
             throw new ForbidException();
         }
 
-        await addressRepository.Delete(address);
+        addressRepository.Remove(address);
         await unitOfWork.SaveChangesAsync(cancellationToken);
     }
 }

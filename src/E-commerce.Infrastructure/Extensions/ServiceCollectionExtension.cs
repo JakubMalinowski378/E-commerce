@@ -26,9 +26,6 @@ public static class ServiceCollectionExtension
         services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddScoped<IUserRepository, UserRepository>();
-        services.AddScoped<IAddressRepository, AddressRepository>();
-        services.AddScoped<IProductRepository, ProductRepository>();
-        services.AddScoped<ICartItemRepository, CartItemRepository>();
         services.AddScoped<IRoleRepository, RoleRepository>();
         services.AddScoped<IRatingRepository, RatingRepository>();
         services.AddScoped<ICategoryRepository, CategoryRepository>();

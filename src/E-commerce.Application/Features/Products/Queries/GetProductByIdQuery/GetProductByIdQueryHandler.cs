@@ -6,18 +6,17 @@ using E_commerce.Domain.Repositories;
 using MediatR;
 
 namespace E_commerce.Application.Features.Products.Queries.GetProductByIdQuery;
-public class GetProductByIdQueryHandler(IProductRepository productsRepository,
+
+public class GetProductByIdQueryHandler(
+    IRepository<Product> productsRepository,
     IMapper mapper)
     : IRequestHandler<GetProductByIdQuery, ProductDetailsDto>
 {
-    private readonly IProductRepository _productsRepository = productsRepository;
-    private readonly IMapper _mapper = mapper;
-
     public async Task<ProductDetailsDto> Handle(GetProductByIdQuery request, CancellationToken cancellationToken)
     {
-        var product = await _productsRepository.GetProductByIdAsync(request.ProductId)
+        var product = await productsRepository.GetByIdAsync(request.ProductId)
             ?? throw new NotFoundException(nameof(Product), request.ProductId.ToString());
-        var productDto = _mapper.Map<ProductDetailsDto>(product);
+        var productDto = mapper.Map<ProductDetailsDto>(product);
 
         return productDto;
     }

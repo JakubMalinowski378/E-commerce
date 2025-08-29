@@ -1,34 +1,56 @@
 ﻿using E_commerce.Application.Interfaces;
+using E_commerce.Domain.Constants;
 using E_commerce.Domain.Interfaces;
 using E_commerce.Domain.Repositories;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Logging;
 
 namespace E_commerce.Infrastructure.Services;
 
 internal class AuthorizationService(
     IUserContext userContext,
     IRoleRepository roleRepository,
-    IMemoryCache memoryCache) : IAuthorizationService
+    IMemoryCache memoryCache,
+    ILogger<AuthorizationService> logger) : IAuthorizationService
 {
     public async Task<bool> HasPermission(IUserOwned resource, string action)
     {
         var user = userContext.GetCurrentUser()
             ?? throw new UnauthorizedAccessException("User is not authenticated.");
 
-        var rolePermissions = await memoryCache.GetOrCreateAsync("UserRoles", async (entry) =>
+        var rolePermissions = await memoryCache.GetOrCreateAsync(user.Role, async (entry) =>
         {
-            entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(30);
-            return await roleRepository.GetAllRolesWithPermissions();
+            entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(60 * 24);
+            return await roleRepository.GetByNameAsync(user.Role, r => r.Include(x => x.Permisisons), true);
         });
 
-        var userRole = await roleRepository.GetRole(user.Role)
-            ?? throw new UnauthorizedAccessException($"Role '{user.Role}' not found.");
-
-        return action switch
+        switch (action)
         {
-            "View" => true,// All users can view resources.
-            "Edit" or "Delete" => resource.UserId == user.Id,// Only the owner can edit or delete.
-            _ => throw new NotSupportedException($"Action '{action}' is not supported."),
-        };
+            case ResourceOperation.Create:
+                return rolePermissions!.Permisisons
+                    .Any(r => r.Resource == nameof(resource) && r.Action == ResourceOperation.Create);
+            case ResourceOperation.Read:
+                return rolePermissions!.Permisisons
+                    .Any(r => r.Resource == nameof(resource) && (r.Action == ResourceOperation.Read || r.Action == ResourceOperation.ReadHidden))
+                    || (rolePermissions.Permisisons
+                        .Any(r => r.Resource == nameof(resource) && r.Action == ResourceOperation.ReadOwns)
+                        && resource.UserId == user.Id);
+            case ResourceOperation.Update:
+                return rolePermissions!.Permisisons
+                    .Any(r => r.Resource == nameof(resource) && r.Action == ResourceOperation.Update)
+                    || (rolePermissions.Permisisons
+                        .Any(r => r.Resource == nameof(resource) && r.Action == ResourceOperation.UpdateOwns)
+                        && resource.UserId == user.Id);
+            case ResourceOperation.Delete:
+                return rolePermissions!.Permisisons
+                    .Any(r => r.Resource == nameof(resource) && r.Action == ResourceOperation.Delete)
+                    || (rolePermissions.Permisisons
+                        .Any(r => r.Resource == nameof(resource) && r.Action == ResourceOperation.DeleteOwns)
+                        && resource.UserId == user.Id);
+            default:
+                logger.LogWarning("Unknown action {Action} for resource {Resource}", action, nameof(resource));
+                return false;
+        }
     }
 }

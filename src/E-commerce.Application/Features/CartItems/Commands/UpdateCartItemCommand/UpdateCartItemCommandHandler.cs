@@ -9,13 +9,13 @@ namespace E_commerce.Application.Features.CartItems.Commands.UpdateCartItemComma
 
 public class UpdateCartItemCommandHandler(
     IUnitOfWork unitOfWork,
-    ICartItemRepository cartItemRepository,
+    IRepository<CartItem> cartItemRepository,
     IAuthorizationService authorizationService)
     : IRequestHandler<UpdateCartItemCommand>
 {
     public async Task Handle(UpdateCartItemCommand request, CancellationToken cancellationToken)
     {
-        var cartItem = await cartItemRepository.GetCartItemByIdAsync(request.CartItemId)
+        var cartItem = await cartItemRepository.GetByIdAsync(request.CartItemId)
             ?? throw new NotFoundException(nameof(CartItem), request.CartItemId.ToString());
 
         if (!await authorizationService.HasPermission(cartItem, ResourceOperation.Update))

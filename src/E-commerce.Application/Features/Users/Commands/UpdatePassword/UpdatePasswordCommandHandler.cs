@@ -20,7 +20,7 @@ public class UpdatePasswordCommandHandler(
     {
         var userContext = _userContext.GetCurrentUser();
 
-        var user = await _userRepository.GetUserByEmailAsync(userContext!.Email)
+        var user = await _userRepository.GetByEmail(userContext!.Email)
             ?? throw new NotFoundException(nameof(User), userContext.Email);
 
         var computedHash = passwordHasher.Hash(request.OldPassword);

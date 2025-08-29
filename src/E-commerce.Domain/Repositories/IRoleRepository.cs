@@ -2,8 +2,10 @@
 
 namespace E_commerce.Domain.Repositories;
 
-public interface IRoleRepository
+public interface IRoleRepository : IRepository<Role>
 {
-    Task<Role?> GetRole(string roleName);
-    Task<IEnumerable<Role>> GetAllRolesWithPermissions();
+    Task<Role?> GetByNameAsync(
+        string name,
+        Func<IQueryable<Role>, IQueryable<Role>>? include = null,
+        bool asNoTracking = false);
 }

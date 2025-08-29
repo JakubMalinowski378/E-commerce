@@ -3,6 +3,7 @@ using E_commerce.Application.Interfaces;
 using E_commerce.Domain.Exceptions;
 using E_commerce.Domain.Repositories;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace E_commerce.Application.Features.Users.Queries.LoginUser;
 
@@ -14,7 +15,7 @@ public class LoginUserQueryHandler(
 {
     public async Task<JwtToken> Handle(LoginUserQuery request, CancellationToken cancellationToken)
     {
-        var user = await userRepository.GetUserByEmailAsync(request.Email, u => u.Role)
+        var user = await userRepository.GetByEmail(request.Email, u => u.Include(x => x.Role))
             ?? throw new UnauthorizedException("Invalid username or password");
 
         if (!passwordHasher.Verify(request.Password, user.PasswordHash))

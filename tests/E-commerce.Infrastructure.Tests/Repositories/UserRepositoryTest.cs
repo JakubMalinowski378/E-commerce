@@ -74,7 +74,7 @@ public class UserRepositoryTest
 
         //act
         await _userRepository.Create(_user);
-        var userFromDb = await _userRepository.GetUserByEmailAsync("email@gmail.com");
+        var userFromDb = await _userRepository.GetByEmail("email@gmail.com");
 
         //assert
         Assert.Equal(_user.FirstName, userFromDb?.FirstName);

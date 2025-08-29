@@ -6,20 +6,18 @@ using E_commerce.Domain.Repositories;
 using MediatR;
 
 namespace E_commerce.Application.Features.Users.Queries.GetUserById;
-public class GetUserByIdQueryHandler(IUserRepository userRepository, IMapper mapper)
+
+public class GetUserByIdQueryHandler(
+    IUserRepository userRepository,
+    IMapper mapper)
     : IRequestHandler<GetUserByIdQuery, UserDto>
 {
-    private readonly IUserRepository _userRepository = userRepository;
-    private readonly IMapper _mapper = mapper;
-
     public async Task<UserDto> Handle(GetUserByIdQuery request, CancellationToken cancellationToken)
     {
-        var user = await _userRepository.GetUserByIdAsync(request.UserId);
+        var user = await userRepository.GetByIdAsync(request.UserId)
+            ?? throw new NotFoundException(nameof(User), request.UserId.ToString());
 
-        if (user == null)
-            throw new NotFoundException(nameof(User), request.UserId.ToString());
-
-        var userDto = _mapper.Map<UserDto>(user);
+        var userDto = mapper.Map<UserDto>(user);
         return userDto;
     }
 }
