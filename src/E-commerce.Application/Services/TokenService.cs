@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace E_commerce.Application.Services;
@@ -13,7 +14,7 @@ public class TokenService(IConfiguration config) : ITokenService
     public readonly SymmetricSecurityKey _key = new(Encoding.UTF8.GetBytes(config["Jwt:Key"]
         ?? throw new Exception("Key was not found")));
 
-    public string CreateToken(User user)
+    public (string accessToken, string refreshToken) GenerateTokens(User user)
     {
         var claims = new List<Claim>()
         {
@@ -33,6 +34,18 @@ public class TokenService(IConfiguration config) : ITokenService
 
         var handler = new JwtSecurityTokenHandler();
         var token = handler.CreateToken(tokenDescription);
-        return handler.WriteToken(token);
+
+        var accessToken = handler.WriteToken(token);
+        var refreshToken = GenerateRefreshToken();
+
+        return (accessToken, refreshToken);
+    }
+
+    private static string GenerateRefreshToken()
+    {
+        var randomNumber = new byte[64];
+        using var rng = RandomNumberGenerator.Create();
+        rng.GetBytes(randomNumber);
+        return Convert.ToBase64String(randomNumber);
     }
 }

@@ -1,4 +1,4 @@
-﻿using E_commerce.Application.Features.Users.Dtos;
+﻿using E_commerce.Application.Features.Accounts.Dtos;
 using MediatR;
 
 namespace E_commerce.Application.Features.Users.Queries.GetUsers;

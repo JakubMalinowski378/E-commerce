@@ -9,10 +9,10 @@ public class UserRepository(
     ECommerceDbContext dbContext)
     : Repository<User>(dbContext), IUserRepository
 {
-    public async Task<bool> UserExists(string email)
+    public async Task<bool> IsEmailInUseAsync(string email)
         => await _dbSet.AnyAsync(x => x.Email == email);
 
-    public async Task<User?> GetByEmail(
+    public async Task<User?> GetByEmailAsync(
         string email,
         Func<IQueryable<User>, IQueryable<User>>? include = null,
         bool asNoTracking = false)
@@ -34,6 +34,9 @@ public class UserRepository(
     public async Task<User?> GetByResetPasswordTokenAsync(string token)
         => await _dbSet.SingleOrDefaultAsync(x => x.ResetPasswordToken == token);
 
-    public async Task<bool> IsPhoneNumberInUse(string phoneNumber)
+    public async Task<bool> IsPhoneNumberInUseAsync(string phoneNumber)
         => await _dbSet.AnyAsync(x => x.PhoneNumber == phoneNumber);
+
+    public async Task<User?> GetByRefreshTokenAsync(string token)
+        => await _dbSet.FirstOrDefaultAsync(x => x.RefreshToken == token);
 }

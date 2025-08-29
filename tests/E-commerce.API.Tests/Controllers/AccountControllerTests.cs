@@ -1,8 +1,7 @@
-﻿using E_commerce.Application.Features.Users.Commands.RegisterUser;
-using E_commerce.Application.Features.Users.Queries.LoginUser;
+﻿using E_commerce.Application.Features.Accounts.Commands.Login;
+using E_commerce.Application.Features.Accounts.Commands.RegisterUser;
 using E_commerce.Application.Interfaces;
 using E_commerce.Domain.Entities;
-using E_commerce.Domain.Interfaces;
 using E_commerce.Domain.Repositories;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -20,9 +19,8 @@ public class AccountControllerTests : IClassFixture<WebApplicationFactory<Progra
 {
     private readonly WebApplicationFactory<Program> _factory;
     private readonly Mock<IUserRepository> _userRepositoryMock = new();
-    private readonly Mock<IDatabaseMigrator> _databaseMigrator = new();
     private readonly Mock<ITokenService> _tokenServiceMock = new();
-    private readonly LoginUserQuery _loginUserQuery = new()
+    private readonly LoginCommand _loginUserQuery = new()
     {
         Email = "test@example.com",
         Password = "Password#123"
@@ -40,17 +38,13 @@ public class AccountControllerTests : IClassFixture<WebApplicationFactory<Progra
 
     internal AccountControllerTests(WebApplicationFactory<Program> factory)
     {
-        _databaseMigrator.Setup(m => m.MigrateAsync()).Returns(Task.CompletedTask);
-        _tokenServiceMock.Setup(m => m.CreateToken(new User())).Returns("");
+        _tokenServiceMock.Setup(m => m.GenerateTokens(new User())).Returns((string.Empty, string.Empty));
         _factory = factory.WithWebHostBuilder(builder =>
         {
             builder.ConfigureTestServices(services =>
             {
                 services.Replace(ServiceDescriptor.Scoped(typeof(IUserRepository),
                     _ => _userRepositoryMock.Object));
-
-                services.Replace(ServiceDescriptor.Scoped(typeof(IDatabaseMigrator),
-                    _ => _databaseMigrator.Object));
 
                 services.Replace(ServiceDescriptor.Scoped(typeof(ITokenService),
                     _ => _tokenServiceMock.Object));
@@ -61,7 +55,9 @@ public class AccountControllerTests : IClassFixture<WebApplicationFactory<Progra
     [Fact]
     public async Task Login_ForNonExisitingUser_ShouldReturn401Unauthorized()
     {
-        _userRepositoryMock.Setup(m => m.GetByEmail(_loginUserQuery.Email))
+        _userRepositoryMock.Setup(m => m.GetByEmailAsync(_loginUserQuery.Email, null, false))
+            .ReturnsAsync((User?)null);
+        _userRepositoryMock.Setup(m => m.GetByEmailAsync(_loginUserQuery.Email, null, false))
             .ReturnsAsync((User?)null);
 
         var client = _factory.CreateClient();
@@ -82,7 +78,7 @@ public class AccountControllerTests : IClassFixture<WebApplicationFactory<Progra
     [Fact]
     public async Task Register_WhenEmailIsAlreadyInUse_ShouldReturn409Conflict()
     {
-        _userRepositoryMock.Setup(m => m.UserExists(_registerUserCommand.Email)).ReturnsAsync(true);
+        _userRepositoryMock.Setup(m => m.IsEmailInUseAsync(_registerUserCommand.Email)).ReturnsAsync(true);
 
         var client = _factory.CreateClient();
         var json = JsonSerializer.Serialize(_registerUserCommand);
@@ -96,7 +92,7 @@ public class AccountControllerTests : IClassFixture<WebApplicationFactory<Progra
     [Fact]
     public async Task Register_WhenGivenValidData_ShouldReturn200Ok()
     {
-        _userRepositoryMock.Setup(m => m.UserExists(_registerUserCommand.Email)).ReturnsAsync(false);
+        _userRepositoryMock.Setup(m => m.IsEmailInUseAsync(_registerUserCommand.Email)).ReturnsAsync(false);
 
         var client = _factory.CreateClient();
         var json = JsonSerializer.Serialize(_registerUserCommand);

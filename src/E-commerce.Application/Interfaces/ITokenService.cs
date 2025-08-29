@@ -4,5 +4,5 @@ namespace E_commerce.Application.Interfaces;
 
 public interface ITokenService
 {
-    string CreateToken(User user);
+    (string accessToken, string refreshToken) GenerateTokens(User user);
 }

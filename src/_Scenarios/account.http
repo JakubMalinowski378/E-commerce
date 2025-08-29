@@ -1,0 +1,18 @@
+@Url=https://localhost:8000/api
+
+# @name register
+POST {{Url}}/Account/register
+Content-Type: application/json
+
+{
+  "firstName": "John",
+  "lastName": "Doe",
+  "email": "test@example.com",
+  "dateOfBirth": "1990-01-01",
+  "gender": "M",
+  "phoneNumber": "1234567890",
+  "password": "Password123!"
+}
+
+###
+

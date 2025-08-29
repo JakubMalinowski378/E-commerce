@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using E_commerce.Application.Features.Users.Dtos;
+using E_commerce.Application.Features.Accounts.Dtos;
 using E_commerce.Domain.Entities;
 using E_commerce.Domain.Exceptions;
 using E_commerce.Domain.Repositories;

@@ -1,5 +1,5 @@
-﻿using E_commerce.Application.Features.Users.Commands.DeleteUser;
-using E_commerce.Application.Features.Users.Dtos;
+﻿using E_commerce.Application.Features.Accounts.Commands.DeleteUser;
+using E_commerce.Application.Features.Accounts.Dtos;
 using E_commerce.Application.Features.Users.Queries.GetUserById;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
