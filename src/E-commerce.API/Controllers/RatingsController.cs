@@ -16,27 +16,25 @@ namespace E_commerce.API.Controllers;
 [Route("api")]
 public class RatingsController(ISender sender) : ControllerBase
 {
-    private readonly ISender _sender = sender;
-
     [HttpGet("Ratings/{ratingId}")]
     public async Task<ActionResult<RatingDto>> GetRatingById(Guid ratingId)
     {
-        var rating = await _sender.Send(new GetRatingByIdQuery(ratingId));
+        var rating = await sender.Send(new GetRatingByIdQuery(ratingId));
         return Ok(rating);
     }
 
     [HttpDelete("Ratings/{ratingId}")]
     public async Task<ActionResult> DeleteRating([FromRoute] Guid ratingId)
     {
-        await _sender.Send(new DeleteRatingCommand(ratingId));
+        await sender.Send(new DeleteRatingCommand(ratingId));
         return NoContent();
     }
 
-    [HttpPatch("Ratings/{ratingId}")]
+    [HttpPut("Ratings/{ratingId}")]
     public async Task<ActionResult> UpdateRating([FromRoute] Guid ratingId, UpdateRatingCommand command)
     {
         command.RatingId = ratingId;
-        await _sender.Send(command);
+        await sender.Send(command);
         return NoContent();
     }
 
@@ -44,7 +42,7 @@ public class RatingsController(ISender sender) : ControllerBase
     public async Task<ActionResult> CreateRating([FromRoute] Guid productId, CreateRatingCommand command)
     {
         command.ProductId = productId;
-        await _sender.Send(command);
+        await sender.Send(command);
         return NoContent();
     }
 
@@ -52,14 +50,14 @@ public class RatingsController(ISender sender) : ControllerBase
     [HttpGet("Products/{productId}/Ratings")]
     public async Task<ActionResult<IEnumerable<RatingDto>>> GetProductRatings([FromRoute] Guid productId)
     {
-        var ratings = await _sender.Send(new GetProductRatingsQuery(productId));
+        var ratings = await sender.Send(new GetProductRatingsQuery(productId));
         return Ok(ratings);
     }
 
     [HttpGet("Users/{userId}/Ratings")]
     public async Task<ActionResult<IEnumerable<RatingDto>>> GetAllRatingsOfUser(Guid userId)
     {
-        var ratings = await _sender.Send(new GetUserRatingsQuery(userId));
+        var ratings = await sender.Send(new GetUserRatingsQuery(userId));
         return Ok(ratings);
     }
 }

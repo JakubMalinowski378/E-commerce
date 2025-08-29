@@ -17,35 +17,33 @@ namespace E_commerce.API.Controllers;
 [Route("api")]
 public class ProductsController(ISender sender) : ControllerBase
 {
-    private readonly ISender _sender = sender;
-
     [AllowAnonymous]
     [HttpGet("Products/{productId}")]
     public async Task<ActionResult<ProductDetailsDto>> GetProduct([FromRoute] Guid productId)
     {
-        var product = await _sender.Send(new GetProductByIdQuery(productId));
+        var product = await sender.Send(new GetProductByIdQuery(productId));
         return Ok(product);
     }
 
     [HttpPost("Products")]
     public async Task<ActionResult> CreateProduct([FromForm] CreateProductCommand command)
     {
-        var productId = await _sender.Send(command);
+        var productId = await sender.Send(command);
         return CreatedAtAction(nameof(GetProduct), new { productId }, null);
     }
 
     [HttpDelete("Products/{productId}")]
     public async Task<ActionResult> DeleteProduct(Guid productId)
     {
-        await _sender.Send(new DeleteProductCommand(productId));
+        await sender.Send(new DeleteProductCommand(productId));
         return NoContent();
     }
 
-    [HttpPatch("Products/{productId}")]
+    [HttpPut("Products/{productId}")]
     public async Task<ActionResult> UpdateProduct([FromRoute] Guid productId, [FromForm] UpdateProductCommand command)
     {
         command.ProductId = productId;
-        await _sender.Send(command);
+        await sender.Send(command);
         return NoContent();
     }
 
@@ -53,14 +51,14 @@ public class ProductsController(ISender sender) : ControllerBase
     [HttpGet("Products/")]
     public async Task<ActionResult<PagedResult<ProductDto>>> GetProducts([FromQuery] GetAllProductsQuery query)
     {
-        var products = await _sender.Send(query);
+        var products = await sender.Send(query);
         return Ok(products);
     }
 
     [HttpGet("Users/{userId}/Products")]
     public async Task<ActionResult<IEnumerable<ProductDto>>> GetUserProducts([FromRoute] Guid userId)
     {
-        var products = await _sender.Send(new GetUserProducts(userId));
+        var products = await sender.Send(new GetUserProducts(userId));
         return Ok(products);
     }
 }

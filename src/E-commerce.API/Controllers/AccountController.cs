@@ -15,15 +15,13 @@ namespace E_commerce.API.Controllers;
 [Route("api/[controller]")]
 public class AccountController(ISender sender) : ControllerBase
 {
-    public readonly ISender _sender = sender;
-
     [HttpPost("register")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
     public async Task<ActionResult<JwtToken>> Register(RegisterUserCommand command)
     {
-        return Ok(await _sender.Send(command));
+        return Ok(await sender.Send(command));
     }
 
     [HttpPost("login")]
@@ -31,18 +29,18 @@ public class AccountController(ISender sender) : ControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult<JwtToken>> Login(LoginUserQuery loginUserQuery)
     {
-        var userDto = await _sender.Send(loginUserQuery);
+        var userDto = await sender.Send(loginUserQuery);
         return Ok(userDto);
     }
 
     [Authorize]
-    [HttpPatch("update-password")]
+    [HttpPut("update-password")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult> UpdatePassword(UpdatePasswordCommand command)
     {
-        await _sender.Send(command);
+        await sender.Send(command);
         return NoContent();
     }
 
@@ -52,7 +50,7 @@ public class AccountController(ISender sender) : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> ConfirmEmail([FromQuery] string token)
     {
-        await _sender.Send(new ConfirmEmailCommand(token));
+        await sender.Send(new ConfirmEmailCommand(token));
         return Ok("Email confirmed successfully.");
     }
 
@@ -61,7 +59,7 @@ public class AccountController(ISender sender) : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordCommand command)
     {
-        await _sender.Send(command);
+        await sender.Send(command);
         return Ok("Password reset successfully");
     }
 
@@ -71,7 +69,7 @@ public class AccountController(ISender sender) : ControllerBase
     public async Task<IActionResult> ResetPassword([FromQuery] string token, [FromBody] ResetPasswordCommand command)
     {
         command.Token = token;
-        await _sender.Send(command);
+        await sender.Send(command);
         return Ok("Password reset successfully");
     }
 }

@@ -15,41 +15,39 @@ namespace E_commerce.API.Controllers;
 [Route("api")]
 public class AddressesController(ISender sender) : ControllerBase
 {
-    private readonly ISender _sender = sender;
-
     [HttpGet("Addresses/{addressId}")]
     public async Task<ActionResult<AddressDto>> GetAddressById([FromRoute] Guid addressId)
     {
-        var address = await _sender.Send(new GetAddressByIdQuery(addressId));
+        var address = await sender.Send(new GetAddressByIdQuery(addressId));
         return Ok(address);
     }
 
     [HttpDelete("Addresses/{addressId}")]
     public async Task<ActionResult> DeleteAddress([FromRoute] Guid addressId)
     {
-        await _sender.Send(new DeleteAddressCommand(addressId));
+        await sender.Send(new DeleteAddressCommand(addressId));
         return NoContent();
     }
 
-    [HttpPatch("Addresses/{addressId}")]
+    [HttpPut("Addresses/{addressId}")]
     public async Task<ActionResult> UpdateAddress([FromRoute] Guid addressId, UpdateAddressCommand command)
     {
         command.AddressId = addressId;
-        await _sender.Send(command);
+        await sender.Send(command);
         return NoContent();
     }
 
     [HttpPost("Addresses")]
     public async Task<ActionResult> CreateAddress(CreateAddressCommand command)
     {
-        var addressId = await _sender.Send(command);
+        var addressId = await sender.Send(command);
         return CreatedAtAction(nameof(GetAddressById), new { addressId }, null);
     }
 
     [HttpGet("Users/{userId}/Addresses")]
     public async Task<ActionResult<AddressDto>> GetUserAddresses([FromRoute] Guid userId)
     {
-        var addresses = await _sender.Send(new GetUserAddressesQuery(userId));
+        var addresses = await sender.Send(new GetUserAddressesQuery(userId));
         return Ok(addresses);
     }
 }

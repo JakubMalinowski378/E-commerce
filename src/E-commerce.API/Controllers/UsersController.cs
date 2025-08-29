@@ -12,19 +12,17 @@ namespace E_commerce.API.Controllers;
 [Route("api/[controller]")]
 public class UsersController(ISender sender) : ControllerBase
 {
-    private readonly ISender _sender = sender;
-
     [HttpGet("{userId}")]
     public async Task<ActionResult<UserDto>> GetUser(Guid userId)
     {
-        var user = await _sender.Send(new GetUserByIdQuery(userId));
+        var user = await sender.Send(new GetUserByIdQuery(userId));
         return Ok(user);
     }
 
     [HttpDelete("{userId}")]
     public async Task<ActionResult> DeleteUser([FromRoute] Guid userId)
     {
-        await _sender.Send(new DeleteUserCommand(userId));
+        await sender.Send(new DeleteUserCommand(userId));
         return NoContent();
     }
 }
