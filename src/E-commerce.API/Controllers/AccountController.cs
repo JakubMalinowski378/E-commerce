@@ -1,11 +1,11 @@
-﻿using E_commerce.Application.Features.Accounts.Commands.ConfirmEmail;
-using E_commerce.Application.Features.Accounts.Commands.ForgotPassword;
+﻿using E_commerce.Application.Features.Accounts.Commands.ChangePassword;
+using E_commerce.Application.Features.Accounts.Commands.ConfirmEmail;
 using E_commerce.Application.Features.Accounts.Commands.Login;
 using E_commerce.Application.Features.Accounts.Commands.Logout;
+using E_commerce.Application.Features.Accounts.Commands.PasswordReset;
+using E_commerce.Application.Features.Accounts.Commands.PasswordResetRequest;
 using E_commerce.Application.Features.Accounts.Commands.RefreshToken;
 using E_commerce.Application.Features.Accounts.Commands.RegisterUser;
-using E_commerce.Application.Features.Accounts.Commands.ResetPassword;
-using E_commerce.Application.Features.Accounts.Commands.UpdatePassword;
 using E_commerce.Application.Features.Accounts.Dtos;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -36,43 +36,12 @@ public class AccountController(ISender sender) : ControllerBase
     }
 
     [Authorize]
-    [HttpPut("update-password")]
-    [ProducesResponseType(StatusCodes.Status204NoContent)]
-    [ProducesResponseType(StatusCodes.Status403Forbidden)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult> UpdatePassword(UpdatePasswordCommand command)
+    [HttpPost("logout")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<IActionResult> Logout()
     {
-        await sender.Send(command);
+        await sender.Send(new LogoutCommand());
         return NoContent();
-    }
-
-    [HttpGet("confirm-email")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> ConfirmEmail([FromQuery] string token)
-    {
-        await sender.Send(new ConfirmEmailCommand(token));
-        return Ok("Email confirmed successfully.");
-    }
-
-    [HttpPost("forgot-password")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordCommand command)
-    {
-        await sender.Send(command);
-        return Ok("Password reset successfully");
-    }
-
-    [HttpPost("reset-pasword")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> ResetPassword([FromQuery] string token, [FromBody] ResetPasswordCommand command)
-    {
-        command.Token = token;
-        await sender.Send(command);
-        return Ok("Password reset successfully");
     }
 
     [HttpPost("refresh-token")]
@@ -83,12 +52,41 @@ public class AccountController(ISender sender) : ControllerBase
         return Ok(await sender.Send(query));
     }
 
-    [Authorize]
-    [HttpPost("logout")]
+    [HttpGet("confirm-email")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<IActionResult> Logout()
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> ConfirmEmail([FromQuery] ConfirmEmailCommand command)
     {
-        await sender.Send(new LogoutCommand());
-        return Ok();
+        await sender.Send(command);
+        return Ok("Email confirmed successfully.");
+    }
+
+    [Authorize]
+    [HttpPut("change-password")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult> ChangePassword([FromBody] ChangePasswordCommand command)
+    {
+        await sender.Send(command);
+        return NoContent();
+    }
+
+    [HttpPost("request-password-reset")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<IActionResult> RequestPasswordReset([FromBody] ResetPasswordRequestCommand command)
+    {
+        await sender.Send(command);
+        return Ok("If the account exists, a password reset link has been sent.");
+    }
+
+    [HttpPost("reset-password")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> ResetPassword([FromBody] PasswordResetCommand command)
+    {
+        await sender.Send(command);
+        return Ok("Password reset successfully");
     }
 }

@@ -2,6 +2,7 @@
 using MediatR;
 
 namespace E_commerce.Application.Features.Accounts.Commands.RegisterUser;
+
 public class RegisterUserCommand : IRequest<AuthResponse>
 {
     public string FirstName { get; set; } = string.Empty;

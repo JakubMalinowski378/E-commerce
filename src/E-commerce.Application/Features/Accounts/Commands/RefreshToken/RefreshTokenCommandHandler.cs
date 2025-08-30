@@ -2,6 +2,7 @@
 using E_commerce.Application.Interfaces;
 using E_commerce.Domain.Repositories;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace E_commerce.Application.Features.Accounts.Commands.RefreshToken;
 
@@ -13,7 +14,9 @@ public class RefreshTokenCommandHandler(
 {
     public async Task<AuthResponse> Handle(RefreshTokenCommand request, CancellationToken cancellationToken)
     {
-        var user = await userRepository.GetByRefreshTokenAsync(request.RefreshToken)
+        var user = await userRepository.FirstOrDefaultAsync(u => u.RefreshToken == request.RefreshToken,
+            u => u.Include(x => x.Role),
+            cancellationToken: cancellationToken)
             ?? throw new InvalidOperationException("Invalid refresh token.");
 
         if (user.RefreshTokenExpires <= DateTime.UtcNow)

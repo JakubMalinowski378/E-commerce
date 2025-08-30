@@ -15,7 +15,8 @@ public class UserRepository(
     public async Task<User?> GetByEmailAsync(
         string email,
         Func<IQueryable<User>, IQueryable<User>>? include = null,
-        bool asNoTracking = false)
+        bool asNoTracking = false,
+        CancellationToken cancellationToken = default)
     {
         var query = _dbSet.AsQueryable();
 
@@ -25,7 +26,7 @@ public class UserRepository(
         if (include is not null)
             query = include(query);
 
-        return await query.FirstOrDefaultAsync(u => u.Email == email);
+        return await query.FirstOrDefaultAsync(u => u.Email == email, cancellationToken);
     }
 
     public async Task<User?> GetByConfirmationTokenAsync(string token)

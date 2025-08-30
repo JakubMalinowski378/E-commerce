@@ -16,7 +16,8 @@ public class LoginCommandHandler(
 {
     public async Task<AuthResponse> Handle(LoginCommand request, CancellationToken cancellationToken)
     {
-        var user = await userRepository.GetByEmailAsync(request.Email, u => u.Include(x => x.Role))
+        var user = await userRepository.GetByEmailAsync(request.Email, u => u.Include(x => x.Role),
+            cancellationToken: cancellationToken)
             ?? throw new UnauthorizedException("Invalid username or password");
 
         if (!passwordHasher.Verify(request.Password, user.PasswordHash))

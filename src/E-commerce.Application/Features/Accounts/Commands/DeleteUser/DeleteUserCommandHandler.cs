@@ -15,7 +15,8 @@ public class DeleteUserCommandHandler(
     {
         var user = await userRepository.GetByIdAsync(request.UserId,
             u => u.Include(x => x.Ratings)
-                  .Include(x => x.Ratings))
+                  .Include(x => x.Ratings),
+            cancellationToken: cancellationToken)
             ?? throw new NotFoundException(nameof(User), request.UserId.ToString());
 
         userRepository.Remove(user);

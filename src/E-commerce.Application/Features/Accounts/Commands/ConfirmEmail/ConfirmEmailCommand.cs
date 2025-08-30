@@ -1,7 +1,9 @@
 ﻿using MediatR;
 
 namespace E_commerce.Application.Features.Accounts.Commands.ConfirmEmail;
-public class ConfirmEmailCommand(string token) : IRequest
+
+public class ConfirmEmailCommand : IRequest
 {
-    public string Token { get; set; } = token;
+    public Guid UserId { get; set; }
+    public string Token { get; set; } = string.Empty;
 }

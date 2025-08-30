@@ -41,7 +41,7 @@ public class RegisterUserCommandHandler(
         user.RefreshToken = refreshToken;
         user.RefreshTokenExpires = DateTime.UtcNow.AddDays(30);
 
-        await userRepository.AddAsync(user);
+        await userRepository.AddAsync(user, cancellationToken);
         await unitOfWork.SaveChangesAsync(cancellationToken);
 
         return new AuthResponse(accessToken, refreshToken);

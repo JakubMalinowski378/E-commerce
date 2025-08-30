@@ -1,5 +1,12 @@
 @Url=https://localhost:8000/api
 
+@Email=test@example.com
+@Password=Password123!
+@NewPassword=NewPassword123!
+@ConfirmationEmailToken=x
+@UserId=x
+@ResetPasswordToken=x
+
 # @name register
 POST {{Url}}/Account/register
 Content-Type: application/json
@@ -7,12 +14,75 @@ Content-Type: application/json
 {
   "firstName": "John",
   "lastName": "Doe",
-  "email": "test@example.com",
+  "email": "{{Email}}",
   "dateOfBirth": "1990-01-01",
   "gender": "M",
   "phoneNumber": "1234567890",
-  "password": "Password123!"
+  "password": "{{Password}}"
 }
 
 ###
 
+# @name login
+POST {{Url}}/Account/login
+Content-Type: application/json
+
+{  
+  "email": "{{Email}}",
+  "password": "{{Password}}"
+}
+
+###
+
+# @name logout
+POST {{Url}}/Account/logout
+Content-Type: application/json
+Authorization: Bearer {{login.response.body.$.accessToken}}
+
+###
+
+# @name confirmEmail
+GET {{Url}}/Account/confirm-email?userId={{UserId}}&token={{ConfirmationEmailToken}}
+
+###
+
+# @name requestPasswordReset
+POST {{Url}}/Account/request-password-reset
+Content-Type: application/json
+
+{
+  "email": "{{Email}}"
+}
+
+###
+
+#@name resetPassword
+POST {{Url}}/Account/reset-password?
+Content-Type: application/json
+{
+  "email": "{{Email}}",
+  "token": "{{ResetPasswordToken}}",
+  "newPassword": "{{NewPassword}}"
+}
+
+###
+
+#@name refreshToken
+POST {{Url}}/Account/refresh-token
+Content-Type: application/json
+
+{
+  "RefreshToken": "{{login.response.body.$.refreshToken}}"
+}
+
+###
+
+# @name changePassword
+PUT {{Url}}/Account/change-password
+Content-Type: application/json
+Authorization: Bearer {{login.response.body.$.accessToken}}
+
+{
+  "oldPassword": "{{Password}}",
+  "newPassword": "{{NewPassword}}"
+}

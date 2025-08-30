@@ -7,13 +7,14 @@ namespace E_commerce.Application.Features.Accounts.Commands.ConfirmEmail;
 
 public class ConfirmEmailCommandHandler(
     IUserRepository userRepository,
-    IUnitOfWork unitOfWork) : IRequestHandler<ConfirmEmailCommand>
+    IUnitOfWork unitOfWork)
+    : IRequestHandler<ConfirmEmailCommand>
 {
-    private readonly IUserRepository _userRepository = userRepository;
-
     public async Task Handle(ConfirmEmailCommand request, CancellationToken cancellationToken)
     {
-        var user = await _userRepository.GetByConfirmationTokenAsync(request.Token)
+        var user = await userRepository
+            .FirstOrDefaultAsync(u => u.ConfirmationToken == request.Token && u.Id == request.UserId,
+                                 cancellationToken: cancellationToken)
             ?? throw new NotFoundException(nameof(User), request.Token);
 
         if (user.ConfirmationTokenExpiration < DateTime.UtcNow)
@@ -25,6 +26,6 @@ public class ConfirmEmailCommandHandler(
         user.EmailConfirmed = true;
         user.ConfirmationTokenExpiration = null;
         user.ConfirmationToken = null;
-        await unitOfWork.SaveChangesAsync();
+        await unitOfWork.SaveChangesAsync(cancellationToken);
     }
 }

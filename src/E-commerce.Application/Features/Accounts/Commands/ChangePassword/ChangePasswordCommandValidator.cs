@@ -1,10 +1,14 @@
 ﻿using FluentValidation;
 
-namespace E_commerce.Application.Features.Accounts.Commands.UpdatePassword;
-public class UpdatePasswordCommandValidator : AbstractValidator<UpdatePasswordCommand>
+namespace E_commerce.Application.Features.Accounts.Commands.ChangePassword;
+
+public class ChangePasswordCommandValidator : AbstractValidator<ChangePasswordCommand>
 {
-    public UpdatePasswordCommandValidator()
+    public ChangePasswordCommandValidator()
     {
+        RuleFor(x => x.OldPassword)
+         .NotEmpty().WithMessage("Old password is required.");
+
         RuleFor(x => x.NewPassword)
          .NotEmpty()
          .MinimumLength(8)

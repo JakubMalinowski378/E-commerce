@@ -1,9 +1,10 @@
 ﻿using FluentValidation;
 
-namespace E_commerce.Application.Features.Accounts.Commands.ResetPassword;
-public class ResetPasswordCommandValidator : AbstractValidator<ResetPasswordCommand>
+namespace E_commerce.Application.Features.Accounts.Commands.PasswordReset;
+
+public class PasswordResetCommandValidator : AbstractValidator<PasswordResetCommand>
 {
-    public ResetPasswordCommandValidator()
+    public PasswordResetCommandValidator()
     {
         RuleFor(x => x.NewPassword)
             .NotEmpty()
